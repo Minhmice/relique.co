@@ -1,0 +1,103 @@
+"use client";
+
+import Link from "next/link";
+import Image from "next/image";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { SectionHeader } from "@/components/sections/SectionHeader";
+import { marketplaceService } from "@/lib/services/marketplaceService";
+import type { MarketplaceListing } from "@/lib/types";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useState } from "react";
+
+interface RelatedItemsProps {
+  currentListing: MarketplaceListing;
+  limit?: number;
+}
+
+export function RelatedItems({ currentListing, limit = 4 }: RelatedItemsProps) {
+  const [startIndex, setStartIndex] = useState(0);
+
+  const related = marketplaceService
+    .list(
+      {
+        category: currentListing.category,
+      },
+      { page: 1, limit: 20 }
+    )
+    .data.filter((item) => item.id !== currentListing.id)
+    .slice(0, limit);
+
+  if (related.length === 0) return null;
+
+  const visibleItems = related.slice(startIndex, startIndex + limit);
+  const canGoPrev = startIndex > 0;
+  const canGoNext = startIndex + limit < related.length;
+
+  return (
+    <div className="space-y-6">
+      <SectionHeader
+        title="Related Items"
+        description="Other items you might be interested in"
+      />
+      <div className="relative">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          {visibleItems.map((item) => (
+            <Card key={item.id} className="hover:shadow-lg transition-shadow">
+              <Link href={`/marketplace/${item.slug}`}>
+                <div className="relative w-full h-48">
+                  <Image
+                    src={item.image}
+                    alt={item.title}
+                    fill
+                    className="object-cover"
+                  />
+                </div>
+                <CardHeader>
+                  <CardTitle className="line-clamp-2 text-base">{item.title}</CardTitle>
+                  <CardDescription className="text-xs">{item.category}</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="flex items-center justify-between">
+                    <span className="text-lg font-bold">${item.price.toLocaleString()}</span>
+                    {item.authenticated && (
+                      <Badge variant="outline" className="text-xs">
+                        Verified
+                      </Badge>
+                    )}
+                  </div>
+                </CardContent>
+              </Link>
+            </Card>
+          ))}
+        </div>
+        {related.length > limit && (
+          <>
+            {canGoPrev && (
+              <Button
+                variant="outline"
+                size="icon"
+                className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4"
+                onClick={() => setStartIndex(Math.max(0, startIndex - limit))}
+              >
+                <ChevronLeft className="w-4 h-4" />
+              </Button>
+            )}
+            {canGoNext && (
+              <Button
+                variant="outline"
+                size="icon"
+                className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4"
+                onClick={() => setStartIndex(startIndex + limit)}
+              >
+                <ChevronRight className="w-4 h-4" />
+              </Button>
+            )}
+          </>
+        )}
+      </div>
+    </div>
+  );
+}
+
