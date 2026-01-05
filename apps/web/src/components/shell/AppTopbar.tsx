@@ -12,7 +12,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { ThemeToggle } from "./ThemeToggle";
 import { storage } from "@/lib/storage";
 import type { Session } from "@/lib/storage";
 import { User, LogOut, Settings } from "lucide-react";
@@ -56,7 +55,6 @@ export function AppTopbar() {
       <div className="flex items-center justify-between">
         <h1 className="text-xl font-semibold">Relique</h1>
         <div className="flex items-center gap-4">
-          <ThemeToggle />
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="flex items-center gap-2">

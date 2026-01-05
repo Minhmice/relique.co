@@ -7,12 +7,22 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { SectionHeader } from "@/components/sections/SectionHeader";
 import { marketplaceService } from "@/lib/services/marketplaceService";
+import type { MarketplaceListing } from "@/lib/schemas/marketplace";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export function FeaturedItems() {
   const [startIndex, setStartIndex] = useState(0);
-  const items = marketplaceService.list({}, { page: 1, limit: 10 }).data.slice(0, 6);
+  const [items, setItems] = useState<MarketplaceListing[]>([]);
+
+  useEffect(() => {
+    const loadItems = async () => {
+      const result = await marketplaceService.list({ page: 1, pageSize: 10 });
+      setItems(result.items.slice(0, 6));
+    };
+    loadItems();
+  }, []);
+
   const visibleItems = items.slice(startIndex, startIndex + 3);
   const canGoPrev = startIndex > 0;
   const canGoNext = startIndex + 3 < items.length;

@@ -14,7 +14,7 @@ type Props = {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const post = contentService.posts.get(slug);
+  const post = await contentService.posts.get(slug);
   
   if (!post) {
     return {
@@ -47,13 +47,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function PostDetailPage({ params }: Props) {
   const { slug } = await params;
   
-  const post = contentService.posts.get(slug);
+  const post = await contentService.posts.get(slug);
   
   if (!post) {
     notFound();
   }
 
-  const relatedPosts = contentService.posts.list(false, undefined)
+  const allPosts = await contentService.posts.list();
+  const relatedPosts = allPosts
     .filter((p) => p.id !== post.id && p.tags?.some(tag => post.tags?.includes(tag)))
     .slice(0, 3);
 

@@ -7,27 +7,16 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { QRScanInput } from "@/components/verify/QRScanInput";
 import { VerifyLoading } from "@/components/verify/VerifyLoading";
 import { VerifyResult } from "@/components/verify/VerifyResult";
-import { storage } from "@/lib/storage";
+import { verifyService } from "@/lib/services/verifyService";
 import { toast } from "sonner";
 import { Save } from "lucide-react";
-import type { VerifyHistoryEntry } from "@/lib/storage";
-
-type VerifyStatus = "qualified" | "inconclusive" | "disqualified";
-
-interface VerifyResultData {
-  productId: string;
-  itemName: string;
-  signatures: number;
-  status: VerifyStatus;
-  date: string;
-  certificate: string;
-}
+import type { VerifyResult as VerifyResultType } from "@/lib/schemas/verify";
 
 export default function VerifyPage() {
   const router = useRouter();
   const [productId, setProductId] = useState("");
   const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState<VerifyResultData | null>(null);
+  const [result, setResult] = useState<VerifyResultType | null>(null);
   const [saved, setSaved] = useState(false);
 
   const handleCodeScanned = (code: string) => {
@@ -42,51 +31,35 @@ export default function VerifyPage() {
     setLoading(true);
     setResult(null);
     setSaved(false);
+
+    try {
+      const verifyResult = await verifyService.run({
+        inputType: "code",
+        code: id,
+      });
+
+      setResult(verifyResult);
+    } catch (error) {
+      toast.error(
+        error instanceof Error ? error.message : "Verification failed"
+      );
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleLoadingComplete = () => {
-    const results: VerifyStatus[] = ["qualified", "inconclusive", "disqualified"];
-    const randomResult = results[Math.floor(Math.random() * results.length)] as VerifyStatus;
-    const itemName = `Authenticated Item ${productId}`;
-    const signatures = Math.floor(Math.random() * 3) + 1;
-    const certificate = productId.startsWith("REL-") ? productId : `REL-2024-${String(Math.floor(Math.random() * 1000)).padStart(3, "0")}`;
-    
-    const verifyResult: VerifyResultData = {
-      productId: productId || certificate,
-      itemName,
-      signatures,
-      status: randomResult,
-      date: new Date().toISOString(),
-      certificate,
-    };
-
-    setResult(verifyResult);
-    setLoading(false);
-  };
-
-  const handleSaveResult = () => {
+  const handleSaveResult = async () => {
     if (!result) return;
 
-    const history = storage.verifyHistory.get() as VerifyHistoryEntry[];
-    const entry: VerifyHistoryEntry = {
-      productId: result.productId,
-      result: result.status,
-      timestamp: new Date(result.date).getTime(),
-    };
-
-    const exists = history.some(h => h.productId === result.productId);
-    if (exists) {
-      const updated = history.map(h => 
-        h.productId === result.productId ? entry : h
+    try {
+      await verifyService.history.add(result);
+      setSaved(true);
+      toast.success("Result saved to your verification history");
+    } catch (error) {
+      toast.error(
+        error instanceof Error ? error.message : "Failed to save result"
       );
-      storage.verifyHistory.set(updated);
-    } else {
-      history.push(entry);
-      storage.verifyHistory.set(history);
     }
-
-    setSaved(true);
-    toast.success("Result saved to your verification history");
   };
 
   return (
@@ -113,7 +86,7 @@ export default function VerifyPage() {
       )}
 
       {loading && (
-        <VerifyLoading duration={5000} onComplete={handleLoadingComplete} />
+        <VerifyLoading duration={5000} onComplete={() => {}} />
       )}
 
       {result && !loading && (

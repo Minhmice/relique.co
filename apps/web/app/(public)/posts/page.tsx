@@ -1,19 +1,32 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { PostCard } from "@/components/content/PostCard";
 import { FeaturedPost } from "@/components/content/FeaturedPost";
 import { SectionHeader } from "@/components/sections/SectionHeader";
 import { Badge } from "@/components/ui/badge";
 import { contentService } from "@/lib/services/contentService";
-import type { Post } from "@/lib/types";
+import type { Post } from "@/lib/schemas/content";
 
 export default function PostsPage() {
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
+  const [allPosts, setAllPosts] = useState<Post[]>([]);
 
-  const allPosts = contentService.posts.list();
-  const featuredPost = allPosts.find((p) => p.featured) || allPosts[0];
-  const otherPosts = allPosts.filter((p) => p.id !== featuredPost?.id);
+  useEffect(() => {
+    const loadPosts = async () => {
+      const posts = await contentService.posts.list();
+      setAllPosts(posts);
+    };
+    loadPosts();
+  }, []);
+
+  const featuredPost = useMemo(() => {
+    return allPosts.find((p) => p.featured) || allPosts[0];
+  }, [allPosts]);
+
+  const otherPosts = useMemo(() => {
+    return allPosts.filter((p) => p.id !== featuredPost?.id);
+  }, [allPosts, featuredPost]);
 
   const tags = useMemo(() => {
     const allTags = new Set<string>();

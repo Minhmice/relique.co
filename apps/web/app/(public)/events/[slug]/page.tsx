@@ -14,7 +14,7 @@ type Props = {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const event = contentService.events.get(slug);
+  const event = await contentService.events.get(slug);
   
   if (!event) {
     return {
@@ -46,7 +46,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function EventDetailPage({ params }: Props) {
   const { slug } = await params;
   
-  const event = contentService.events.get(slug);
+  const event = await contentService.events.get(slug);
   
   if (!event) {
     notFound();
@@ -54,7 +54,8 @@ export default async function EventDetailPage({ params }: Props) {
 
   const eventDate = new Date(event.date);
   const isUpcoming = eventDate >= new Date();
-  const relatedEvents = contentService.events.list(false)
+  const allEvents = await contentService.events.list(false);
+  const relatedEvents = allEvents
     .filter((e) => e.id !== event.id && e.type === event.type)
     .slice(0, 3);
 

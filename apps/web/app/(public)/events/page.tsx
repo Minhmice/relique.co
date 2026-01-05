@@ -1,16 +1,29 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { EventCard } from "@/components/content/EventCard";
 import { EventTimeline } from "@/components/content/EventTimeline";
 import { SectionHeader } from "@/components/sections/SectionHeader";
 import { Button } from "@/components/ui/button";
 import { contentService } from "@/lib/services/contentService";
+import type { Event } from "@/lib/schemas/content";
 
 export default function EventsPage() {
   const [viewMode, setViewMode] = useState<"cards" | "timeline">("cards");
-  const allEvents = contentService.events.list();
-  const upcomingEvents = contentService.events.list(true);
+  const [allEvents, setAllEvents] = useState<Event[]>([]);
+  const [upcomingEvents, setUpcomingEvents] = useState<Event[]>([]);
+
+  useEffect(() => {
+    const loadEvents = async () => {
+      const [all, upcoming] = await Promise.all([
+        contentService.events.list(),
+        contentService.events.list(true),
+      ]);
+      setAllEvents(all);
+      setUpcomingEvents(upcoming);
+    };
+    loadEvents();
+  }, []);
 
   return (
     <div className="container mx-auto px-4 py-16">

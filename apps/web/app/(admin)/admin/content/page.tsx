@@ -8,7 +8,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { contentService } from "@/lib/services/contentService";
+import { adminService } from "@/lib/services/adminService";
 import type { Post, Event } from "@/lib/types";
 import { Plus, Pencil, Trash2 } from "lucide-react";
 import { toast } from "sonner";
@@ -25,28 +25,32 @@ export default function AdminContentPage() {
     loadData();
   }, []);
 
-  const loadData = () => {
-    setPosts(contentService.posts.list());
-    setEvents(contentService.events.list());
+  const loadData = async () => {
+    const [postsData, eventsData] = await Promise.all([
+      adminService.content.posts.list(),
+      adminService.content.events.list(),
+    ]);
+    setPosts(postsData);
+    setEvents(eventsData);
   };
 
-  const handleDeletePost = (id: string) => {
+  const handleDeletePost = async (id: string) => {
     if (confirm("Are you sure you want to delete this post?")) {
-      contentService.posts.delete(id);
-      loadData();
+      await adminService.content.posts.delete(id);
+      await loadData();
       toast.success("Post deleted");
     }
   };
 
-  const handleDeleteEvent = (id: string) => {
+  const handleDeleteEvent = async (id: string) => {
     if (confirm("Are you sure you want to delete this event?")) {
-      contentService.events.delete(id);
-      loadData();
+      await adminService.content.events.delete(id);
+      await loadData();
       toast.success("Event deleted");
     }
   };
 
-  const handleSubmitPost = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmitPost = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     
@@ -62,19 +66,19 @@ export default function AdminContentPage() {
     };
 
     if (editingPost) {
-      contentService.posts.update(editingPost.id, postData);
+      await adminService.content.posts.update(editingPost.id, postData);
       toast.success("Post updated");
     } else {
-      contentService.posts.create(postData);
+      await adminService.content.posts.create(postData);
       toast.success("Post created");
     }
 
     setIsPostDialogOpen(false);
     setEditingPost(null);
-    loadData();
+    await loadData();
   };
 
-  const handleSubmitEvent = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmitEvent = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     
@@ -90,16 +94,16 @@ export default function AdminContentPage() {
     };
 
     if (editingEvent) {
-      contentService.events.update(editingEvent.id, eventData);
+      await adminService.content.events.update(editingEvent.id, eventData);
       toast.success("Event updated");
     } else {
-      contentService.events.create(eventData);
+      await adminService.content.events.create(eventData);
       toast.success("Event created");
     }
 
     setIsEventDialogOpen(false);
     setEditingEvent(null);
-    loadData();
+    await loadData();
   };
 
   const postColumns = [

@@ -2,39 +2,46 @@
 
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { DataTable } from "@/components/sections/DataTable";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { marketplaceService } from "@/lib/services/marketplaceService";
-import type { MarketplaceListing } from "@/lib/types";
+import { adminService } from "@/lib/services/adminService";
+import type { MarketplaceListing } from "@/lib/schemas/marketplace";
 import { Plus, Pencil, Trash2 } from "lucide-react";
 import { toast } from "sonner";
+import { DataTable } from "@repo/ui";
+import type { ColumnDef } from "@tanstack/react-table";
 
 export default function AdminMarketplacePage() {
   const [listings, setListings] = useState<MarketplaceListing[]>([]);
   const [editingListing, setEditingListing] = useState<MarketplaceListing | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    loadListings();
+    void loadListings();
   }, []);
 
-  const loadListings = () => {
-    const result = marketplaceService.list({}, { page: 1, limit: 1000 });
-    setListings(result.data);
+  const loadListings = async () => {
+    setLoading(true);
+    try {
+      const result = await adminService.marketplace.list({ page: 1, pageSize: 1000 });
+      setListings(result.items);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleDelete = (id: string) => {
+  const handleDelete = async (id: string) => {
     if (confirm("Are you sure you want to delete this listing?")) {
-      marketplaceService.delete(id);
-      loadListings();
+      await adminService.marketplace.delete(id);
+      await loadListings();
       toast.success("Listing deleted");
     }
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     
@@ -52,23 +59,61 @@ export default function AdminMarketplacePage() {
     };
 
     if (editingListing) {
-      marketplaceService.update(editingListing.id, listingData);
+      await adminService.marketplace.update(editingListing.id, listingData);
       toast.success("Listing updated");
     } else {
-      marketplaceService.create(listingData);
+      await adminService.marketplace.create(listingData);
       toast.success("Listing created");
     }
 
     setIsDialogOpen(false);
     setEditingListing(null);
-    loadListings();
+    await loadListings();
   };
 
-  const columns = [
-    { key: "title", label: "Title", sortable: true },
-    { key: "category", label: "Category", sortable: true },
-    { key: "price", label: "Price", sortable: true, render: (value: number) => `$${value.toLocaleString()}` },
-    { key: "authenticated", label: "Status", sortable: true, render: (value: boolean) => value ? "Verified" : "Unverified" },
+  const columns: ColumnDef<MarketplaceListing>[] = [
+    { accessorKey: "title", header: "Title" },
+    { accessorKey: "category", header: "Category" },
+    {
+      accessorKey: "price",
+      header: "Price",
+      cell: ({ getValue }) => {
+        const value = Number(getValue() ?? 0);
+        return `$${value.toLocaleString()}`;
+      },
+    },
+    {
+      accessorKey: "authenticated",
+      header: "Status",
+      cell: ({ getValue }) => (getValue() ? "Verified" : "Unverified"),
+    },
+    {
+      id: "actions",
+      header: "Actions",
+      cell: ({ row }) => (
+        <div className="flex gap-2">
+          <Button
+            variant="ghost"
+            size="sm"
+            aria-label="Edit listing"
+            onClick={() => {
+              setEditingListing(row.original);
+              setIsDialogOpen(true);
+            }}
+          >
+            <Pencil className="w-4 h-4" />
+          </Button>
+          <Button
+            variant="ghost"
+            size="sm"
+            aria-label="Delete listing"
+            onClick={() => void handleDelete(row.original.id)}
+          >
+            <Trash2 className="w-4 h-4" />
+          </Button>
+        </div>
+      ),
+    },
   ];
 
   return (
@@ -157,32 +202,7 @@ export default function AdminMarketplacePage() {
         </Dialog>
       </div>
 
-      <DataTable
-        data={listings}
-        columns={columns}
-        searchable
-        actions={(row) => (
-          <div className="flex gap-2">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => {
-                setEditingListing(row);
-                setIsDialogOpen(true);
-              }}
-            >
-              <Pencil className="w-4 h-4" />
-            </Button>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => handleDelete(row.id)}
-            >
-              <Trash2 className="w-4 h-4" />
-            </Button>
-          </div>
-        )}
-      />
+      <DataTable data={listings} columns={columns} loading={loading} />
     </div>
   );
 }

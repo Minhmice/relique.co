@@ -14,13 +14,16 @@ export default function AdminDashboardPage() {
   });
 
   useEffect(() => {
-    const adminStats = adminService.getStats();
-    setStats({
-      totalListings: adminStats.totalListings,
-      totalPosts: adminStats.totalPosts,
-      totalEvents: adminStats.totalEvents,
-      totalSubmissions: adminStats.totalSubmissions,
-    });
+    const loadStats = async () => {
+      const adminStats = await adminService.getStats();
+      setStats({
+        totalListings: adminStats.totalListings,
+        totalPosts: adminStats.totalPosts,
+        totalEvents: adminStats.totalEvents,
+        totalSubmissions: adminStats.totalSubmissions,
+      });
+    };
+    loadStats();
   }, []);
 
   return (

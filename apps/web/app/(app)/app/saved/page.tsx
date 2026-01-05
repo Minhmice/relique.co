@@ -2,104 +2,97 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { FavoriteButton } from "@/components/marketplace/FavoriteButton";
-import { EmptyState } from "@/components/shared/EmptyState";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { EmptyState } from "@repo/ui";
 import { marketplaceService } from "@/lib/services/marketplaceService";
-import { storage } from "@/lib/storage";
-
-const FAVORITES_KEY = "relique_favorites";
-
-function getFavorites(): string[] {
-  if (typeof window === "undefined") return [];
-  const data = localStorage.getItem(FAVORITES_KEY);
-  return data ? JSON.parse(data) : [];
-}
+import type { MarketplaceListing } from "@/lib/schemas/marketplace";
+import { Media } from "@repo/ui";
 
 export default function SavedPage() {
-  const [favoriteIds, setFavoriteIds] = useState<string[]>([]);
-  const [favorites, setFavorites] = useState<any[]>([]);
+  const [favorites, setFavorites] = useState<MarketplaceListing[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const ids = getFavorites();
-    setFavoriteIds(ids);
+    const loadFavorites = async () => {
+      try {
+        const favoriteIds = await marketplaceService.getFavorites();
+        
+        if (favoriteIds.length === 0) {
+          setFavorites([]);
+          return;
+        }
+        
+        // Load all items and filter by favorites
+        const result = await marketplaceService.list();
+        const favoriteItems = result.items.filter((item) =>
+          favoriteIds.includes(item.id)
+        );
+        
+        setFavorites(favoriteItems);
+      } catch (error) {
+        console.error("Failed to load favorites:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
     
-    const allListings = marketplaceService.list({}, { page: 1, limit: 1000 }).data;
-    const favoriteItems = allListings.filter(item => ids.includes(item.id));
-    setFavorites(favoriteItems);
+    loadFavorites();
   }, []);
 
-  const handleRemoveFavorite = (itemId: string) => {
-    const newFavorites = favoriteIds.filter(id => id !== itemId);
-    localStorage.setItem(FAVORITES_KEY, JSON.stringify(newFavorites));
-    setFavoriteIds(newFavorites);
-    setFavorites(favorites.filter(item => item.id !== itemId));
-  };
-
-  if (favorites.length === 0) {
+  if (isLoading) {
     return (
-      <div className="container mx-auto px-4 py-16">
-        <div className="max-w-2xl mx-auto">
-          <h1 className="text-h1 mb-4">Saved Items</h1>
-          <EmptyState
-            title="No saved items"
-            description="Items you save will appear here"
-          />
+      <div className="space-y-6">
+        <div>
+          <h1 className="text-h1">Saved Items</h1>
+          <p className="text-muted-foreground mt-2">Loading...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="container mx-auto px-4 py-16">
-      <div className="space-y-8">
-        <div>
-          <h1 className="text-h1">Saved Items</h1>
-          <p className="text-muted-foreground mt-2">
-            Your favorite collectibles and memorabilia
-          </p>
-        </div>
+    <div className="space-y-6">
+      <div>
+        <h1 className="text-h1">Saved Items</h1>
+        <p className="text-muted-foreground mt-2">
+          Your favorite items from the marketplace
+        </p>
+      </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {favorites.length === 0 ? (
+        <EmptyState
+          title="No saved items"
+          description="Start saving items from the marketplace to see them here."
+          action={
+            <Link href="/marketplace">
+              <button className="inline-flex items-center justify-center rounded-none bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90">
+                Browse Marketplace
+              </button>
+            </Link>
+          }
+        />
+      ) : (
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {favorites.map((item) => (
-            <Card key={item.id} className="h-full hover:shadow-lg transition-shadow flex flex-col">
-              <Link href={`/marketplace/${item.slug}`} className="flex-1 flex flex-col">
-                <div className="relative w-full h-64">
-                  <Image
-                    src={item.image}
-                    alt={item.title}
-                    fill
-                    className="object-cover"
-                  />
-                  <div className="absolute top-2 right-2" onClick={(e) => e.preventDefault()}>
-                    <FavoriteButton itemId={item.id} />
-                  </div>
-                </div>
+            <Link key={item.id} href={`/marketplace/${item.slug}`}>
+              <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+                <Media src={item.image} alt={item.title} ratio="1:1" fit="cover" />
                 <CardHeader>
                   <CardTitle className="line-clamp-2">{item.title}</CardTitle>
-                  <CardDescription>{item.category}</CardDescription>
-                </CardHeader>
-                <CardContent className="flex-1">
-                  <p className="text-sm text-muted-foreground line-clamp-2">
+                  <CardDescription className="line-clamp-2">
                     {item.description}
-                  </p>
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold">
+                    ${item.price.toLocaleString()}
+                  </div>
                 </CardContent>
-                <CardFooter className="flex justify-between items-center">
-                  <span className="text-2xl font-bold">${item.price.toLocaleString()}</span>
-                  {item.authenticated && (
-                    <Badge variant="outline" className="bg-green-100 dark:bg-green-900 border-green-500">
-                      Verified
-                    </Badge>
-                  )}
-                </CardFooter>
-              </Link>
-            </Card>
+              </Card>
+            </Link>
           ))}
         </div>
-      </div>
+      )}
     </div>
   );
 }
-

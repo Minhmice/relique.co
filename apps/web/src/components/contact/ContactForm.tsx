@@ -3,17 +3,8 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+import { Form, FormField, FormItem, FormLabel, FormMessage, TextField, TextareaField } from "@repo/ui";
 import { contactSchema, type ContactFormData } from "@/lib/validations/contactSchema";
 import { toast } from "sonner";
 import { useState } from "react";
@@ -57,9 +48,7 @@ export function ContactForm() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Name *</FormLabel>
-                  <FormControl>
-                    <Input {...field} />
-                  </FormControl>
+                  <TextField {...field} />
                   <FormMessage />
                 </FormItem>
               )}
@@ -70,9 +59,7 @@ export function ContactForm() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Email *</FormLabel>
-                  <FormControl>
-                    <Input type="email" {...field} />
-                  </FormControl>
+                  <TextField type="email" {...field} />
                   <FormMessage />
                 </FormItem>
               )}
@@ -83,9 +70,7 @@ export function ContactForm() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Message *</FormLabel>
-                  <FormControl>
-                    <Textarea rows={6} {...field} />
-                  </FormControl>
+                  <TextareaField rows={6} {...field} />
                   <FormMessage />
                 </FormItem>
               )}

@@ -1,9 +1,21 @@
+"use client";
+
+import { useState, useEffect } from "react";
 import { PostCard } from "@/components/content/PostCard";
 import { SectionHeader } from "@/components/sections/SectionHeader";
 import { contentService } from "@/lib/services/contentService";
+import type { Post } from "@/lib/schemas/content";
 
 export function FeaturedPosts() {
-  const posts = contentService.posts.list(true).slice(0, 3);
+  const [posts, setPosts] = useState<Post[]>([]);
+
+  useEffect(() => {
+    const loadPosts = async () => {
+      const allPosts = await contentService.posts.list({ featured: true });
+      setPosts(allPosts.slice(0, 3));
+    };
+    loadPosts();
+  }, []);
 
   if (posts.length === 0) return null;
 

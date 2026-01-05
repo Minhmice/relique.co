@@ -6,7 +6,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { ThemeToggle } from "@/components/shell/ThemeToggle";
 import { storage } from "@/lib/storage";
 import type { Session } from "@/lib/storage";
 import { toast } from "sonner";
@@ -103,10 +102,10 @@ export default function ProfilePage() {
               <div>
                 <Label>Theme</Label>
                 <p className="text-sm text-muted-foreground">
-                  Switch between light and dark mode
+                  Dark mode is enforced across the product.
                 </p>
               </div>
-              <ThemeToggle />
+              <span className="text-sm font-medium">Dark</span>
             </div>
           </CardContent>
         </Card>

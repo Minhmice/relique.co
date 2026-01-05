@@ -9,23 +9,35 @@ import Image from "next/image";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { FavoriteButton } from "@/components/marketplace/FavoriteButton";
-import { MarketplaceSort, type SortOption } from "@/components/marketplace/MarketplaceSort";
+import { MarketplaceSort } from "@/components/marketplace/MarketplaceSort";
+import type { SortOption as UISortOption } from "@/components/marketplace/MarketplaceSort";
+import type { SortOption } from "@/lib/schemas/marketplace";
 import { MarketplaceSearch } from "@/components/marketplace/MarketplaceSearch";
 import { AdvancedFilters } from "@/components/marketplace/AdvancedFilters";
 import { Pagination } from "@/components/marketplace/Pagination";
-import { EmptyState } from "@/components/shared/EmptyState";
+import { EmptyState } from "@repo/ui";
 import { LoadingState } from "@/components/shared/LoadingState";
 import { marketplaceService } from "@/lib/services/marketplaceService";
 import type { MarketplaceFilters } from "@/lib/types";
+import type { MarketplaceListing } from "@/lib/schemas/marketplace";
 import { Grid, List } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 function MarketplacePageContent() {
   const searchParams = useSearchParams();
-  const [sortBy, setSortBy] = useState<SortOption>("newest");
+  const [sortBy, setSortBy] = useState<UISortOption>("newest");
   const [filters, setFilters] = useState<MarketplaceFilters>({});
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [loading, setLoading] = useState(true);
+  const [items, setItems] = useState<MarketplaceListing[]>([]);
+  const [totalPages, setTotalPages] = useState(1);
+  const [availableOptions, setAvailableOptions] = useState({
+    sports: [] as string[],
+    categories: [] as string[],
+    signedBy: [] as string[],
+    statuses: [] as string[],
+    coaIssuers: [] as string[],
+  });
 
   const page = parseInt(searchParams.get("page") || "1", 10);
   const search = searchParams.get("search") || "";
@@ -47,40 +59,50 @@ function MarketplacePageContent() {
     setLoading(false);
   }, [searchParamsString, search]);
 
-  const result = useMemo(() => {
-    const combinedFilters = { ...filters, search };
-    return marketplaceService.list(combinedFilters, { page, limit: 12 });
-  }, [filters, search, page]);
-
-  const availableOptions = useMemo(() => {
-    const allListings = marketplaceService.list({}, { page: 1, limit: 1000 }).data;
-    return {
-      sports: Array.from(new Set(allListings.filter(l => l.category.toLowerCase().includes("sports")).map(l => "Sports"))),
-      categories: Array.from(new Set(allListings.map(l => l.category))),
-      signedBy: Array.from(new Set(allListings.map(l => l.signedBy).filter((v): v is string => Boolean(v)))),
-      statuses: Array.from(new Set(allListings.map(l => l.status).filter((v): v is NonNullable<typeof v> => Boolean(v)))),
-      coaIssuers: Array.from(new Set(allListings.map(l => l.coaIssuer).filter((v): v is string => Boolean(v)))),
+  useEffect(() => {
+    const loadData = async () => {
+      // Map UI sort option to service sort option
+      const mapSort = (uiSort: UISortOption): SortOption | undefined => {
+        switch (uiSort) {
+          case "newest": return "newest";
+          case "highest-bids": return "price-desc";
+          case "price-low": return "price-asc";
+          case "price-high": return "price-desc";
+          default: return undefined;
+        }
+      };
+      
+      const params = {
+        q: search,
+        filters,
+        sort: mapSort(sortBy),
+        page,
+        pageSize: 12,
+      };
+      const result = await marketplaceService.list(params);
+      setItems(result.items);
+      setTotalPages(result.pageInfo.totalPages);
     };
-  }, []); // Empty deps - only compute once on mount
+    loadData();
+  }, [filters, search, sortBy, page]);
 
-  const sortedItems = useMemo(() => {
-    let items = [...result.data];
-    switch (sortBy) {
-      case "newest":
-        items.sort((a, b) => (b.createdAt || "").localeCompare(a.createdAt || ""));
-        break;
-      case "highest-bids":
-        items.sort((a, b) => b.price - a.price);
-        break;
-      case "price-low":
-        items.sort((a, b) => a.price - b.price);
-        break;
-      case "price-high":
-        items.sort((a, b) => b.price - a.price);
-        break;
-    }
-    return items;
-  }, [result.data, sortBy]);
+  useEffect(() => {
+    const loadOptions = async () => {
+      const result = await marketplaceService.list({ page: 1, pageSize: 1000 });
+      const allListings = result.items;
+      setAvailableOptions({
+        sports: Array.from(new Set(allListings.filter(l => l.category.toLowerCase().includes("sports")).map(l => "Sports"))),
+        categories: Array.from(new Set(allListings.map(l => l.category))),
+        signedBy: Array.from(new Set(allListings.map(l => l.signedBy).filter((v): v is string => Boolean(v)))),
+        statuses: Array.from(new Set(allListings.map(l => l.status).filter((v): v is NonNullable<typeof v> => Boolean(v)))),
+        coaIssuers: Array.from(new Set(allListings.map(l => l.coaIssuer).filter((v): v is string => Boolean(v)))),
+      });
+    };
+    loadOptions();
+  }, []);
+
+  // Client-side sorting is handled by the service, but we keep this for consistency
+  const sortedItems = items;
 
   if (loading) {
     return <LoadingState />;
@@ -212,7 +234,7 @@ function MarketplacePageContent() {
                 ))}
               </div>
             )}
-            <Pagination currentPage={page} totalPages={result.totalPages} />
+            <Pagination currentPage={page} totalPages={totalPages} />
           </>
         )}
       </div>

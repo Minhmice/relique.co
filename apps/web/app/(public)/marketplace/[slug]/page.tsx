@@ -16,7 +16,7 @@ type Props = {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const listing = marketplaceService.get(slug);
+  const listing = await marketplaceService.getBySlug(slug);
   
   if (!listing) {
     return {
@@ -47,7 +47,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function MarketplaceDetailPage({ params }: Props) {
   const { slug } = await params;
   
-  const listing = marketplaceService.get(slug);
+  const listing = await marketplaceService.getBySlug(slug);
   
   if (!listing) {
     notFound();

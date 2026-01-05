@@ -51,34 +51,41 @@ export function ConsignForm() {
   const debouncedFormData = useDebounce(formData, 1000);
 
   useEffect(() => {
-    const draft = consignService.getDraft();
-    if (draft && draft.status === "draft") {
-      form.reset({
-        name: draft.name || "",
-        email: draft.email || "",
-        phone: draft.phone || "",
-        country: draft.country || "",
-        itemDescription: draft.itemDescription || "",
-        category: draft.category || "",
-        estimatedValue: draft.estimatedValue,
-        coaIssuer: draft.coaIssuer || "",
-        howDidYouHear: draft.howDidYouHear || "",
-        consent: false,
-      });
-    }
+    const loadDraft = async () => {
+      const drafts = await consignService.drafts.list();
+      const latestDraft = drafts.sort((a, b) => b.timestamp - a.timestamp)[0];
+      if (latestDraft && latestDraft.status === "draft") {
+        form.reset({
+          name: latestDraft.name || "",
+          email: latestDraft.email || "",
+          phone: latestDraft.phone || "",
+          country: latestDraft.country || "",
+          itemDescription: latestDraft.itemDescription || "",
+          category: latestDraft.category || "",
+          estimatedValue: latestDraft.estimatedValue,
+          coaIssuer: latestDraft.coaIssuer || "",
+          howDidYouHear: latestDraft.howDidYouHear || "",
+          consent: false,
+        });
+      }
+    };
+    loadDraft();
   }, [form]);
 
   useEffect(() => {
     if (debouncedFormData.name || debouncedFormData.email || debouncedFormData.itemDescription) {
-      consignService.saveDraft({
-        ...debouncedFormData,
-        files: files.map(f => ({ name: f.name, size: f.size, type: f.type })),
-      });
-      setLastSaved(new Date());
+      const saveDraft = async () => {
+        await consignService.drafts.save({
+          ...debouncedFormData,
+          files: files.map(f => ({ name: f.name, size: f.size, type: f.type })),
+        });
+        setLastSaved(new Date());
+      };
+      saveDraft();
     }
   }, [debouncedFormData, files]);
 
-  const handleLoadDraft = useCallback((draft: ConsignSubmission) => {
+  const handleLoadDraft = useCallback((draft: import("@/lib/schemas/consign").ConsignDraft) => {
     form.reset({
       name: draft.name || "",
       email: draft.email || "",
@@ -102,7 +109,7 @@ export function ConsignForm() {
     setIsSubmitting(true);
     
     try {
-      const submission = consignService.submit();
+      const submission = await consignService.submitMock();
       if (submission) {
         toast.success("Consignment form submitted successfully!");
         setTimeout(() => {
@@ -167,8 +174,8 @@ export function ConsignForm() {
             <Button
               type="button"
               variant="outline"
-              onClick={() => {
-                consignService.saveDraft({
+              onClick={async () => {
+                await consignService.drafts.save({
                   ...form.getValues(),
                   files: files.map(f => ({ name: f.name, size: f.size, type: f.type })),
                 });

@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { marketplaceService } from "@/lib/services/marketplaceService";
 
 interface FavoriteButtonProps {
   itemId: string;
@@ -12,26 +13,31 @@ interface FavoriteButtonProps {
 
 export function FavoriteButton({ itemId, className }: FavoriteButtonProps) {
   const [isFavorite, setIsFavorite] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    const favorites = getFavorites();
-    setIsFavorite(favorites.includes(itemId));
+    const loadFavorites = async () => {
+      try {
+        const favorites = await marketplaceService.getFavorites();
+        setIsFavorite(favorites.includes(itemId));
+      } catch (error) {
+        console.error("Failed to load favorites:", error);
+      }
+    };
+    
+    loadFavorites();
   }, [itemId]);
 
-  const getFavorites = (): string[] => {
-    if (typeof window === "undefined") return [];
-    const data = localStorage.getItem("relique_favorites");
-    return data ? JSON.parse(data) : [];
-  };
-
-  const toggleFavorite = () => {
-    const favorites = getFavorites();
-    const newFavorites = isFavorite
-      ? favorites.filter((id) => id !== itemId)
-      : [...favorites, itemId];
-    
-    localStorage.setItem("relique_favorites", JSON.stringify(newFavorites));
-    setIsFavorite(!isFavorite);
+  const toggleFavorite = async () => {
+    setIsLoading(true);
+    try {
+      await marketplaceService.toggleFavorite(itemId);
+      setIsFavorite(!isFavorite);
+    } catch (error) {
+      console.error("Failed to toggle favorite:", error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -39,7 +45,9 @@ export function FavoriteButton({ itemId, className }: FavoriteButtonProps) {
       variant="ghost"
       size="icon"
       onClick={toggleFavorite}
+      disabled={isLoading}
       className={cn("h-8 w-8", className)}
+      aria-label={isFavorite ? "Remove from favorites" : "Add to favorites"}
     >
       <Heart
         className={cn(
@@ -50,4 +58,3 @@ export function FavoriteButton({ itemId, className }: FavoriteButtonProps) {
     </Button>
   );
 }
-

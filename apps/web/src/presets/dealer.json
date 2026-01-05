@@ -1,0 +1,42 @@
+{
+  "dataset": {
+    "marketplace": [],
+    "posts": [],
+    "events": []
+  },
+  "userState": {
+    "favorites": [],
+    "verifyHistory": [],
+    "drafts": [
+      {
+        "name": "John Doe",
+        "email": "john@example.com",
+        "itemDescription": "Vintage signed baseball",
+        "status": "draft",
+        "timestamp": 1704067200000
+      },
+      {
+        "name": "Jane Smith",
+        "email": "jane@example.com",
+        "itemDescription": "Rare autographed jersey",
+        "status": "draft",
+        "timestamp": 1704153600000
+      }
+    ]
+  },
+  "verifyMapping": {
+    "RLQ-QUAL-*": {
+      "status": "qualified",
+      "signatures": 2
+    },
+    "RLQ-INCON-*": {
+      "status": "inconclusive",
+      "signatures": 1
+    },
+    "RLQ-DISQ-*": {
+      "status": "disqualified",
+      "signatures": 0
+    }
+  }
+}
+

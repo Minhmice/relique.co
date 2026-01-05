@@ -10,7 +10,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { ThemeToggle } from "./ThemeToggle";
 import { storage } from "@/lib/storage";
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
@@ -37,9 +36,9 @@ export function Header() {
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
-        <Link href="/" className="flex items-center space-x-2">
+        <Link href="/" className="flex items-center space-x-2 overflow-hidden">
           <Image
-            src="/brand/logo_1.svg"
+            src="/logo.svg"
             alt="Relique"
             width={120}
             height={40}
@@ -86,7 +85,6 @@ export function Header() {
         </nav>
 
         <div className="flex items-center space-x-2">
-          <ThemeToggle />
           {mounted && session ? (
             <Button asChild variant="outline">
               <Link href="/app">Account</Link>

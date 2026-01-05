@@ -4,144 +4,150 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { StatRow } from "@/components/sections/StatRow";
-import { storage } from "@/lib/storage";
+import { Heart, FileText, ShoppingBag, CheckCircle2 } from "lucide-react";
+import { marketplaceService } from "@/lib/services/marketplaceService";
 import { consignService } from "@/lib/services/consignService";
-import type { Session } from "@/lib/storage";
-import type { VerifyHistoryEntry } from "@/lib/storage";
-
-const FAVORITES_KEY = "relique_favorites";
-
-function getFavoritesCount(): number {
-  if (typeof window === "undefined") return 0;
-  const data = localStorage.getItem(FAVORITES_KEY);
-  return data ? JSON.parse(data).length : 0;
-}
+import { verifyService } from "@/lib/services/verifyService";
 
 export default function AppDashboardPage() {
-  const [session, setSession] = useState<Session | null>(null);
-  const [stats, setStats] = useState({
-    favorites: 0,
-    consignments: 0,
-    verifications: 0,
-  });
+  const [favoritesCount, setFavoritesCount] = useState(0);
+  const [submissionsCount, setSubmissionsCount] = useState(0);
+  const [verifyHistoryCount, setVerifyHistoryCount] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const currentSession = storage.session.get();
-    setSession(currentSession);
-
-    const favorites = getFavoritesCount();
-    const consignments = consignService.list("submitted").length;
-    const verifyHistory = (storage.verifyHistory.get() as VerifyHistoryEntry[]).length;
-
-    setStats({
-      favorites,
-      consignments,
-      verifications: verifyHistory,
-    });
+    const loadData = async () => {
+      try {
+        const [favorites, submissions, history] = await Promise.all([
+          marketplaceService.getFavorites(),
+          consignService.list("submitted"),
+          verifyService.history.list(),
+        ]);
+        
+        setFavoritesCount(favorites.length);
+        setSubmissionsCount(submissions.length);
+        setVerifyHistoryCount(history.length);
+      } catch (error) {
+        console.error("Failed to load dashboard data:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    
+    loadData();
   }, []);
 
-  if (!session) {
+  if (isLoading) {
     return (
-      <div className="container mx-auto px-4 py-16">
-        <p>Loading...</p>
+      <div className="space-y-6">
+        <div>
+          <h1 className="text-h1">Dashboard</h1>
+          <p className="text-muted-foreground mt-2">Loading...</p>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="container mx-auto px-4 py-16">
-      <div className="space-y-8">
-        <div>
-          <h1 className="text-h1">
-            Welcome back, {session.userName}!
-          </h1>
-          <p className="text-muted-foreground mt-2">
-            Manage your submissions, listings, and verifications
-          </p>
-        </div>
+    <div className="space-y-6">
+      <div>
+        <h1 className="text-h1">Dashboard</h1>
+        <p className="text-muted-foreground mt-2">
+          Welcome back! Here's an overview of your account.
+        </p>
+      </div>
 
-        <StatRow
-          stats={[
-            { value: stats.favorites, label: "Saved Items" },
-            { value: stats.consignments, label: "Consignments" },
-            { value: stats.verifications, label: "Verifications" },
-          ]}
-        />
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Saved Items</CardTitle>
+            <Heart className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{favoritesCount}</div>
+            <p className="text-xs text-muted-foreground">
+              Items in your favorites
+            </p>
+          </CardContent>
+        </Card>
 
-        <div className="grid md:grid-cols-3 gap-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>Quick Actions</CardTitle>
-              <CardDescription>Common tasks</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-2">
-              <Button asChild variant="outline" className="w-full justify-start">
-                <Link href="/verify">Verify an Item</Link>
-              </Button>
-              <Button asChild variant="outline" className="w-full justify-start">
-                <Link href="/consign">Submit for Consignment</Link>
-              </Button>
-              <Button asChild variant="outline" className="w-full justify-start">
-                <Link href="/app/saved">View Saved Items</Link>
-              </Button>
-              <Button asChild variant="outline" className="w-full justify-start">
-                <Link href="/app/submissions">View Submissions</Link>
-              </Button>
-            </CardContent>
-          </Card>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Submissions</CardTitle>
+            <FileText className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{submissionsCount}</div>
+            <p className="text-xs text-muted-foreground">
+              Consignment submissions
+            </p>
+          </CardContent>
+        </Card>
 
-          <Card>
-            <CardHeader>
-              <CardTitle>Account Info</CardTitle>
-              <CardDescription>Your account details</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-2">
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">Email:</span>
-                <span>{session.userEmail}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">Login Method:</span>
-                <span className="capitalize">{session.loginMethod.replace("-", " ")}</span>
-              </div>
-            </CardContent>
-          </Card>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Verifications</CardTitle>
+            <CheckCircle2 className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{verifyHistoryCount}</div>
+            <p className="text-xs text-muted-foreground">
+              Verification history
+            </p>
+          </CardContent>
+        </Card>
 
-          <Card>
-            <CardHeader>
-              <CardTitle>Recent Activity</CardTitle>
-              <CardDescription>Your latest actions</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-2 text-sm">
-                {stats.verifications > 0 && (
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">Verifications:</span>
-                    <span>{stats.verifications}</span>
-                  </div>
-                )}
-                {stats.consignments > 0 && (
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">Consignments:</span>
-                    <span>{stats.consignments}</span>
-                  </div>
-                )}
-                {stats.favorites > 0 && (
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">Saved Items:</span>
-                    <span>{stats.favorites}</span>
-                  </div>
-                )}
-                {stats.verifications === 0 && stats.consignments === 0 && stats.favorites === 0 && (
-                  <p className="text-muted-foreground text-center py-4">
-                    No activity yet
-                  </p>
-                )}
-              </div>
-            </CardContent>
-          </Card>
-        </div>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Marketplace</CardTitle>
+            <ShoppingBag className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <Link href="/marketplace">
+              <Button variant="outline" className="w-full">
+                Browse Items
+              </Button>
+            </Link>
+          </CardContent>
+        </Card>
+      </div>
+
+      <div className="grid gap-4 md:grid-cols-2">
+        <Card>
+          <CardHeader>
+            <CardTitle>Quick Actions</CardTitle>
+            <CardDescription>Common tasks and shortcuts</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-2">
+            <Link href="/verify">
+              <Button variant="outline" className="w-full justify-start">
+                Verify Product
+              </Button>
+            </Link>
+            <Link href="/consign">
+              <Button variant="outline" className="w-full justify-start">
+                Consign Item
+              </Button>
+            </Link>
+            <Link href="/marketplace">
+              <Button variant="outline" className="w-full justify-start">
+                Browse Marketplace
+              </Button>
+            </Link>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Recent Activity</CardTitle>
+            <CardDescription>Your latest actions</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <p className="text-sm text-muted-foreground">
+              No recent activity to display.
+            </p>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );

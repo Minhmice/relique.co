@@ -6,10 +6,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { EmptyState } from "@/components/shared/EmptyState";
+import { EmptyState } from "@repo/ui";
 import { consignService } from "@/lib/services/consignService";
 import { storage } from "@/lib/storage";
-import type { ConsignSubmission } from "@/lib/types";
+import type { ConsignSubmission } from "@/lib/schemas/consign";
 import type { VerifyHistoryEntry } from "@/lib/storage";
 import Link from "next/link";
 
@@ -18,11 +18,14 @@ export default function SubmissionsPage() {
   const [verifyHistory, setVerifyHistory] = useState<VerifyHistoryEntry[]>([]);
 
   useEffect(() => {
-    const submissions = consignService.list("submitted");
-    setConsignSubmissions(submissions);
-    
-    const history = storage.verifyHistory.get() as VerifyHistoryEntry[];
-    setVerifyHistory(history);
+    const loadData = async () => {
+      const submissions = await consignService.list("submitted");
+      setConsignSubmissions(submissions);
+      
+      const history = storage.verifyHistory.get() as VerifyHistoryEntry[];
+      setVerifyHistory(history);
+    };
+    loadData();
   }, []);
 
   return (

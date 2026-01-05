@@ -6,10 +6,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { SectionHeader } from "@/components/sections/SectionHeader";
 import { marketplaceService } from "@/lib/services/marketplaceService";
-import type { MarketplaceListing } from "@/lib/types";
+import type { MarketplaceListing } from "@/lib/schemas/marketplace";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 interface RelatedItemsProps {
   currentListing: MarketplaceListing;
@@ -18,16 +18,24 @@ interface RelatedItemsProps {
 
 export function RelatedItems({ currentListing, limit = 4 }: RelatedItemsProps) {
   const [startIndex, setStartIndex] = useState(0);
+  const [related, setRelated] = useState<MarketplaceListing[]>([]);
 
-  const related = marketplaceService
-    .list(
-      {
-        category: currentListing.category,
-      },
-      { page: 1, limit: 20 }
-    )
-    .data.filter((item) => item.id !== currentListing.id)
-    .slice(0, limit);
+  useEffect(() => {
+    const loadRelated = async () => {
+      const result = await marketplaceService.list({
+        filters: {
+          category: currentListing.category,
+        },
+        page: 1,
+        pageSize: 20,
+      });
+      const filtered = result.items
+        .filter((item) => item.id !== currentListing.id)
+        .slice(0, limit);
+      setRelated(filtered);
+    };
+    loadRelated();
+  }, [currentListing.id, currentListing.category, limit]);
 
   if (related.length === 0) return null;
 

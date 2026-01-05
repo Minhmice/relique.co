@@ -1,0 +1,27 @@
+{
+  "dataset": {
+    "marketplace": [],
+    "posts": [],
+    "events": []
+  },
+  "userState": {
+    "favorites": [],
+    "verifyHistory": [],
+    "drafts": []
+  },
+  "verifyMapping": {
+    "RLQ-QUAL-*": {
+      "status": "qualified",
+      "signatures": 2
+    },
+    "RLQ-INCON-*": {
+      "status": "inconclusive",
+      "signatures": 1
+    },
+    "RLQ-DISQ-*": {
+      "status": "disqualified",
+      "signatures": 0
+    }
+  }
+}
+
