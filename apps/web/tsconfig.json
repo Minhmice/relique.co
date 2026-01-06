@@ -11,6 +11,10 @@
       "@/*": ["./src/*"]
     }
   },
+  "references": [
+    { "path": "../../packages/shared" },
+    { "path": "../../packages/ui" }
+  ],
   "include": [
     "**/*.ts",
     "**/*.tsx",

@@ -1,9 +1,21 @@
+import type { Metadata } from "next";
 import { HeroSection } from "@/components/home/HeroSection";
+import { FeatureSection } from "@/components/home/FeatureSection";
 import { FeaturedItems } from "@/components/home/FeaturedItems";
 import { FeaturedPosts } from "@/components/home/FeaturedPosts";
 import { UpcomingEvents } from "@/components/home/UpcomingEvents";
 import teamData from "@/mocks/team.json";
 import { Container, PartnerStrip, QuickActions, Section, TeamGrid } from "@repo/ui";
+
+export const metadata: Metadata = {
+  title: "Relique - Probabilistic Authentication for Collectibles",
+  description: "Trusted authentication for memorabilia and collectibles. Verify, browse, and consign authenticated items.",
+  openGraph: {
+    title: "Relique - Probabilistic Authentication for Collectibles",
+    description: "Trusted authentication for memorabilia and collectibles",
+    type: "website",
+  },
+};
 
 const partners = [
   { name: "PSA", logo: "/brand/logo_1.svg" },
@@ -17,6 +29,8 @@ export default function HomePage() {
       <HeroSection />
       
       <Container className="space-y-24">
+        <FeatureSection />
+        
         <Section size="md">
           <div className="space-y-6">
             <div className="text-center space-y-2">
@@ -50,12 +64,6 @@ export default function HomePage() {
           </div>
         </Section>
         
-        <FeaturedItems />
-        
-        <FeaturedPosts />
-        
-        <UpcomingEvents />
-        
         <Section size="md">
           <PartnerStrip
             title="Trusted Partners"
@@ -74,6 +82,12 @@ export default function HomePage() {
             }))}
           />
         </Section>
+        
+        <FeaturedItems />
+        
+        <FeaturedPosts />
+        
+        <UpcomingEvents />
       </Container>
     </div>
   );

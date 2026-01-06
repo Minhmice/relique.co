@@ -1,7 +1,12 @@
+"use client";
+
 import { ResultTable } from "@/components/shared/ResultTable";
 import { StatusExplanations } from "./StatusExplanations";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Share2, Printer } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { toast } from "sonner";
 
 type VerifyStatus = "qualified" | "inconclusive" | "disqualified";
 
@@ -37,10 +42,50 @@ export function VerifyResult({
 
   const config = statusConfig[status];
 
+  const handleShare = () => {
+    const url = `${window.location.origin}/verify?code=${encodeURIComponent(productId)}&result=${status}`;
+    if (navigator.share) {
+      navigator.share({
+        title: `Verification Result: ${itemName}`,
+        text: `Product ${productId} verification result: ${config.label}`,
+        url,
+      }).catch(() => {
+        copyToClipboard(url);
+      });
+    } else {
+      copyToClipboard(url);
+    }
+  };
+
+  const copyToClipboard = (text: string) => {
+    navigator.clipboard.writeText(text).then(() => {
+      toast.success("Link copied to clipboard");
+    }).catch(() => {
+      toast.error("Failed to copy link");
+    });
+  };
+
+  const handlePrint = () => {
+    window.print();
+  };
+
   return (
-    <div className="space-y-8">
-      <div>
-        <h2 className="text-h2 mb-6">Authentication Result</h2>
+    <div className="space-y-8 print:space-y-4">
+      <div className="flex items-center justify-between print:hidden">
+        <h2 className="text-h2">Authentication Result</h2>
+        <div className="flex gap-2">
+          <Button variant="outline" size="sm" onClick={handleShare}>
+            <Share2 className="w-4 h-4 mr-2" />
+            Share
+          </Button>
+          <Button variant="outline" size="sm" onClick={handlePrint}>
+            <Printer className="w-4 h-4 mr-2" />
+            Print
+          </Button>
+        </div>
+      </div>
+      <h2 className="text-h2 mb-6 hidden print:block">Authentication Result</h2>
+      <div className="print:break-inside-avoid">
         <ResultTable
           rows={[
             { label: "Product ID", value: productId },
@@ -58,7 +103,9 @@ export function VerifyResult({
           ]}
         />
       </div>
-      <StatusExplanations />
+      <div className="print:break-inside-avoid">
+        <StatusExplanations />
+      </div>
     </div>
   );
 }

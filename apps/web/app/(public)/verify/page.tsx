@@ -1,23 +1,34 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { QRScanInput } from "@/components/verify/QRScanInput";
 import { VerifyLoading } from "@/components/verify/VerifyLoading";
-import { VerifyResult } from "@/components/verify/VerifyResult";
+import { VerifyResultEnhanced } from "@/components/verify/VerifyResultEnhanced";
 import { verifyService } from "@/lib/services/verifyService";
 import { toast } from "sonner";
 import { Save } from "lucide-react";
-import type { VerifyResult as VerifyResultType } from "@/lib/schemas/verify";
+import type { VerifyResult as VerifyResultType } from "@relique/shared/domain";
 
 export default function VerifyPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [productId, setProductId] = useState("");
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<VerifyResultType | null>(null);
   const [saved, setSaved] = useState(false);
+
+  // Handle URL params
+  useEffect(() => {
+    const codeParam = searchParams.get("code");
+    if (codeParam && !result && !loading) {
+      setProductId(codeParam);
+      handleVerify(codeParam);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams]);
 
   const handleCodeScanned = (code: string) => {
     setProductId(code);
@@ -91,22 +102,12 @@ export default function VerifyPage() {
 
       {result && !loading && (
         <div className="space-y-6">
-          <VerifyResult
-            productId={result.productId}
-            itemName={result.itemName}
-            signatures={result.signatures}
-            status={result.status}
-            date={result.date}
+          <VerifyResultEnhanced
+            result={result}
+            onSave={handleSaveResult}
+            saved={saved}
           />
           <div className="flex gap-4">
-            <Button
-              onClick={handleSaveResult}
-              disabled={saved}
-              className="flex items-center gap-2"
-            >
-              <Save className="w-4 h-4" />
-              {saved ? "Saved" : "Save Result"}
-            </Button>
             <Button
               variant="outline"
               onClick={() => {

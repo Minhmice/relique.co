@@ -1,11 +1,8 @@
 "use client";
 
-import Link from "next/link";
-import Image from "next/image";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { SectionHeader } from "@/components/sections/SectionHeader";
+import { MarketplaceItemCard } from "@/components/marketplace/MarketplaceItemCard";
 import { marketplaceService } from "@/lib/services/marketplaceService";
 import type { MarketplaceListing } from "@/lib/schemas/marketplace";
 import { ChevronLeft, ChevronRight } from "lucide-react";
@@ -33,7 +30,7 @@ export function FeaturedItems() {
     <div className="space-y-6">
       <SectionHeader
         title="Featured Items"
-        description="Handpicked authenticated collectibles from our marketplace"
+        description="Authenticated collectibles from our marketplace"
         cta={{
           label: "View All",
           href: "/marketplace",
@@ -42,35 +39,7 @@ export function FeaturedItems() {
       <div className="relative">
         <div className="grid md:grid-cols-3 gap-6">
           {visibleItems.map((item) => (
-            <Card key={item.id} className="h-full hover:shadow-lg transition-shadow">
-              <Link href={`/marketplace/${item.slug}`}>
-                <div className="relative w-full h-48">
-                  <Image
-                    src={item.image}
-                    alt={item.title}
-                    fill
-                    className="object-cover"
-                  />
-                  {item.authenticated && (
-                    <Badge className="absolute top-2 right-2 bg-green-600 text-white">
-                      Verified
-                    </Badge>
-                  )}
-                </div>
-                <CardHeader>
-                  <CardTitle className="line-clamp-2">{item.title}</CardTitle>
-                  <CardDescription>{item.category}</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-sm text-muted-foreground line-clamp-2">
-                    {item.description}
-                  </p>
-                </CardContent>
-                <CardFooter>
-                  <span className="text-xl font-bold">${item.price.toLocaleString()}</span>
-                </CardFooter>
-              </Link>
-            </Card>
+            <MarketplaceItemCard key={item.id} item={item} />
           ))}
         </div>
         {items.length > 3 && (

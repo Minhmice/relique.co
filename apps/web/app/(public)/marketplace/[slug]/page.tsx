@@ -25,21 +25,43 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://relique.co";
+  const url = `${baseUrl}/marketplace/${slug}`;
+  const ogImage = listing.image || `${baseUrl}/og-default.jpg`;
   
   return {
-    title: listing.title,
-    description: listing.description,
+    title: `${listing.title} | Relique Marketplace`,
+    description: listing.description || `Authenticated ${listing.category.toLowerCase()} - ${listing.title}. Verified by ${listing.coaIssuer || "Relique"}.`,
+    keywords: [
+      listing.category,
+      listing.signedBy,
+      listing.coaIssuer,
+      "authenticated collectibles",
+      "memorabilia",
+      "verified",
+    ].filter(Boolean),
+    alternates: {
+      canonical: url,
+    },
     openGraph: {
       title: listing.title,
-      description: listing.description,
-      images: [listing.image],
-      url: `${baseUrl}/marketplace/${slug}`,
+      description: listing.description || `Authenticated ${listing.category.toLowerCase()} - ${listing.title}`,
+      images: [
+        {
+          url: ogImage,
+          width: 1200,
+          height: 630,
+          alt: listing.title,
+        },
+      ],
+      url,
+      type: "website",
+      siteName: "Relique",
     },
     twitter: {
       card: "summary_large_image",
       title: listing.title,
-      description: listing.description,
-      images: [listing.image],
+      description: listing.description || `Authenticated ${listing.category.toLowerCase()} - ${listing.title}`,
+      images: [ogImage],
     },
   };
 }
@@ -132,21 +154,22 @@ export default async function MarketplaceDetailPage({ params }: Props) {
             )}
 
             <div className="space-y-3">
-              <Button size="lg" className="w-full" asChild>
+              {listing.certificate && (
+                <Button size="lg" className="w-full" asChild>
+                  <Link href={`/verify?code=${encodeURIComponent(listing.certificate)}`}>
+                    Verify this item
+                  </Link>
+                </Button>
+              )}
+              <Button variant="outline" size="lg" className="w-full" asChild>
                 <a href={`mailto:contact@relique.co?subject=Inquiry about ${listing.title}`}>
-                  Contact Seller
+                  Inquire
                 </a>
               </Button>
-              <Button variant="outline" size="lg" className="w-full" asChild>
-                <Link href={`/verify?productId=${listing.certificate}`}>
-                  Request Verification
-                </Link>
-              </Button>
-              <Button variant="outline" size="lg" className="w-full" asChild>
-                <Link href="/consign">
-                  Consign Similar Item
-                </Link>
-              </Button>
+              <div className="flex items-center gap-2 pt-2">
+                <FavoriteButton itemId={listing.id} />
+                <span className="text-sm text-muted-foreground">Save to favorites</span>
+              </div>
             </div>
           </div>
         </div>

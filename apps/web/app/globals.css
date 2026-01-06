@@ -125,3 +125,53 @@
     @apply transition-all duration-300 ease-in-out;
   }
 }
+
+/* Print styles */
+@media print {
+  @page {
+    margin: 1in;
+  }
+  
+  body {
+    @apply bg-white text-black;
+    color-scheme: light;
+  }
+  
+  .print\:hidden {
+    display: none !important;
+  }
+  
+  .print\:block {
+    display: block !important;
+  }
+  
+  .print\:break-inside-avoid {
+    break-inside: avoid;
+  }
+  
+  a[href^="http"]:after {
+    content: " (" attr(href) ")";
+    font-size: 0.8em;
+    color: #666;
+  }
+  
+  /* Legal pages print styles */
+  .prose-content {
+    max-width: 100% !important;
+  }
+  
+  .prose-content p {
+    line-height: 1.8 !important;
+    max-width: 100% !important;
+  }
+  
+  .prose-content h1,
+  .prose-content h2,
+  .prose-content h3 {
+    page-break-after: avoid;
+  }
+  
+  .prose-content section {
+    page-break-inside: avoid;
+  }
+}

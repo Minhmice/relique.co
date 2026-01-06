@@ -20,13 +20,21 @@ export function DemoToolsDrawer({ onClose }: { onClose: () => void }) {
   const [confirmReset, setConfirmReset] = useState(false);
   const [confirmPreset, setConfirmPreset] = useState(false);
 
+  const [demoMode, setDemoMode] = useState(false);
+  const [currentPreset, setCurrentPreset] = useState<PresetName | null>(null);
+
   useEffect(() => {
     // Load current settings
     getCurrentPreset().then((preset) => {
-      if (preset) setSelectedPreset(preset);
+      if (preset) {
+        setSelectedPreset(preset);
+        setCurrentPreset(preset);
+      }
     });
     
     const config = getSimulationConfig();
+    const isDemoMode = config.latency === "verify" && config.errors === "off";
+    setDemoMode(isDemoMode);
     setLatency(config.latency || "normal");
     setErrors(config.errors || "off");
   }, []);
@@ -40,12 +48,31 @@ export function DemoToolsDrawer({ onClose }: { onClose: () => void }) {
     setIsApplying(true);
     try {
       await applyPreset(selectedPreset);
+      setCurrentPreset(selectedPreset);
       toast.success(`Preset "${selectedPreset}" applied successfully`);
       setConfirmPreset(false);
     } catch (error) {
       toast.error(`Failed to apply preset: ${error instanceof Error ? error.message : "Unknown error"}`);
     } finally {
       setIsApplying(false);
+    }
+  };
+
+  const handleToggleDemoMode = () => {
+    const newDemoMode = !demoMode;
+    setDemoMode(newDemoMode);
+    if (newDemoMode) {
+      // Demo mode: fixed 5s latency, zero errors
+      setSimulationConfig({ latency: "verify", errors: "off" });
+      setLatency("verify");
+      setErrors("off");
+      toast.success("Demo mode enabled (fixed 5s latency, zero errors)");
+    } else {
+      // Normal mode: restore previous settings
+      setSimulationConfig({ latency: "normal", errors: "off" });
+      setLatency("normal");
+      setErrors("off");
+      toast.success("Demo mode disabled");
     }
   };
 
@@ -136,6 +163,12 @@ export function DemoToolsDrawer({ onClose }: { onClose: () => void }) {
         </Alert>
 
         <div className="space-y-4">
+          {currentPreset && (
+            <div className="rounded-md bg-muted p-3">
+              <p className="text-sm font-medium">Current Preset: {currentPreset}</p>
+            </div>
+          )}
+          
           <div>
             <Label htmlFor="preset">Scenario Preset</Label>
             <Select value={selectedPreset} onValueChange={(v) => setSelectedPreset(v as PresetName)}>
@@ -147,7 +180,6 @@ export function DemoToolsDrawer({ onClose }: { onClose: () => void }) {
                 <SelectItem value="investor">Investor (high value items + watchlist)</SelectItem>
                 <SelectItem value="dealer">Dealer (many drafts + submissions)</SelectItem>
                 <SelectItem value="empty">Empty (demo empty states)</SelectItem>
-                <SelectItem value="error-heavy">Error Heavy (force errors)</SelectItem>
               </SelectContent>
             </Select>
             <div className="mt-2 flex gap-2">
@@ -171,35 +203,56 @@ export function DemoToolsDrawer({ onClose }: { onClose: () => void }) {
           </div>
 
           <div className="space-y-4">
-            <div>
-              <Label htmlFor="latency">Latency Profile</Label>
-              <Select value={latency} onValueChange={handleLatencyChange}>
-                <SelectTrigger id="latency">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="fast">Fast (0-150ms)</SelectItem>
-                  <SelectItem value="normal">Normal (200-600ms)</SelectItem>
-                  <SelectItem value="slow">Slow (1200-2500ms)</SelectItem>
-                  <SelectItem value="verify">Verify (fixed 5s)</SelectItem>
-                </SelectContent>
-              </Select>
+            <div className="flex items-center justify-between rounded-md border p-3">
+              <div>
+                <Label htmlFor="demo-mode">Demo Mode</Label>
+                <p className="text-xs text-muted-foreground">
+                  Fixed 5s latency, zero errors (stable for demos)
+                </p>
+              </div>
+              <Button
+                id="demo-mode"
+                variant={demoMode ? "default" : "outline"}
+                size="sm"
+                onClick={handleToggleDemoMode}
+              >
+                {demoMode ? "On" : "Off"}
+              </Button>
             </div>
 
-            <div>
-              <Label htmlFor="errors">Error Mode</Label>
-              <Select value={errors} onValueChange={handleErrorsChange}>
-                <SelectTrigger id="errors">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="off">Off (0%)</SelectItem>
-                  <SelectItem value="low">Low (1-3%)</SelectItem>
-                  <SelectItem value="medium">Medium (5-8%)</SelectItem>
-                  <SelectItem value="force">Force (100% next call)</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
+            {!demoMode && (
+              <>
+                <div>
+                  <Label htmlFor="latency">Latency Profile</Label>
+                  <Select value={latency} onValueChange={handleLatencyChange}>
+                    <SelectTrigger id="latency">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="fast">Fast (0-150ms)</SelectItem>
+                      <SelectItem value="normal">Normal (200-600ms)</SelectItem>
+                      <SelectItem value="slow">Slow (1200-2500ms)</SelectItem>
+                      <SelectItem value="verify">Verify (fixed 5s)</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div>
+                  <Label htmlFor="errors">Error Mode</Label>
+                  <Select value={errors} onValueChange={handleErrorsChange}>
+                    <SelectTrigger id="errors">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="off">Off (0%)</SelectItem>
+                      <SelectItem value="low">Low (1-3%)</SelectItem>
+                      <SelectItem value="medium">Medium (5-8%)</SelectItem>
+                      <SelectItem value="force">Force (100% next call)</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </>
+            )}
           </div>
 
           <div className="space-y-2">

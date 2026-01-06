@@ -90,9 +90,19 @@ export function TrustPanel({ listing }: TrustPanelProps) {
           </div>
         )}
 
+        {listing.certificate && (
+          <div className="pt-4 border-t">
+            <Button variant="outline" asChild className="w-full">
+              <Link href={`/verify?code=${encodeURIComponent(listing.certificate)}`}>
+                <Shield className="w-4 h-4 mr-2" />
+                Verify this item
+              </Link>
+            </Button>
+          </div>
+        )}
         <div className="pt-4 border-t">
           <Button variant="outline" asChild className="w-full">
-            <Link href="/about#ai-authentication">
+            <Link href="/about#artificial-intelligence">
               <Info className="w-4 h-4 mr-2" />
               Learn about our AI authentication
             </Link>

@@ -1,153 +1,80 @@
+/**
+ * @deprecated Use services from impl/ instead
+ * This file is kept for backward compatibility during Phase 4 migration.
+ */
+import { consignService as consignServiceImpl } from "./impl";
 import type { IConsignService } from "./contracts";
-import {
-  ConsignSubmissionSchema,
-  ConsignDraftSchema,
-  SubmissionStatusSchema,
-} from "@/lib/schemas/consign";
-import { storage } from "@/lib/storage";
-import type { ConsignSubmission, ConsignDraft, SubmissionStatus } from "@/lib/schemas/consign";
-
-function readStorageSubmissions(): ConsignSubmission[] {
-  return storage.consign.submissions.get<ConsignSubmission>();
-}
-
-function saveSubmissions(submissions: ConsignSubmission[]): void {
-  storage.consign.submissions.set(submissions);
-}
-
-function validateSubmission(item: ConsignSubmission): ConsignSubmission {
-  const validated = ConsignSubmissionSchema.safeParse(item);
-  if (validated.success) {
-    return validated.data;
-  }
-  console.warn("Invalid consign submission:", item);
-  return item;
-}
-
-function validateDraft(item: ConsignDraft): ConsignDraft {
-  const validated = ConsignDraftSchema.safeParse(item);
-  if (validated.success) {
-    return validated.data;
-  }
-  console.warn("Invalid consign draft:", item);
-  return item;
-}
+import type { ConsignDraft, ConsignSubmission, SubmissionStatus } from "@relique/shared/domain";
 
 export const consignService: IConsignService = {
   drafts: {
     async list(): Promise<ConsignDraft[]> {
-      const draft = storage.consign.drafts.get<ConsignDraft>();
-      if (!draft) return [];
-      
-      const validated = validateDraft(draft);
-      return [validated];
+      const result = await consignServiceImpl.listDrafts();
+      if (result.ok) {
+        return result.data;
+      }
+      console.error("Failed to list drafts:", result.error);
+      return [];
     },
     
     async save(draftData: Partial<ConsignDraft>): Promise<ConsignDraft> {
-      const existing = storage.consign.drafts.get<ConsignDraft>();
-      const now = Date.now();
+      // Try to update existing draft first
+      const draftsResult = await consignServiceImpl.listDrafts();
+      if (draftsResult.ok && draftsResult.data.length > 0) {
+        const latest = draftsResult.data[draftsResult.data.length - 1];
+        const updateResult = await consignServiceImpl.updateDraft(String(latest.timestamp), draftData);
+        if (updateResult.ok) {
+          return updateResult.data;
+        }
+      }
       
-      const draft: ConsignDraft = {
-        name: draftData.name ?? existing?.name,
-        email: draftData.email ?? existing?.email,
-        phone: draftData.phone ?? existing?.phone,
-        country: draftData.country ?? existing?.country,
-        itemDescription: draftData.itemDescription ?? existing?.itemDescription,
-        category: draftData.category ?? existing?.category,
-        estimatedValue: draftData.estimatedValue ?? existing?.estimatedValue,
-        coaIssuer: draftData.coaIssuer ?? existing?.coaIssuer,
-        howDidYouHear: draftData.howDidYouHear ?? existing?.howDidYouHear,
-        files: draftData.files ?? existing?.files,
-        status: "draft",
-        timestamp: existing?.timestamp ?? now,
-      };
+      // Create new draft
+      const createResult = await consignServiceImpl.createDraft(draftData);
+      if (createResult.ok) {
+        return createResult.data;
+      }
       
-      const validated = validateDraft(draft);
-      storage.consign.drafts.set(validated);
-      
-      return validated;
+      throw new Error(createResult.error.message);
     },
     
     async remove(id: string): Promise<void> {
-      // For now, we only have one draft, so clear it
-      storage.consign.drafts.set(null);
+      const result = await consignServiceImpl.deleteDraft(id);
+      if (!result.ok) {
+        throw new Error(result.error.message);
+      }
     },
     
     async get(id: string): Promise<ConsignDraft | null> {
-      const draft = storage.consign.drafts.get<ConsignDraft>();
-      if (!draft) return null;
-      
-      return validateDraft(draft);
+      const result = await consignServiceImpl.getDraft(id);
+      if (result.ok) {
+        return result.data;
+      }
+      return null;
     },
   },
   
-  async submitMock(draftId?: string): Promise<{ submissionId: string; status: SubmissionStatus }> {
-    let draft: ConsignDraft | null = null;
-    
-    if (draftId) {
-      draft = await consignService.drafts.get(draftId);
-    } else {
-      const drafts = await consignService.drafts.list();
-      draft = drafts[0] ?? null;
+  async submitMock(draftId?: string) {
+    const result = await consignServiceImpl.submitDraft(draftId);
+    if (result.ok) {
+      return result.data;
     }
-    
-    if (!draft || !draft.name || !draft.email || !draft.itemDescription) {
-      throw new Error("Draft is incomplete. Please fill in required fields.");
-    }
-    
-    const now = new Date().toISOString();
-    const submission: ConsignSubmission = {
-      id: `submission-${Date.now()}`,
-      name: draft.name,
-      email: draft.email,
-      phone: draft.phone,
-      country: draft.country,
-      itemDescription: draft.itemDescription,
-      category: draft.category,
-      estimatedValue: draft.estimatedValue,
-      coaIssuer: draft.coaIssuer,
-      howDidYouHear: draft.howDidYouHear,
-      files: draft.files,
-      status: "submitted",
-      createdAt: now,
-      updatedAt: now,
-    };
-    
-    const validated = validateSubmission(submission);
-    const submissions = readStorageSubmissions();
-    submissions.push(validated);
-    saveSubmissions(submissions);
-    
-    // Clear draft after submission
-    storage.consign.drafts.set(null);
-    
-    return {
-      submissionId: validated.id,
-      status: validated.status,
-    };
+    throw new Error(result.error.message);
   },
   
   async list(status?: SubmissionStatus): Promise<ConsignSubmission[]> {
-    let submissions = readStorageSubmissions();
-    
-    if (status) {
-      submissions = submissions.filter((s) => s.status === status);
+    const result = await consignServiceImpl.listSubmissions(status);
+    if (result.ok) {
+      return result.data;
     }
-    
-    return submissions
-      .map(validateSubmission)
-      .sort(
-        (a, b) =>
-          new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
-      );
+    console.error("Failed to list submissions:", result.error);
+    return [];
   },
   
   async get(id: string): Promise<ConsignSubmission | null> {
-    const submissions = readStorageSubmissions();
-    const submission = submissions.find((s) => s.id === id);
-    
-    if (!submission) return null;
-    
-    return validateSubmission(submission);
+    const result = await consignServiceImpl.getSubmission(id);
+    if (result.ok) {
+      return result.data;
+    }
+    return null;
   },
 };

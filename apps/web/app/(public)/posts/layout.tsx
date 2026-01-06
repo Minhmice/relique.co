@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Blog Posts",
-  description: "Read articles about collectibles, authentication, and the memorabilia market.",
+  title: "Posts - Relique",
+  description: "Stay updated with news, insights, and stories from Relique about collectibles authentication and memorabilia.",
   openGraph: {
-    title: "Blog Posts - Relique",
-    description: "Read articles about collectibles, authentication, and the memorabilia market.",
+    title: "Posts - Relique",
+    description: "News and insights from Relique",
     type: "website",
   },
 };
@@ -15,6 +15,5 @@ export default function PostsLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <>{children}</>;
+  return children;
 }
-

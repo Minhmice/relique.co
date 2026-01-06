@@ -1,69 +1,100 @@
 import { MetadataRoute } from "next";
+import { marketplaceListingsSeed } from "@relique/shared/domain";
+import { postsSeed } from "@relique/shared/domain";
+import { eventsSeed } from "@relique/shared/domain";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://relique.co";
+  const now = new Date();
 
-  return [
+  // Static pages
+  const staticPages: MetadataRoute.Sitemap = [
     {
       url: baseUrl,
-      lastModified: new Date(),
+      lastModified: now,
       changeFrequency: "weekly",
       priority: 1,
     },
     {
       url: `${baseUrl}/about`,
-      lastModified: new Date(),
+      lastModified: now,
       changeFrequency: "monthly",
       priority: 0.8,
     },
     {
       url: `${baseUrl}/marketplace`,
-      lastModified: new Date(),
+      lastModified: now,
       changeFrequency: "daily",
       priority: 0.9,
     },
     {
       url: `${baseUrl}/verify`,
-      lastModified: new Date(),
+      lastModified: now,
       changeFrequency: "monthly",
       priority: 0.8,
     },
     {
       url: `${baseUrl}/consign`,
-      lastModified: new Date(),
+      lastModified: now,
       changeFrequency: "monthly",
       priority: 0.8,
     },
     {
       url: `${baseUrl}/posts`,
-      lastModified: new Date(),
+      lastModified: now,
       changeFrequency: "weekly",
       priority: 0.7,
     },
     {
       url: `${baseUrl}/events`,
-      lastModified: new Date(),
+      lastModified: now,
       changeFrequency: "weekly",
       priority: 0.7,
     },
     {
       url: `${baseUrl}/contact`,
-      lastModified: new Date(),
+      lastModified: now,
       changeFrequency: "monthly",
       priority: 0.6,
     },
     {
       url: `${baseUrl}/policies`,
-      lastModified: new Date(),
+      lastModified: now,
       changeFrequency: "yearly",
       priority: 0.5,
     },
     {
       url: `${baseUrl}/terms`,
-      lastModified: new Date(),
+      lastModified: now,
       changeFrequency: "yearly",
       priority: 0.5,
     },
   ];
+
+  // Dynamic marketplace listings
+  const marketplacePages: MetadataRoute.Sitemap = (marketplaceListingsSeed as Array<{ slug: string; updatedAt?: string }>).map((listing) => ({
+    url: `${baseUrl}/marketplace/${listing.slug}`,
+    lastModified: listing.updatedAt ? new Date(listing.updatedAt) : now,
+    changeFrequency: "weekly" as const,
+    priority: 0.8,
+  }));
+
+  // Dynamic posts
+  const postPages: MetadataRoute.Sitemap = (postsSeed as Array<{ slug: string; updatedAt?: string }>).map((post) => ({
+    url: `${baseUrl}/posts/${post.slug}`,
+    lastModified: post.updatedAt ? new Date(post.updatedAt) : (post.publishedAt ? new Date(post.publishedAt) : now),
+    changeFrequency: "monthly" as const,
+    priority: 0.7,
+  }));
+
+  // Dynamic events
+  const eventPages: MetadataRoute.Sitemap = (eventsSeed as Array<{ slug: string; updatedAt?: string }>).map((event) => ({
+    url: `${baseUrl}/events/${event.slug}`,
+    lastModified: event.updatedAt ? new Date(event.updatedAt) : now,
+    changeFrequency: "monthly" as const,
+    priority: 0.7,
+  }));
+
+  return [...staticPages, ...marketplacePages, ...postPages, ...eventPages];
 }
 

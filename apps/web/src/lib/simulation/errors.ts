@@ -53,7 +53,7 @@ export function generateError(code: string = "SERVICE_ERROR"): ServiceError {
   
   return {
     code,
-    message: errorMessages[code] || errorMessages.SERVICE_ERROR,
+    message: errorMessages[code] ?? errorMessages.SERVICE_ERROR ?? "An unexpected error occurred. Please try again.",
     retryable: retryableCodes.includes(code),
   };
 }

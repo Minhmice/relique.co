@@ -1,17 +1,11 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Verify Product",
-  description: "Verify the authenticity of your collectibles using RLQ certification codes. Get probabilistic authentication results in seconds.",
-  robots: {
-    index: true,
-    follow: true,
-    // Note: Result pages with query params should have noindex
-    // This is handled client-side in the verify page component
-  },
+  title: "Verify Product - Relique",
+  description: "Enter a product ID or certificate code to verify authenticity of your collectibles",
   openGraph: {
     title: "Verify Product - Relique",
-    description: "Verify the authenticity of your collectibles using RLQ certification codes.",
+    description: "Verify authenticity of your collectibles with Relique",
     type: "website",
   },
 };
@@ -21,6 +15,5 @@ export default function VerifyLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <>{children}</>;
+  return children;
 }
-

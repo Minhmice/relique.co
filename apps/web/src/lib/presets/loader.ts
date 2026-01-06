@@ -1,132 +1,68 @@
+/**
+ * @deprecated Use @relique/shared/domain fixtures/seed instead
+ * This file is kept for backward compatibility during Phase 6 migration.
+ * All new code should use applyPreset from @relique/shared/domain
+ */
+import {
+  applyPreset as applyPresetShared,
+  getCurrentPreset as getCurrentPresetShared,
+  resetAllStorage as resetAllStorageShared,
+  type PresetId,
+} from "@relique/shared/domain";
 import { storage } from "@/lib/storage";
 import { setVerifyMapping, getVerifyMappingForPreset } from "@/lib/services/verifyService";
-import { setSimulationConfig } from "@/lib/simulation";
-import type { VerifyMappingEntry } from "@/lib/schemas/verify";
-import type { MarketplaceListing } from "@/lib/schemas/marketplace";
-import type { Post } from "@/lib/schemas/content";
-import type { Event } from "@/lib/schemas/content";
-import type { ConsignDraft } from "@/lib/schemas/consign";
-import type { VerifyHistoryEntry } from "@/lib/storage";
+import { setSimulationConfig, getSimulationConfig } from "@/lib/simulation";
+import {
+  getVerifyHistory,
+  getMarketplaceFavorites,
+  getConsignDrafts,
+  getConsignSubmissions,
+  getSavedSearches,
+  getContentBookmarks,
+} from "@relique/shared/domain";
 
-export interface PresetData {
-  dataset?: {
-    marketplace?: MarketplaceListing[];
-    posts?: Post[];
-    events?: Event[];
-  };
-  userState?: {
-    favorites?: string[];
-    verifyHistory?: VerifyHistoryEntry[];
-    drafts?: ConsignDraft[];
-  };
-  verifyMapping?: Record<string, VerifyMappingEntry>;
-  simulation?: {
-    latency?: "fast" | "normal" | "slow";
-    errors?: "off" | "low" | "medium" | "force";
-  };
-}
-
-export type PresetName = "collector" | "investor" | "dealer" | "empty" | "error-heavy";
-
-async function loadPreset(name: PresetName): Promise<PresetData> {
-  try {
-    const preset = await import(`@/presets/${name}.json`);
-    return preset.default as PresetData;
-  } catch (error) {
-    console.error(`Failed to load preset "${name}":`, error);
-    throw new Error(`Preset "${name}" not found`);
-  }
-}
+export type PresetName = "collector" | "investor" | "dealer" | "empty";
 
 export async function applyPreset(name: PresetName): Promise<void> {
-  const preset = await loadPreset(name);
+  // Use shared preset system
+  await applyPresetShared(name);
   
-  // Apply dataset overrides (if provided)
-  if (preset.dataset) {
-    if (preset.dataset.marketplace) {
-      storage.marketplace.listings.set(preset.dataset.marketplace);
-    }
-    if (preset.dataset.posts) {
-      storage.content.posts.set(preset.dataset.posts);
-    }
-    if (preset.dataset.events) {
-      storage.content.events.set(preset.dataset.events);
-    }
-  }
-  
-  // Apply user state
-  if (preset.userState) {
-    if (preset.userState.favorites) {
-      storage.marketplace.favorites.set(preset.userState.favorites);
-    }
-    if (preset.userState.verifyHistory) {
-      storage.verifyHistory.set(preset.userState.verifyHistory);
-    }
-    if (preset.userState.drafts) {
-      // Only one draft supported for now
-      const draft = preset.userState.drafts[0] || null;
-      storage.consign.drafts.set(draft);
-    }
-  }
-  
-  // Apply verify mapping
-  if (preset.verifyMapping) {
-    setVerifyMapping(preset.verifyMapping);
-  }
-  
-  // Apply simulation config
-  if (preset.simulation) {
-    setSimulationConfig({
-      latency: preset.simulation.latency,
-      errors: preset.simulation.errors,
-    });
-  }
-  
-  // Store current preset name
-  if (typeof window !== "undefined") {
-    localStorage.setItem("relique.v1.demo.preset", name);
-  }
+  // Also set demo mode (fixed latency, zero errors)
+  setSimulationConfig({
+    latency: "verify", // Fixed 5s for verify
+    errors: "off", // Zero errors in demo mode
+  });
 }
 
 export async function getCurrentPreset(): Promise<PresetName | null> {
-  if (typeof window === "undefined") return null;
-  const preset = localStorage.getItem("relique.v1.demo.preset");
-  return (preset as PresetName) || null;
+  return getCurrentPresetShared();
 }
 
 export function resetAllStorage(): void {
-  storage.clearAll();
-  
-  // Reset preset tracking
-  if (typeof window !== "undefined") {
-    localStorage.removeItem("relique.v1.demo.preset");
-    localStorage.removeItem("relique.v1.demo.latency");
-    localStorage.removeItem("relique.v1.demo.errors");
-  }
+  resetAllStorageShared();
+  // Also clear portal-specific storage (if needed)
+  storage.clearAll(); // This still clears portal-specific keys
 }
 
 export async function exportStorageData(): Promise<string> {
   const data = {
     marketplace: {
-      listings: storage.marketplace.listings.get(),
-      favorites: storage.marketplace.favorites.get(),
+      favorites: getMarketplaceFavorites(),
+      savedSearches: getSavedSearches(),
     },
     verify: {
-      history: storage.verifyHistory.get(),
+      history: getVerifyHistory(),
       mapping: getVerifyMappingForPreset(),
     },
     consign: {
-      drafts: storage.consign.drafts.get(),
-      submissions: storage.consign.submissions.get(),
+      drafts: getConsignDrafts(),
+      submissions: getConsignSubmissions(),
     },
     content: {
-      posts: storage.content.posts.get(),
-      events: storage.content.events.get(),
+      bookmarks: getContentBookmarks(),
     },
-    simulation: {
-      latency: localStorage.getItem("relique.v1.demo.latency"),
-      errors: localStorage.getItem("relique.v1.demo.errors"),
-    },
+    simulation: getSimulationConfig(),
+    preset: await getCurrentPreset(),
   };
   
   return JSON.stringify(data, null, 2);
@@ -136,18 +72,22 @@ export async function importStorageData(jsonString: string): Promise<void> {
   try {
     const data = JSON.parse(jsonString);
     
+    // Import using shared storage helpers
     if (data.marketplace) {
-      if (data.marketplace.listings) {
-        storage.marketplace.listings.set(data.marketplace.listings);
-      }
       if (data.marketplace.favorites) {
-        storage.marketplace.favorites.set(data.marketplace.favorites);
+        const { setMarketplaceFavorites } = await import("@relique/shared/domain");
+        setMarketplaceFavorites(data.marketplace.favorites);
+      }
+      if (data.marketplace.savedSearches) {
+        const { setSavedSearches } = await import("@relique/shared/domain");
+        setSavedSearches(data.marketplace.savedSearches);
       }
     }
     
     if (data.verify) {
       if (data.verify.history) {
-        storage.verifyHistory.set(data.verify.history);
+        const { setVerifyHistory } = await import("@relique/shared/domain");
+        setVerifyHistory(data.verify.history);
       }
       if (data.verify.mapping) {
         setVerifyMapping(data.verify.mapping);
@@ -156,31 +96,31 @@ export async function importStorageData(jsonString: string): Promise<void> {
     
     if (data.consign) {
       if (data.consign.drafts) {
-        storage.consign.drafts.set(data.consign.drafts);
+        const { setConsignDrafts } = await import("@relique/shared/domain");
+        setConsignDrafts(data.consign.drafts);
       }
       if (data.consign.submissions) {
-        storage.consign.submissions.set(data.consign.submissions);
+        const { setConsignSubmissions } = await import("@relique/shared/domain");
+        setConsignSubmissions(data.consign.submissions);
       }
     }
     
     if (data.content) {
-      if (data.content.posts) {
-        storage.content.posts.set(data.content.posts);
-      }
-      if (data.content.events) {
-        storage.content.events.set(data.content.events);
+      if (data.content.bookmarks) {
+        const { setContentBookmarks } = await import("@relique/shared/domain");
+        setContentBookmarks(data.content.bookmarks);
       }
     }
     
     if (data.simulation) {
-      setSimulationConfig({
-        latency: data.simulation.latency,
-        errors: data.simulation.errors,
-      });
+      setSimulationConfig(data.simulation);
+    }
+    
+    if (data.preset) {
+      await applyPreset(data.preset);
     }
   } catch (error) {
     console.error("Failed to import storage data:", error);
     throw new Error("Invalid JSON data");
   }
 }
-

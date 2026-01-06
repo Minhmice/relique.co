@@ -43,6 +43,14 @@ export const metadata: Metadata = {
     siteName: "Relique",
     title: "Relique - Authentic Collectibles",
     description: "Probabilistic authentication for collectibles and memorabilia",
+    images: [
+      {
+        url: `${process.env.NEXT_PUBLIC_SITE_URL || "https://relique.co"}/og-default.jpg`,
+        width: 1200,
+        height: 630,
+        alt: "Relique - Authentic Collectibles",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",

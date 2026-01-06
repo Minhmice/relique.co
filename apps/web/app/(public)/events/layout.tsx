@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Events & Appearances",
-  description: "Upcoming events, appearances, and shows featuring Relique authentication services.",
+  title: "Events - Relique",
+  description: "Join us at upcoming showcases, auctions, and appearances related to collectibles authentication.",
   openGraph: {
-    title: "Events & Appearances - Relique",
-    description: "Upcoming events, appearances, and shows featuring Relique authentication services.",
+    title: "Events - Relique",
+    description: "Upcoming events and showcases",
     type: "website",
   },
 };
@@ -15,6 +15,5 @@ export default function EventsLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <>{children}</>;
+  return children;
 }
-

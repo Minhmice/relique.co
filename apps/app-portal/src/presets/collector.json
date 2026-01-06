@@ -1,0 +1,24 @@
+{
+  "userState": {
+    "favorites": ["1", "2", "3", "4", "5"],
+    "verifyHistory": [
+      {
+        "productId": "RLQ-QUAL-001",
+        "result": "qualified",
+        "timestamp": 1704067200000
+      },
+      {
+        "productId": "RLQ-QUAL-002",
+        "result": "qualified",
+        "timestamp": 1704153600000
+      },
+      {
+        "productId": "RLQ-INCON-001",
+        "result": "inconclusive",
+        "timestamp": 1704240000000
+      }
+    ],
+    "drafts": []
+  }
+}
+

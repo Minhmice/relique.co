@@ -22,7 +22,7 @@ export function FeaturedPosts() {
   return (
     <div className="space-y-6">
       <SectionHeader
-        title="Latest Posts"
+        title="Posts"
         description="Stay updated with news and insights from Relique"
         cta={{
           label: "View All Posts",

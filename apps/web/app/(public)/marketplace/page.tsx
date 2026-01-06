@@ -9,6 +9,7 @@ import Image from "next/image";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { FavoriteButton } from "@/components/marketplace/FavoriteButton";
+import { MarketplaceItemCard } from "@/components/marketplace/MarketplaceItemCard";
 import { MarketplaceSort } from "@/components/marketplace/MarketplaceSort";
 import type { SortOption as UISortOption } from "@/components/marketplace/MarketplaceSort";
 import type { SortOption } from "@/lib/schemas/marketplace";
@@ -162,38 +163,7 @@ function MarketplacePageContent() {
             {viewMode === "grid" ? (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {sortedItems.map((item) => (
-                  <Card key={item.id} className="h-full hover:shadow-lg transition-shadow flex flex-col">
-                    <Link href={`/marketplace/${item.slug}`} className="flex-1 flex flex-col">
-                      <div className="relative w-full h-64">
-                        <Image
-                          src={item.image}
-                          alt={item.title}
-                          fill
-                          className="object-cover"
-                        />
-                        <div className="absolute top-2 right-2" onClick={(e) => e.preventDefault()}>
-                          <FavoriteButton itemId={item.id} />
-                        </div>
-                      </div>
-                      <CardHeader>
-                        <CardTitle className="line-clamp-2">{item.title}</CardTitle>
-                        <CardDescription>{item.category}</CardDescription>
-                      </CardHeader>
-                      <CardContent className="flex-1">
-                        <p className="text-sm text-muted-foreground line-clamp-2">
-                          {item.description}
-                        </p>
-                      </CardContent>
-                      <CardFooter className="flex justify-between items-center">
-                        <span className="text-2xl font-bold">${item.price.toLocaleString()}</span>
-                        {item.authenticated && (
-                          <Badge variant="outline" className="bg-green-100 dark:bg-green-900 border-green-500">
-                            Verified
-                          </Badge>
-                        )}
-                      </CardFooter>
-                    </Link>
-                  </Card>
+                  <MarketplaceItemCard key={item.id} item={item} />
                 ))}
               </div>
             ) : (

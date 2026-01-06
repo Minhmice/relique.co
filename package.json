@@ -5,12 +5,20 @@
     "build": "turbo run build",
     "dev": "turbo run dev",
     "dev:web": "turbo run dev --filter=web",
+    "dev:app-portal": "turbo run dev --filter=app-portal",
+    "dev:all": "turbo run dev --filter=web --filter=app-portal",
     "dev:admin": "turbo run dev --filter=web",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "check-types": "turbo run check-types"
+    "typecheck": "tsc --build",
+    "typecheck:watch": "tsc --build --watch",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "test:e2e:debug": "playwright test --debug",
+    "check": "pnpm lint && pnpm typecheck && pnpm test:e2e && pnpm build"
   },
   "devDependencies": {
+    "@playwright/test": "^1.57.0",
     "prettier": "^3.7.4",
     "turbo": "^2.7.2",
     "typescript": "5.9.2"

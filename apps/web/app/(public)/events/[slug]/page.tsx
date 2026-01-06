@@ -23,22 +23,44 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://relique.co";
+  const url = `${baseUrl}/events/${slug}`;
+  const ogImage = event.image || `${baseUrl}/og-default.jpg`;
+  const eventDate = new Date(event.date);
   
   return {
-    title: event.title,
-    description: event.description,
+    title: `${event.title} | Relique Events`,
+    description: event.description || `${event.title} - ${eventDate.toLocaleDateString()} at ${event.location || "TBA"}`,
+    keywords: [
+      event.type,
+      "collectibles",
+      "events",
+      "memorabilia",
+      "relique",
+      event.location,
+    ].filter(Boolean),
+    alternates: {
+      canonical: url,
+    },
     openGraph: {
       title: event.title,
-      description: event.description,
-      images: [event.image],
-      url: `${baseUrl}/events/${slug}`,
+      description: event.description || `${event.title} - ${eventDate.toLocaleDateString()}`,
+      images: [
+        {
+          url: ogImage,
+          width: 1200,
+          height: 630,
+          alt: event.title,
+        },
+      ],
+      url,
       type: "website",
+      siteName: "Relique",
     },
     twitter: {
       card: "summary_large_image",
       title: event.title,
-      description: event.description,
-      images: [event.image],
+      description: event.description || `${event.title} - ${eventDate.toLocaleDateString()}`,
+      images: [ogImage],
     },
   };
 }

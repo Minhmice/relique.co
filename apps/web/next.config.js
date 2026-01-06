@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  transpilePackages: ["@repo/ui"],
+  transpilePackages: ["@relique/shared", "@relique/ui"],
   experimental: {
     // Allow resolving modules outside of app dir (pnpm store paths land outside apps/web)
     externalDir: true,
