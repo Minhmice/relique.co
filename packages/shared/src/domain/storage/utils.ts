@@ -1,6 +1,4 @@
 import type { z } from "zod";
-import { getJson, setJson } from "./json";
-import { STORAGE_LIMITS } from "./keys";
 
 /**
  * Cap array to max length (keep most recent items)

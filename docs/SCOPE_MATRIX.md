@@ -24,7 +24,6 @@
 ### Quality & Testing
 - ✅ TypeScript type safety
 - ✅ ESLint boundary enforcement
-- ✅ Playwright E2E smoke tests
 - ✅ Performance optimization (images, code splitting)
 - ✅ Accessibility compliance (WCAG 2.1 AA)
 

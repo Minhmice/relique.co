@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { EventCard } from "@/components/content/EventCard";
 import { SectionHeader } from "@/components/sections/SectionHeader";
 import { contentService } from "@/lib/services/contentService";
-import type { Event } from "@/lib/schemas/content";
+import type { Event } from "@/lib/types";
 
 export function UpcomingEvents() {
   const [events, setEvents] = useState<Event[]>([]);
@@ -12,7 +12,17 @@ export function UpcomingEvents() {
   useEffect(() => {
     const loadEvents = async () => {
       const allEvents = await contentService.events.list(true);
-      setEvents(allEvents.slice(0, 3));
+      // Ensure events have required fields with defaults
+      const eventsWithDefaults = allEvents.map((e) => ({
+        ...e,
+        description: e.description ?? "",
+        location: e.location ?? "",
+        image: e.image ?? "",
+        time: (e as any).time,
+        type: (e as any).type,
+        featured: (e as any).featured ?? false,
+      })) as Event[];
+      setEvents(eventsWithDefaults.slice(0, 3));
     };
     loadEvents();
   }, []);

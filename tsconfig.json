@@ -4,7 +4,7 @@
     { "path": "./packages/shared" },
     { "path": "./packages/ui" },
     { "path": "./apps/web" },
-    { "path": "./apps/app-portal" }
+    { "path": "./apps/admin" }
   ]
 }
 

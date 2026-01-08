@@ -37,6 +37,7 @@ function useFormField() {
   const fieldContext = React.useContext(FormFieldContext);
   const itemContext = React.useContext(FormItemContext);
   const { getFieldState, formState } = useFormContext();
+  const fallbackId = React.useId();
 
   if (!fieldContext) {
     throw new Error("useFormField must be used within <FormField>");
@@ -44,7 +45,7 @@ function useFormField() {
 
   const fieldState = getFieldState(fieldContext.name, formState);
 
-  const id = itemContext?.id ?? React.useId();
+  const id = itemContext?.id ?? fallbackId;
   return {
     id,
     name: fieldContext.name,

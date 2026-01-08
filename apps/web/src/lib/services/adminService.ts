@@ -128,13 +128,13 @@ const adminContentService: IAdminContentService = {
       const mutations = storage.content.posts.get<Post>();
       const now = new Date().toISOString();
       
-      const newPost: Post = {
+      const newPost = {
         ...post,
         id: `admin-post-${Date.now()}`,
         slug: post.title.toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, ""),
         createdAt: now,
         updatedAt: now,
-      };
+      } as Post;
       
       const validated = PostSchema.safeParse(newPost);
       if (!validated.success) {
@@ -156,11 +156,11 @@ const adminContentService: IAdminContentService = {
       const existing = mutations[index];
       if (!existing) return null;
       
-      const updated: Post = {
+      const updated = {
         ...existing,
         ...updates,
         updatedAt: new Date().toISOString(),
-      };
+      } as Post;
       
       const validated = PostSchema.safeParse(updated);
       if (!validated.success) {
@@ -193,13 +193,13 @@ const adminContentService: IAdminContentService = {
       const mutations = storage.content.events.get<Event>();
       const now = new Date().toISOString();
       
-      const newEvent: Event = {
+      const newEvent = {
         ...event,
         id: `admin-event-${Date.now()}`,
         slug: event.title.toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, ""),
         createdAt: now,
         updatedAt: now,
-      };
+      } as Event;
       
       const validated = EventSchema.safeParse(newEvent);
       if (!validated.success) {
@@ -221,11 +221,11 @@ const adminContentService: IAdminContentService = {
       const existing = mutations[index];
       if (!existing) return null;
       
-      const updated: Event = {
+      const updated = {
         ...existing,
         ...updates,
         updatedAt: new Date().toISOString(),
-      };
+      } as Event;
       
       const validated = EventSchema.safeParse(updated);
       if (!validated.success) {

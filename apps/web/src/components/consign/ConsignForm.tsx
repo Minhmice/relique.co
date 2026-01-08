@@ -7,9 +7,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Form } from "@/components/ui/form";
-import { UploadManager, type UploadMeta } from "@repo/ui";
+import { UploadManager, type UploadMeta } from "@relique/ui";
 import { DraftManager } from "./DraftManager";
 import { FormProgress } from "./FormProgress";
+import { DraftStatusBar, type DraftStatus, type DraftVersion } from "./DraftStatusBar";
 import { YourInformationSection } from "./sections/YourInformationSection";
 import { ItemDetailsSection } from "./sections/ItemDetailsSection";
 import { SignatureInformationSection } from "./sections/SignatureInformationSection";
@@ -21,7 +22,7 @@ import { consignSchema, type ConsignFormData } from "@/lib/validations/consignSc
 import { consignService } from "@/lib/services/consignService";
 import { useDebounce } from "@/lib/hooks/useDebounce";
 import { toast } from "sonner";
-import { Save, Clock } from "lucide-react";
+import { Save } from "lucide-react";
 
 const FORM_STEPS = [
   "Your Information",
@@ -40,6 +41,8 @@ export function ConsignForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [currentStep, setCurrentStep] = useState(1);
   const [lastSaved, setLastSaved] = useState<Date | null>(null);
+  const [draftStatus, setDraftStatus] = useState<DraftStatus>("idle");
+  const [draftVersions, setDraftVersions] = useState<DraftVersion[]>([]);
 
   const form = useForm<ConsignFormData>({
     resolver: zodResolver(consignSchema),
@@ -101,11 +104,27 @@ export function ConsignForm() {
   useEffect(() => {
     if (debouncedFormData.name || debouncedFormData.email || debouncedFormData.itemDescription) {
       const saveDraft = async () => {
-        await consignService.drafts.save({
-          ...debouncedFormData,
-          files: files.map(f => ({ name: f.name, size: f.size, type: f.type })),
-        });
-        setLastSaved(new Date());
+        setDraftStatus("saving");
+        try {
+          await consignService.drafts.save({
+            ...debouncedFormData,
+            files: files.map(f => ({ name: f.name, size: f.size, type: f.type })),
+          });
+          const now = new Date();
+          setLastSaved(now);
+          setDraftStatus("saved");
+          
+          // Add to version history (keep last 3)
+          setDraftVersions((prev) => {
+            const newVersion: DraftVersion = {
+              id: `v-${now.getTime()}`,
+              timestamp: now.getTime(),
+            };
+            return [newVersion, ...prev].slice(0, 3);
+          });
+        } catch (error) {
+          setDraftStatus("error");
+        }
       };
       saveDraft();
     }
@@ -173,12 +192,31 @@ export function ConsignForm() {
       <DraftManager onLoadDraft={handleLoadDraft} onDiscard={handleDiscard} />
       <FormProgress currentStep={currentStep} totalSteps={FORM_STEPS.length} steps={FORM_STEPS} />
       
-      {lastSaved && (
-        <div className="flex items-center gap-2 text-sm text-muted-foreground">
-          <Clock className="w-4 h-4" />
-          <span>Last saved: {lastSaved.toLocaleTimeString()}</span>
-        </div>
-      )}
+      <DraftStatusBar
+        status={draftStatus}
+        lastSaved={lastSaved}
+        versions={draftVersions}
+        onSaveNow={async () => {
+          setDraftStatus("saving");
+          try {
+            await consignService.drafts.save({
+              ...form.getValues(),
+              files: files.map(f => ({ name: f.name, size: f.size, type: f.type })),
+            });
+            const now = new Date();
+            setLastSaved(now);
+            setDraftStatus("saved");
+            toast.success("Draft saved");
+          } catch {
+            setDraftStatus("error");
+            toast.error("Failed to save draft");
+          }
+        }}
+        onRestoreVersion={(version) => {
+          // For now, just show a message - full version restore would require storing snapshots
+          toast.info(`Version from ${new Date(version.timestamp).toLocaleString()} - restore not yet implemented`);
+        }}
+      />
 
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
@@ -250,32 +288,14 @@ export function ConsignForm() {
             <CardContent>
               <UploadManager
                 value={files}
-                onChange={(newFiles) => {
-                  // Validate individual file size (15MB max)
-                  const maxFileSize = 15 * 1024 * 1024; // 15MB
-                  const oversizedFiles = newFiles.filter(f => f.size > maxFileSize);
-                  if (oversizedFiles.length > 0) {
-                    toast.error(`Some files exceed 15MB limit: ${oversizedFiles.map(f => f.name).join(", ")}`);
-                    return;
-                  }
-                  
-                  // Validate total size (120MB max)
-                  const totalSize = newFiles.reduce((sum, f) => sum + f.size, 0);
-                  const maxTotalSize = 120 * 1024 * 1024; // 120MB
-                  if (totalSize > maxTotalSize) {
-                    toast.error("Total file size exceeds 120MB limit");
-                    return;
-                  }
-                  
-                  // Validate max files (20 max)
-                  if (newFiles.length > 20) {
-                    toast.error("Maximum 20 files allowed");
-                    return;
-                  }
-                  
-                  setFiles(newFiles);
-                }}
+                onChange={setFiles}
                 maxFiles={20}
+                maxFileSize={15 * 1024 * 1024} // 15MB
+                maxTotalSize={120 * 1024 * 1024} // 120MB
+                allowedTypes={["image/jpeg", "image/jpg", "image/png", "image/webp", "application/pdf"]}
+                requiredTags={["Full item", "Signature close-up"]}
+                showWarnings={true}
+                onValidationError={(error) => toast.error(error)}
               />
               <p className="text-xs text-muted-foreground mt-2">
                 Limits: 20 files max, 15MB per file, 120MB total
@@ -293,22 +313,7 @@ export function ConsignForm() {
             </CardContent>
           </Card>
 
-          <div className="flex justify-end gap-4">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={async () => {
-                await consignService.drafts.save({
-                  ...form.getValues(),
-                  files: files.map(f => ({ name: f.name, size: f.size, type: f.type })),
-                });
-                setLastSaved(new Date());
-                toast.success("Draft saved");
-              }}
-            >
-              <Save className="w-4 h-4 mr-2" />
-              Save Draft
-            </Button>
+          <div className="flex justify-end">
             <Button type="submit" size="lg" disabled={isSubmitting}>
               {isSubmitting ? "Submitting..." : "Submit for Consignment"}
             </Button>

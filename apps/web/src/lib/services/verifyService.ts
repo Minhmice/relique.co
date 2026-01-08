@@ -56,26 +56,3 @@ export const verifyService: IVerifyService = {
     },
   },
 };
-
-// Export helper to update verify mapping (for presets)
-export function setVerifyMapping(mapping: Record<string, { status: "qualified" | "inconclusive" | "disqualified"; signatures?: number }>): void {
-  if (typeof window === "undefined") return;
-  localStorage.setItem("relique.v1.verify.mapping", JSON.stringify(mapping));
-}
-
-export function getVerifyMappingForPreset(): Record<string, { status: "qualified" | "inconclusive" | "disqualified"; signatures?: number }> {
-  if (typeof window === "undefined") return {};
-  try {
-    const stored = localStorage.getItem("relique.v1.verify.mapping");
-    if (stored) {
-      return JSON.parse(stored);
-    }
-  } catch {
-    // Use default if parse fails
-  }
-  return {
-    "RLQ-QUAL": { status: "qualified", signatures: 2 },
-    "RLQ-INCON": { status: "inconclusive", signatures: 1 },
-    "RLQ-DISQ": { status: "disqualified", signatures: 0 },
-  };
-}

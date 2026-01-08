@@ -5,6 +5,8 @@
  * UI always handles one output type (no try/catch needed)
  */
 
+import type { ServiceError } from "./errors";
+
 export type Result<T, E = ServiceError> = Ok<T> | Err<E>;
 
 export type Ok<T> = {

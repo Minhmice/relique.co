@@ -15,7 +15,6 @@ export function VerifyErrorState({ error, onRetry, onContact }: VerifyErrorState
     <ErrorState
       title="Verification Failed"
       description={error}
-      icon={<AlertCircle className="w-12 h-12 text-destructive" />}
       action={
         <div className="flex gap-2">
           {onRetry && (

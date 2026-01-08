@@ -1,5 +1,5 @@
 import { Shield, Sparkles, ShoppingBag, FileText } from "lucide-react";
-import { FeatureTiles, Section } from "@repo/ui";
+import { FeatureTiles, Section } from "@relique/ui";
 
 export function FeatureSection() {
   return (

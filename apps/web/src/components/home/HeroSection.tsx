@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { HeroCentered } from "@repo/ui";
+import { HeroCentered } from "@relique/ui";
 
 export function HeroSection() {
   return (

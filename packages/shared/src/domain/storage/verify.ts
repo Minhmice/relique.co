@@ -62,3 +62,35 @@ export function setLastVerifyResult(result: VerifyHistoryEntry | null): void {
   setJson(STORAGE_KEYS.VERIFY_LAST_RESULT, result);
 }
 
+/**
+ * Get pinned verify items
+ */
+export function getVerifyPinned(): string[] {
+  return getJson<string[]>(STORAGE_KEYS.VERIFY_PINNED, []);
+}
+
+/**
+ * Set pinned verify items
+ */
+export function setVerifyPinned(pinnedIds: string[]): void {
+  setJson(STORAGE_KEYS.VERIFY_PINNED, pinnedIds);
+}
+
+/**
+ * Pin a verify item
+ */
+export function pinVerifyItem(productId: string): void {
+  const pinned = getVerifyPinned();
+  if (!pinned.includes(productId)) {
+    setVerifyPinned([...pinned, productId]);
+  }
+}
+
+/**
+ * Unpin a verify item
+ */
+export function unpinVerifyItem(productId: string): void {
+  const pinned = getVerifyPinned();
+  setVerifyPinned(pinned.filter((id) => id !== productId));
+}
+

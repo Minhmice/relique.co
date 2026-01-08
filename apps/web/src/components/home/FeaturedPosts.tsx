@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { PostCard } from "@/components/content/PostCard";
 import { SectionHeader } from "@/components/sections/SectionHeader";
 import { contentService } from "@/lib/services/contentService";
-import type { Post } from "@/lib/schemas/content";
+import type { Post } from "@/lib/types";
 
 export function FeaturedPosts() {
   const [posts, setPosts] = useState<Post[]>([]);
@@ -12,7 +12,17 @@ export function FeaturedPosts() {
   useEffect(() => {
     const loadPosts = async () => {
       const allPosts = await contentService.posts.list({ featured: true });
-      setPosts(allPosts.slice(0, 3));
+      // Ensure posts have required fields with defaults
+      const postsWithDefaults = allPosts.map((p) => ({
+        ...p,
+        excerpt: p.excerpt ?? "",
+        content: p.content ?? "",
+        image: p.image ?? "",
+        featured: (p as any).featured ?? false,
+        tags: (p as any).tags ?? [],
+        publishedAt: p.publishedAt ?? new Date().toISOString(),
+      })) as Post[];
+      setPosts(postsWithDefaults.slice(0, 3));
     };
     loadPosts();
   }, []);

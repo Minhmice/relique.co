@@ -37,7 +37,7 @@ export function QRScanInput({ onCodeScanned }: QRScanInputProps) {
   const validateCode = (code: string): boolean => {
     const result = ProductIdSchema.safeParse(code.trim());
     if (!result.success) {
-      setError(result.error.errors[0]?.message || "Invalid format");
+      setError(result.error.issues[0]?.message || "Invalid format");
       return false;
     }
     setError(null);
@@ -97,7 +97,7 @@ export function QRScanInput({ onCodeScanned }: QRScanInputProps) {
     // - verify?code=RLQ-QUAL-001
     const urlMatch = link.match(/[?&]code=([^&]+)/i);
     if (urlMatch) {
-      const extractedCode = decodeURIComponent(urlMatch[1]);
+      const extractedCode = decodeURIComponent(urlMatch[1] || "");
       if (validateCode(extractedCode)) {
         onCodeScanned(extractedCode.trim());
         setPastedCode(extractedCode.trim());

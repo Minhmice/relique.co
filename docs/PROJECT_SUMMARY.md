@@ -19,7 +19,7 @@
 - **Mock Consignment:** Form với autosave, file upload (local), validation
 - **Theme System:** Dark-only (single-tone dark theme)
 - **Responsive:** Desktop-first design
-- **Monorepo Structure:** Web app (port 3000) + App Portal (port 3001)
+- **Monorepo Structure:** Web app (port 3000) + Admin Dashboard (port 3001)
 
 ---
 

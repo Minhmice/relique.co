@@ -8,6 +8,7 @@ export const STORAGE_KEYS = {
   VERIFY_HISTORY: "relique.v1.verify.history",
   VERIFY_LAST_RESULT: "relique.v1.verify.lastResult",
   VERIFY_MAPPING: "relique.v1.verify.mapping",
+  VERIFY_PINNED: "relique.v1.verify.pinned",
   
   // Marketplace domain
   MARKETPLACE_LISTINGS: "relique.v1.marketplace.listings",

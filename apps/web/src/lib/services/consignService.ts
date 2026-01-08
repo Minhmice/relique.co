@@ -22,6 +22,11 @@ export const consignService: IConsignService = {
       const draftsResult = await consignServiceImpl.listDrafts();
       if (draftsResult.ok && draftsResult.data.length > 0) {
         const latest = draftsResult.data[draftsResult.data.length - 1];
+        if (!latest) {
+          const createResult = await consignServiceImpl.createDraft(draftData);
+          if (createResult.ok) return createResult.data;
+          throw new Error("Failed to create draft");
+        }
         const updateResult = await consignServiceImpl.updateDraft(String(latest.timestamp), draftData);
         if (updateResult.ok) {
           return updateResult.data;

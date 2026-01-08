@@ -86,8 +86,7 @@
 
 ### Automated Testing
 - Run Lighthouse CI in build pipeline
-- Use Playwright accessibility tests
-- Check with axe-core in E2E tests
+- Use axe-core for accessibility testing
 
 ### Manual Testing
 - Test with keyboard only (no mouse)

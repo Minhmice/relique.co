@@ -8,7 +8,7 @@ import {
 } from "@relique/shared/domain";
 import type { MarketplaceListing } from "@relique/shared/domain";
 import { MarketplaceListingSchema } from "@relique/shared/domain";
-import { marketplaceListingsSeed } from "@relique/shared/domain";
+import { marketplaceListings } from "@relique/shared/domain";
 import {
   getMarketplaceFavorites,
   toggleMarketplaceFavorite,
@@ -18,7 +18,7 @@ import {
 } from "@relique/shared/domain";
 
 function readSeed(): MarketplaceListing[] {
-  return (marketplaceListingsSeed as MarketplaceListing[]).map((item) => {
+  return (marketplaceListings as MarketplaceListing[]).map((item) => {
     const validated = MarketplaceListingSchema.safeParse(item);
     if (validated.success) {
       return validated.data;

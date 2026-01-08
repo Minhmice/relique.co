@@ -19,6 +19,7 @@ export type DataTableDensity = "comfortable" | "compact";
 
 export type DataTableProps<TData> = {
   data: TData[];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   columns: ColumnDef<TData, any>[];
   loading?: boolean;
   error?: { title?: string; description?: string } | null;

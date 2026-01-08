@@ -25,7 +25,7 @@ Relique.co là platform probabilistic authentication cho collectibles và memora
 - **Mock Consignment:** Form với autosave, file upload (local), validation
 - **Theme System:** Dark-only (single-tone dark theme)
 - **Responsive:** Desktop-first design
-- **Monorepo Structure:** Web app (port 3000) + App Portal (port 3001)
+- **Monorepo Structure:** Web app (port 3000) + Admin Dashboard (port 3001)
 
 ---
 
@@ -85,10 +85,10 @@ pnpm dev:web
 cd apps/web
 pnpm dev
 
-# Run app portal (port 3001)
-pnpm dev:app-portal
+# Run admin dashboard (port 3001)
+pnpm dev:admin
 # hoặc
-cd apps/app-portal
+cd apps/admin
 pnpm dev
 
 # Run cả hai apps cùng lúc
@@ -96,7 +96,7 @@ pnpm dev:all
 ```
 
 - Web app: `http://localhost:3000`
-- App portal: `http://localhost:3001`
+- Admin dashboard: `http://localhost:3001`
 
 ---
 
@@ -115,10 +115,10 @@ relique.co/
 │   │   │   ├── lib/        # Utilities, services, hooks
 │   │   │   └── mocks/      # Mock data (JSON)
 │   │   └── public/         # Static assets
-│   ├── app-portal/         # App portal (port 3001)
+│   ├── admin/              # Admin dashboard (port 3001)
 │   │   ├── app/            # Next.js App Router
 │   │   │   ├── login/      # Login page
-│   │   │   └── app/        # App routes (Dashboard, Saved, etc.)
+│   │   │   └── admin/      # Admin routes (Overview, Dashboard, Submissions, Profile)
 │   │   └── src/
 │   │       ├── components/ # React components
 │   │       └── lib/        # Utilities, services
@@ -134,7 +134,7 @@ relique.co/
 ### Route Groups
 
 - **`(public)`:** Public pages (Home, Verify, Marketplace, Consign, About, Contact, Posts, Events)
-- **`(apps)`:** App portal (Login, Dashboard, Saved, Submissions, Profile)
+- **`(portal)`:** Admin dashboard (Login, Overview, Dashboard, Submissions, Profile)
 - **`(admin)`:** Admin-lite (Dashboard, Marketplace CRUD, Content CRUD)
 - **`(legal)`:** Legal pages (Policies, Terms)
 
@@ -154,21 +154,21 @@ relique.co/
 - **Contact (`/contact`):** Simple form với validation
 - **Posts/Events:** Content hub với list + detail pages
 
-### App Portal (Separate App - Port 3001)
+### Admin Dashboard (Separate App - Port 3001)
 
-App portal là một Next.js app riêng trong monorepo, chạy trên port 3001:
+Admin dashboard là một Next.js app riêng trong monorepo, chạy trên port 3001:
 
 - **Login (`/login`):** 3 login methods (Email/Password, Magic Link, Social) - UI tabs, mock authentication
-- **Dashboard (`/app`):** Welcome message, quick stats, recent activity
-- **Saved Items (`/app/saved`):** List saved marketplace items
-- **Submissions (`/app/submissions`):** Consign drafts + verify history list
-- **Profile (`/app/profile`):** User profile, sign out
+- **Overview (`/admin`):** Home page với quick stats và quick actions
+- **Dashboard (`/admin/dashboard`):** Welcome message, quick stats, recent activity
+- **Submissions (`/admin/submissions`):** Consign drafts + verify history list với advanced search và table personalization
+- **Profile (`/admin/profile`):** User profile, data export/reset
 
-**Chạy app portal:**
+**Chạy admin dashboard:**
 ```bash
-pnpm dev:app-portal
+pnpm dev:admin
 # hoặc
-cd apps/app-portal
+cd apps/admin
 pnpm dev
 ```
 
@@ -620,5 +620,4 @@ Xem `NEXT_STEPS.md` để biết chi tiết.
 
 **Last Updated:** 2024-12-19  
 **Version:** 1.0  
-**Status:** Demo-Ready / Contract-Ready  
 **Phase:** Phase 6 Completed ✅

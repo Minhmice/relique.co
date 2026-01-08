@@ -8,14 +8,14 @@ import {
 } from "@relique/shared/domain";
 import type { Post, Event } from "@relique/shared/domain";
 import { PostSchema, EventSchema } from "@relique/shared/domain";
-import { postsSeed, eventsSeed } from "@relique/shared/domain";
+import { posts, events } from "@relique/shared/domain";
 import {
   getContentBookmarks,
   toggleContentBookmark,
 } from "@relique/shared/domain";
 
 function readSeedPosts(): Post[] {
-  return (postsSeed as Post[]).map((item) => {
+  return (posts as Post[]).map((item) => {
     const validated = PostSchema.safeParse(item);
     if (validated.success) {
       return validated.data;
@@ -26,7 +26,7 @@ function readSeedPosts(): Post[] {
 }
 
 function readSeedEvents(): Event[] {
-  return (eventsSeed as Event[]).map((item) => {
+  return (events as Event[]).map((item) => {
     const validated = EventSchema.safeParse(item);
     if (validated.success) {
       return validated.data;

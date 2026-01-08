@@ -13,8 +13,6 @@ Technical checklist that must be satisfied before a feature/deliverable is consi
 ## Testing
 
 - [ ] **Unit Tests**: Critical logic has unit tests (if applicable)
-- [ ] **E2E Tests**: Core flows covered by Playwright tests
-- [ ] **Test Reports**: HTML reports and traces available in `test-results/`
 - [ ] **Manual Testing**: Feature tested manually in both apps
 
 ## Documentation
