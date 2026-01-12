@@ -16,9 +16,10 @@ export const marketplaceService: IMarketplaceService = {
       return {
         items: response.items,
         pageInfo: {
+          data: response.items,
           total: response.total,
           page: response.page,
-          pageSize: response.pageSize,
+          limit: response.pageSize,
           totalPages: response.totalPages,
         },
       };
@@ -28,9 +29,10 @@ export const marketplaceService: IMarketplaceService = {
       return {
         items: [],
         pageInfo: {
+          data: [],
           total: 0,
           page: 1,
-          pageSize: params?.pageSize || 100,
+          limit: params?.pageSize || 100,
           totalPages: 0,
         },
       };
