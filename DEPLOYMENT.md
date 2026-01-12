@@ -31,10 +31,14 @@ git push origin main
 3. Import repository `Minhmice/relique.co` từ GitHub
 4. Cấu hình project:
    - **Framework Preset**: Next.js
-   - **Root Directory**: `apps/web` ⚠️ **QUAN TRỌNG**
-   - **Build Command**: `cd ../.. && pnpm build --filter=web`
-   - **Output Directory**: `.next` (mặc định)
+   - **Root Directory**: `apps/web` ⚠️ **QUAN TRỌNG - PHẢI SET ĐÚNG**
+   - **Build Command**: `cd ../.. && pnpm build --filter=web` (hoặc để trống, Vercel sẽ dùng vercel.json)
+   - **Output Directory**: `.next` ⚠️ **PHẢI SET ĐÚNG**
    - **Install Command**: `pnpm install`
+   
+   ⚠️ **LƯU Ý QUAN TRỌNG**: 
+   - Nếu không set **Root Directory** = `apps/web`, Vercel sẽ build từ root và không tìm thấy output
+   - Nếu không set **Output Directory** = `.next`, Vercel sẽ tìm "public" directory và fail
 
 5. **Environment Variables** (nếu cần):
    ```
@@ -49,10 +53,14 @@ git push origin main
 2. Import cùng repository `Minhmice/relique.co`
 3. Cấu hình project:
    - **Framework Preset**: Next.js
-   - **Root Directory**: `apps/admin` ⚠️ **QUAN TRỌNG**
-   - **Build Command**: `cd ../.. && pnpm build --filter=admin`
-   - **Output Directory**: `.next` (mặc định)
+   - **Root Directory**: `apps/admin` ⚠️ **QUAN TRỌNG - PHẢI SET ĐÚNG**
+   - **Build Command**: `cd ../.. && pnpm build --filter=admin` (hoặc để trống, Vercel sẽ dùng vercel.json)
+   - **Output Directory**: `.next` ⚠️ **PHẢI SET ĐÚNG**
    - **Install Command**: `pnpm install`
+   
+   ⚠️ **LƯU Ý QUAN TRỌNG**: 
+   - Nếu không set **Root Directory** = `apps/admin`, Vercel sẽ build từ root và không tìm thấy output
+   - Nếu không set **Output Directory** = `.next`, Vercel sẽ tìm "public" directory và fail
 
 4. **Environment Variables**:
    ```
@@ -184,9 +192,13 @@ Vercel tự động deploy khi:
 
 ### Build Fails trên Vercel
 
-**Lỗi**: "No Output Directory found"
-- ✅ Đã fix: Đảm bảo `Root Directory` được set đúng (`apps/web` hoặc `apps/admin`)
-- ✅ Đã fix: `vercel.json` đã được tạo trong mỗi app
+**Lỗi**: "No Output Directory named 'public' found"
+- ✅ **FIX**: Đảm bảo `Root Directory` được set đúng trong Vercel Dashboard:
+  - Web app: `apps/web`
+  - Admin app: `apps/admin`
+- ✅ **FIX**: Đảm bảo `Output Directory` được set = `.next` (KHÔNG phải "public")
+- ✅ **FIX**: `vercel.json` đã được tạo trong mỗi app với `outputDirectory: ".next"`
+- ⚠️ **QUAN TRỌNG**: Với Next.js, output directory là `.next`, không phải `public`. `public` folder chỉ chứa static assets, không phải build output.
 
 **Lỗi**: "Module not found"
 - Kiểm tra `transpilePackages` trong `next.config.js`
