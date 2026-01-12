@@ -39,6 +39,7 @@ import {
   ArrowRight
 } from 'lucide-react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { marketplaceAPIService } from '@/lib/services/api/marketplaceService';
 
 const MOCK_CHART_DATA = [
   { name: 'Jan', val: 400 },
@@ -47,14 +48,6 @@ const MOCK_CHART_DATA = [
   { name: 'Apr', val: 800 },
   { name: 'May', val: 500 },
   { name: 'Jun', val: 900 },
-];
-
-const INITIAL_ITEMS: MarketplaceItem[] = [
-  { id: '1', title: 'Air Jordan 1 Signed', athlete: 'Michael Jordan', category: 'Footwear', status: MarketplaceStatus.PUBLISHED, is_featured: true, price_usd: 45000, featured_order: 1 },
-  { id: '2', title: 'Home Run Ball #700', athlete: 'Albert Pujols', category: 'Memorabilia', status: MarketplaceStatus.DRAFT, is_featured: false, price_usd: 125000, featured_order: null },
-  { id: '3', title: 'Race Worn Helmet', athlete: 'Max Verstappen', category: 'Racing', status: MarketplaceStatus.PUBLISHED, is_featured: true, price_usd: 18000, featured_order: 2 },
-  { id: '4', title: 'Signed Match Jersey', athlete: 'Lionel Messi', category: 'Apparel', status: MarketplaceStatus.DRAFT, is_featured: false, price_usd: 5500, featured_order: null },
-  { id: '5', title: 'Championship Ring', athlete: 'Stephen Curry', category: 'Jewelry', status: MarketplaceStatus.PUBLISHED, is_featured: true, price_usd: 85000, featured_order: 3 },
 ];
 
 const INITIAL_VERIFY_RECORDS: VerifyRecord[] = [
@@ -102,13 +95,37 @@ export default function AdminPage() {
   }, []);
   
   // Data States
-  const [items, setItems] = useState<MarketplaceItem[]>(INITIAL_ITEMS);
+  const [items, setItems] = useState<MarketplaceItem[]>([]);
   const [verifyRecords, setVerifyRecords] = useState<VerifyRecord[]>(INITIAL_VERIFY_RECORDS);
   const [auditLogs, setAuditLogs] = useState<AuditLog[]>(INITIAL_AUDIT_LOGS);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedItemIds, setSelectedItemIds] = useState<string[]>([]);
   const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
+
+  // Fetch marketplace items from API
+  useEffect(() => {
+    const fetchItems = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        const response = await marketplaceAPIService.list({ pageSize: 1000 });
+        setItems(response.items);
+      } catch (err) {
+        console.error('Failed to fetch marketplace items:', err);
+        setError('Failed to load marketplace items');
+        // Keep empty array on error
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (mounted) {
+      fetchItems();
+    }
+  }, [mounted]);
 
   // --- Audit Utility ---
   const addAuditLog = (actor: string, action: string, entity: string) => {
@@ -123,7 +140,7 @@ export default function AdminPage() {
   };
 
   // --- Reordering Logic for Carousel ---
-  const moveFeatured = (index: number, direction: 'up' | 'down') => {
+  const moveFeatured = async (index: number, direction: 'up' | 'down') => {
     const featured = items.filter(i => i.is_featured).sort((a, b) => (a.featured_order || 0) - (b.featured_order || 0));
     if ((direction === 'up' && index === 0) || (direction === 'down' && index === featured.length - 1)) return;
     
@@ -137,31 +154,42 @@ export default function AdminPage() {
     
     [newFeatured[index], newFeatured[targetIndex]] = [targetItem, currentItem];
     
-    const updatedItems = items.map(item => {
-      const featuredIdx = newFeatured.findIndex(nf => nf.id === item.id);
-      if (featuredIdx !== -1) {
-        return { ...item, featured_order: featuredIdx + 1 };
-      }
-      return item;
-    });
-    
-    setItems(updatedItems);
-    addAuditLog('Admin', 'REORDER', 'Featured Carousel');
+    try {
+      // Update all featured items with new order
+      await Promise.all(newFeatured.map((item, idx) => 
+        marketplaceAPIService.update(item.id, { ...item, featured_order: idx + 1 })
+      ));
+      
+      // Refresh items
+      const response = await marketplaceAPIService.list({ pageSize: 1000 });
+      setItems(response.items);
+      addAuditLog('Admin', 'REORDER', 'Featured Carousel');
+    } catch (err) {
+      console.error('Failed to reorder featured items:', err);
+      setError('Failed to reorder featured items');
+    }
   };
 
-  const toggleFeatured = (id: string) => {
-    setItems(prev => prev.map(item => {
-      if (item.id === id) {
-        const newState = !item.is_featured;
-        addAuditLog('Admin', newState ? 'FEATURE' : 'UNFEATURE', item.title);
-        return { 
-          ...item, 
-          is_featured: newState, 
-          featured_order: newState ? items.filter(i => i.is_featured).length + 1 : null 
-        };
-      }
-      return item;
-    }));
+  const toggleFeatured = async (id: string) => {
+    const item = items.find(i => i.id === id);
+    if (!item) return;
+
+    const newState = !item.is_featured;
+    try {
+      await marketplaceAPIService.update(id, {
+        ...item,
+        is_featured: newState,
+        featured_order: newState ? items.filter(i => i.is_featured).length + 1 : null,
+      });
+      
+      // Refresh items
+      const response = await marketplaceAPIService.list({ pageSize: 1000 });
+      setItems(response.items);
+      addAuditLog('Admin', newState ? 'FEATURE' : 'UNFEATURE', item.title);
+    } catch (err) {
+      console.error('Failed to update featured status:', err);
+      setError('Failed to update featured status');
+    }
   };
 
   // --- Enhanced Status Colors & Icons ---
@@ -221,27 +249,54 @@ export default function AdminPage() {
     );
   };
 
-  const handleConfirmDelete = () => {
+  const handleConfirmDelete = async () => {
     if (deleteConfirmId === 'bulk') {
-      addAuditLog('Admin', 'BULK_DELETE', `${selectedItemIds.length} items`);
-      setItems(prev => prev.filter(i => !selectedItemIds.includes(i.id)));
-      setSelectedItemIds([]);
+      try {
+        await Promise.all(selectedItemIds.map(id => marketplaceAPIService.delete(id)));
+        const response = await marketplaceAPIService.list({ pageSize: 1000 });
+        setItems(response.items);
+        addAuditLog('Admin', 'BULK_DELETE', `${selectedItemIds.length} items`);
+        setSelectedItemIds([]);
+      } catch (err) {
+        console.error('Failed to delete items:', err);
+        setError('Failed to delete items');
+      }
     } else if (deleteConfirmId) {
       const itemToDelete = items.find(i => i.id === deleteConfirmId) || verifyRecords.find(i => i.id === deleteConfirmId);
       const entityName = itemToDelete ? (itemToDelete as any).title || (itemToDelete as any).pid : deleteConfirmId;
-      addAuditLog('Admin', 'DELETE', entityName);
-      setItems(prev => prev.filter(i => i.id !== deleteConfirmId));
-      setVerifyRecords(prev => prev.filter(i => i.id !== deleteConfirmId));
+      
+      try {
+        if (items.find(i => i.id === deleteConfirmId)) {
+          await marketplaceAPIService.delete(deleteConfirmId);
+          const response = await marketplaceAPIService.list({ pageSize: 1000 });
+          setItems(response.items);
+        } else {
+          setVerifyRecords(prev => prev.filter(i => i.id !== deleteConfirmId));
+        }
+        addAuditLog('Admin', 'DELETE', entityName);
+      } catch (err) {
+        console.error('Failed to delete item:', err);
+        setError('Failed to delete item');
+      }
     }
     setDeleteConfirmId(null);
   };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     // #region agent log
     fetch('http://127.0.0.1:7243/ingest/f7dc8aa7-be7f-4274-bffb-71b80fe9d9f5',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'admin/page.tsx:228',message:'handleLogout called',data:{activeTab},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C'})}).catch(()=>{});
     // #endregion
-    addAuditLog('Admin', 'LOGOUT', 'Session Management');
-    router.push('/login');
+    try {
+      const { createClient } = await import('@/lib/supabase/client');
+      const supabase = createClient();
+      await supabase.auth.signOut();
+      addAuditLog('Admin', 'LOGOUT', 'Session Management');
+      router.push('/login');
+      router.refresh();
+    } catch (err) {
+      console.error('Failed to logout:', err);
+      router.push('/login');
+    }
   };
 
   const filteredItemsSearch = useMemo(() => {
@@ -423,18 +478,32 @@ export default function AdminPage() {
                 <button className="bg-primary px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2 hover:scale-[1.02] transition-transform text-white"><Plus className="w-4 h-4" /> Add Item</button>
               </div>
             </div>
-            <DataTable 
-              columns={[
-                { header: 'Title', accessor: 'title', render: (r) => <span className="font-semibold text-white">{r.title}</span> },
-                { header: 'Athlete', accessor: 'athlete', render: (r) => <span className="text-white">{r.athlete}</span> },
-                { header: 'Status', accessor: 'status', render: (r: any) => getStatusPill(r.status) },
-                { header: 'Featured', accessor: 'is_featured', render: (r: any) => r.is_featured ? <Star className="w-4 h-4 fill-accent text-accent" /> : <Star className="w-4 h-4 text-gray-700" /> },
-                { header: 'Price', accessor: 'price_usd', render: (r: any) => <span className="font-mono text-gray-300 tracking-tighter font-bold">${r.price_usd.toLocaleString()}</span> }
-              ]} 
-              data={filteredItemsSearch} 
-              onDelete={setDeleteConfirmId} 
-              onEdit={(id) => console.log('Edit', id)} 
-            />
+            {error && (
+              <div className="bg-red-500/10 border border-red-500/20 text-red-400 px-4 py-3 rounded-lg">
+                {error}
+              </div>
+            )}
+            {loading ? (
+              <div className="flex items-center justify-center py-20 text-gray-400">
+                <div className="text-center">
+                  <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+                  <p>Loading marketplace items...</p>
+                </div>
+              </div>
+            ) : (
+              <DataTable 
+                columns={[
+                  { header: 'Title', accessor: 'title', render: (r) => <span className="font-semibold text-white">{r.title}</span> },
+                  { header: 'Athlete', accessor: 'athlete', render: (r) => <span className="text-white">{r.athlete}</span> },
+                  { header: 'Status', accessor: 'status', render: (r: any) => getStatusPill(r.status) },
+                  { header: 'Featured', accessor: 'is_featured', render: (r: any) => r.is_featured ? <Star className="w-4 h-4 fill-accent text-accent" /> : <Star className="w-4 h-4 text-gray-700" /> },
+                  { header: 'Price', accessor: 'price_usd', render: (r: any) => <span className="font-mono text-gray-300 tracking-tighter font-bold">${r.price_usd.toLocaleString()}</span> }
+                ]} 
+                data={filteredItemsSearch} 
+                onDelete={setDeleteConfirmId} 
+                onEdit={(id) => console.log('Edit', id)} 
+              />
+            )}
           </div>
         );
 

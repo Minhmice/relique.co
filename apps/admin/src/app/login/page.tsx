@@ -1,32 +1,69 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useEffect, Suspense } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Lock, ArrowRight } from "lucide-react";
+import { createClient } from "@/lib/supabase/client";
 
-export default function LoginPage() {
+function LoginForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [authStep, setAuthStep] = useState<'login' | 'otp'>('login');
   const [loginEmail, setLoginEmail] = useState('');
   const [loginPass, setLoginPass] = useState('');
   const [otpValue, setOtpValue] = useState('');
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+  const supabase = createClient();
 
-  const handleLogin = (e: React.FormEvent) => {
+  // Load saved email from localStorage
+  useEffect(() => {
+    const savedEmail = localStorage.getItem('relique_admin_email');
+    if (savedEmail) {
+      setLoginEmail(savedEmail);
+    }
+  }, []);
+
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    if ((loginEmail === 'admin@relique.co' || loginEmail === 'admin@gmail.com') && loginPass === 'admin123') {
-      setAuthStep('otp');
-    } else {
-      alert('Invalid credentials');
+    setError('');
+    setLoading(true);
+
+    try {
+      const { data, error: signInError } = await supabase.auth.signInWithPassword({
+        email: loginEmail,
+        password: loginPass,
+      });
+
+      if (signInError) {
+        setError('Invalid credentials');
+        setLoading(false);
+        return;
+      }
+
+      // Save email preference
+      localStorage.setItem('relique_admin_email', loginEmail);
+
+      // For now, skip OTP step and go directly to admin
+      // In production, implement 2FA here
+      const redirectTo = searchParams.get('redirect') || '/admin';
+      router.push(redirectTo);
+      router.refresh();
+    } catch (err) {
+      setError('An error occurred. Please try again.');
+      setLoading(false);
     }
   };
 
   const handleVerifyOtp = (e: React.FormEvent) => {
     e.preventDefault();
+    // OTP verification can be implemented here if needed
     if (otpValue === '123456') {
-      // Set session or redirect
-      router.push('/admin');
+      const redirectTo = searchParams.get('redirect') || '/admin';
+      router.push(redirectTo);
+      router.refresh();
     } else {
-      alert('Invalid OTP');
+      setError('Invalid OTP');
     }
   };
 
@@ -51,7 +88,8 @@ export default function LoginPage() {
                 onChange={e => setLoginEmail(e.target.value)} 
                 required 
                 placeholder="admin@relique.co" 
-                className="w-full bg-white/5 border border-border rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-primary text-white placeholder:text-gray-500" 
+                disabled={loading}
+                className="w-full bg-white/5 border border-border rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-primary text-white placeholder:text-gray-500 disabled:opacity-50" 
               />
               <input 
                 type="password" 
@@ -59,14 +97,19 @@ export default function LoginPage() {
                 onChange={e => setLoginPass(e.target.value)} 
                 required 
                 placeholder="••••••••" 
-                className="w-full bg-white/5 border border-border rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-primary text-white placeholder:text-gray-500" 
+                disabled={loading}
+                className="w-full bg-white/5 border border-border rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-primary text-white placeholder:text-gray-500 disabled:opacity-50" 
               />
+              {error && (
+                <div className="text-red-400 text-sm text-center">{error}</div>
+              )}
             </div>
             <button 
               type="submit" 
-              className="w-full bg-primary hover:bg-primary/90 text-white font-bold py-3 rounded-lg flex items-center justify-center gap-2 shadow-lg shadow-primary/20"
+              disabled={loading}
+              className="w-full bg-primary hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold py-3 rounded-lg flex items-center justify-center gap-2 shadow-lg shadow-primary/20"
             >
-              Continue <ArrowRight className="w-4 h-4" />
+              {loading ? 'Signing in...' : 'Continue'} <ArrowRight className="w-4 h-4" />
             </button>
           </form>
         ) : (
@@ -84,6 +127,9 @@ export default function LoginPage() {
               autoFocus 
               className="w-full text-center tracking-[0.5em] text-2xl font-bold bg-white/5 border border-border rounded-lg py-4 focus:outline-none focus:border-accent text-white placeholder:text-gray-500" 
             />
+            {error && (
+              <div className="text-red-400 text-sm text-center">{error}</div>
+            )}
             <button 
               type="submit" 
               className="w-full bg-accent hover:bg-accent/90 text-black font-bold py-3 rounded-lg"
@@ -94,5 +140,17 @@ export default function LoginPage() {
         )}
       </div>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-bg-0 flex items-center justify-center">
+        <div className="text-white">Loading...</div>
+      </div>
+    }>
+      <LoginForm />
+    </Suspense>
   );
 }

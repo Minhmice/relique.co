@@ -1,0 +1,91 @@
+import { NextRequest, NextResponse } from "next/server";
+import { createServiceRoleClient } from "@/lib/supabase/server";
+
+// POST /api/consigned/[id]/convert - Convert consigned item to marketplace item
+export async function POST(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    const { id } = await params;
+    const supabase = createServiceRoleClient();
+
+    // Get consigned item
+    const { data: consignedItem, error: fetchError } = await supabase
+      .from("consigned_items")
+      .select("*")
+      .eq("id", id)
+      .single();
+
+    if (fetchError || !consignedItem) {
+      return NextResponse.json(
+        { error: "Consigned item not found" },
+        { status: 404 }
+      );
+    }
+
+    // Create marketplace item from consigned item
+    const slug = consignedItem.item_description
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/(^-|-$)/g, "")
+      .substring(0, 50) + "-" + Date.now().toString(36);
+
+    const { data: marketplaceItem, error: createError } = await supabase
+      .from("marketplace_items")
+      .insert({
+        slug,
+        title: consignedItem.item_description.substring(0, 200),
+        description: consignedItem.item_description,
+        price_usd: consignedItem.estimated_value || 0,
+        currency: "USD",
+        image: "", // Should be uploaded separately
+        category: consignedItem.category || "Other",
+        status: "draft",
+        coa_issuer: consignedItem.coa_issuer,
+        commission_rate: consignedItem.commission_rate,
+        created_by: consignedItem.created_by,
+      })
+      .select()
+      .single();
+
+    if (createError) {
+      return NextResponse.json(
+        { error: createError.message },
+        { status: 400 }
+      );
+    }
+
+    // Update consigned item to link to marketplace item
+    await supabase
+      .from("consigned_items")
+      .update({ 
+        marketplace_item_id: marketplaceItem.id,
+        status: "approved"
+      })
+      .eq("id", id);
+
+    // Log audit
+    await supabase.from("audit_logs").insert({
+      action: "CONVERT",
+      entity_type: "consigned_item",
+      entity_id: id,
+      metadata: { 
+        marketplace_item_id: marketplaceItem.id,
+        consigned_item: consignedItem,
+      },
+    });
+
+    return NextResponse.json({
+      marketplace_item: marketplaceItem,
+      consigned_item_id: id,
+    });
+  } catch (error) {
+    console.error("Error converting consigned item:", error);
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 }
+    );
+  }
+}
+

@@ -20,6 +20,8 @@
     "@radix-ui/react-tabs": "^1.1.13",
     "@relique/shared": "workspace:*",
     "@relique/ui": "workspace:*",
+    "@supabase/ssr": "^0.8.0",
+    "@supabase/supabase-js": "^2.90.1",
     "@tanstack/react-table": "^8.21.3",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
@@ -48,4 +50,3 @@
     "typescript": "5.9.2"
   }
 }
-
