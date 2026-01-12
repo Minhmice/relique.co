@@ -1,0 +1,173 @@
+"use client";
+
+import { motion } from "framer-motion";
+import { StrategicPartnerSection } from "@/components/home/StrategicPartnerSection";
+import { TeamSection } from "@/components/home/TeamSection";
+
+export default function AboutPage() {
+  return (
+    <div className="bg-bgDark pt-24 pb-12">
+      <div className="container mx-auto px-6 max-w-5xl">
+        {/* 4.1 WHO WE ARE */}
+        <motion.section
+          id="who-we-are"
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="py-24 border-b border-white/5"
+        >
+          <div className="mb-12">
+            <span className="text-primaryBlue font-black text-xs tracking-widest uppercase mb-4 block">4.1</span>
+            <h2 className="text-6xl font-black uppercase italic tracking-tighter mb-8 leading-none">
+              WHO WE ARE - THE <span className="text-primaryBlue">RELIQUE.CO STORY</span>
+            </h2>
+          </div>
+          <div className="space-y-8 text-textSec text-lg leading-relaxed font-medium">
+            <p>
+              Relique.co was founded by a group of U.S.-based financial professionals with extensive experience in
+              managing investment funds and high-value assets, in a quest for a new investment vehicle. Drawing on years
+              of exposure to global capital markets, we recognized that memorabilia possesses all the characteristics of
+              a legitimate financial asset—scarcity, provenance, and enduring value—yet has been held back by
+              inconsistent verification and fragmented infrastructure.
+            </p>
+            <p>
+              Determined to transform this space, the team set out to address the barriers that have historically
+              limited memorabilia&apos;s capacity as an investment asset. By combining rigorous financial discipline with
+              strategic insight, we aim to design a platform capable of delivering objectivity, transparency, and
+              scalability, elevating memorabilia from mere collectibles to credible assets that investors and collectors
+              can trust.
+            </p>
+            <div className="bg-primaryBlue/5 border-l-4 border-primaryBlue p-8 italic">
+              &quot;To realize this vision, Relique.co chose St.B as its strategic partner and sponsor their AI
+              engineering endeavor.&quot;
+            </div>
+            <p>
+              Their deep expertise in artificial intelligence, established sporting ecosystem, and intimate understanding
+              of the collectibles market provide critical capabilities. This partnership enables Relique.co to bridge the
+              market knowledge gap and eradicate liability of foreignness, ensuring that every authentication and
+              transaction meets the highest standard of credibility and reliability.
+            </p>
+            <p>
+              Relique.co is redefining what it means for memorabilia to be both collectible and investable, creating a
+              trusted foundation for a market ready to mature and thrive.
+            </p>
+          </div>
+        </motion.section>
+
+        {/* 4.2 INVESTMENT VEHICLE */}
+        <motion.section
+          id="investment-vehicle"
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="py-24 border-b border-white/5"
+        >
+          <div className="mb-12">
+            <span className="text-primaryBlue font-black text-xs tracking-widest uppercase mb-4 block">4.2</span>
+            <h2 className="text-6xl font-black uppercase italic tracking-tighter mb-8 leading-none">
+              ONE TO APPRECIATE, AND <span className="text-primaryBlue">ONE THAT APPRECIATE</span>
+            </h2>
+          </div>
+          <div className="space-y-8 text-textSec text-lg leading-relaxed">
+            <p>
+              The founders of Relique all have extensive experience working at financial funds in the United States,
+              where investment decisions always revolve around three core factors:{" "}
+              <span className="text-white font-bold">value – risk – trust</span>. Throughout that process, we witnessed:
+            </p>
+            <ul className="grid gap-6">
+              {[
+                "Traditional financial assets increasingly rely on intermediary trust.",
+                "Fraud, manipulation, and geopolitical instability have shaken confidence in many assets.",
+                "Global capital has begun seeking alternative asset classes that are clearly scarce.",
+              ].map((point, i) => (
+                <li
+                  key={i}
+                  className="flex gap-4 items-start bg-cardDark border border-white/5 p-6 group hover:border-primaryBlue transition-colors"
+                >
+                  <span className="w-8 h-8 bg-primaryBlue flex-none flex items-center justify-center font-black text-white italic">
+                    {i + 1}
+                  </span>
+                  <span className="text-white font-bold">{point}</span>
+                </li>
+              ))}
+            </ul>
+            <p>
+              From the perspective of asset managers, we realized that memorabilia—items tied to people, events, and
+              history that cannot be replicated—possess many of the characteristics of long-term valuable assets:
+              objective scarcity, sustainable collector demand, and cultural value across time.
+            </p>
+            <div className="p-10 border-2 border-dashed border-white/10 text-center">
+              <p className="text-2xl font-black italic text-highlightIce">
+                &quot;With each purchase, you&apos;re not simply acquiring an item, but rather investing in a financial
+                asset imbued with a story, a memory, and a tangible connection to your sporting inspiration.&quot;
+              </p>
+            </div>
+          </div>
+        </motion.section>
+
+        {/* 4.3 QUESTION OF TRUST */}
+        <motion.section
+          id="question-of-trust"
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="py-24 border-b border-white/5"
+        >
+          <div className="mb-12">
+            <span className="text-primaryBlue font-black text-xs tracking-widest uppercase mb-4 block">4.3</span>
+            <h2 className="text-6xl font-black uppercase italic tracking-tighter mb-8 leading-none">
+              A QUESTION <span className="text-primaryBlue">OF TRUST</span>
+            </h2>
+          </div>
+          <div className="space-y-8 text-textSec text-lg leading-relaxed">
+            <p>
+              With a background in institutional finance and capital management, our founders understand that every
+              investment, irrespective of scale or form, rests upon one principle above all others:{" "}
+              <span className="text-white font-bold">trust</span>. It is the single, uncompromising factor that
+              ultimately determines the capacity, resilience, and credibility of any investment vehicle.
+            </p>
+
+            <div
+              id="ai-powered"
+              className="bg-cardDark p-12 border-2 border-primaryBlue relative overflow-hidden group"
+            >
+              <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                <span className="text-8xl font-black italic">AI</span>
+              </div>
+              <h3 className="text-3xl font-black uppercase italic text-highlightIce mb-8 relative z-10">
+                4.3.2 ARTIFICIAL INTELLIGENCE - A NATURAL EXTENSION, NOT A PIVOT
+              </h3>
+              <p className="mb-8">
+                As the saying goes, modern problems require modern solutions. In this day and age, conventional
+                certification methods have unfortunately become extremely vulnerable to forgery and digital manipulation.
+                Expert opinions, while respected, are subjective and hard to scale efficiently.
+              </p>
+              <div className="grid md:grid-cols-2 gap-12 mb-8">
+                <div>
+                  <h4 className="font-black text-primaryBlue text-xs tracking-widest uppercase mb-4">The Tech Analysis</h4>
+                  <ul className="space-y-2 text-sm font-bold uppercase tracking-tight">
+                    <li>• Sequencing</li>
+                    <li>• Stroke Order</li>
+                    <li>• Velocity Fluctuations</li>
+                    <li>• Micro-tremor Signatures</li>
+                  </ul>
+                </div>
+                <p className="text-sm">
+                  Developed and tailored by the team of expert engineers at St.B AI, our model performs a multi-layered
+                  comparison, assessing subtle variances in patterns, pressure dynamics, and morphology on a level of
+                  precision that far exceeds standard naked-eye capability.
+                </p>
+              </div>
+              <p className="text-white/40 text-sm italic">
+                The result is a high-confidence, data-driven and probabilistic assessment, each linked to a unique
+                product code and QR identifier to ensure traceability and integrity.
+              </p>
+            </div>
+          </div>
+        </motion.section>
+      </div>
+      <StrategicPartnerSection />
+      <TeamSection />
+    </div>
+  );
+}

@@ -1,21 +1,9 @@
 import type { Metadata } from "next";
-import localFont from "next/font/local";
 import "./globals.css";
 import { Header } from "@/components/shell/Header";
 import { Footer } from "@/components/shell/Footer";
 import { Toaster } from "@/components/ui/sonner";
 import { CompareProvider, CompareDrawer } from "@/components/marketplace/CompareDrawer";
-
-const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
-  display: "swap",
-});
-const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
-  variable: "--font-geist-mono",
-  display: "swap",
-});
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://relique.co"),
@@ -70,7 +58,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="dark" suppressHydrationWarning>
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+      <body className="antialiased">
         <CompareProvider>
           <div className="flex min-h-screen flex-col">
             <Header />

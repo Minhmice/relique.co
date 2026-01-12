@@ -77,7 +77,6 @@ export function AutoTOC({ containerId, className, variant = "inline" }: AutoTOCP
 
       window.scrollTo({
         top: offsetPosition,
-        behavior: "smooth",
       });
     }
   };

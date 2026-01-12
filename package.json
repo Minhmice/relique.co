@@ -5,9 +5,8 @@
     "build": "turbo run build",
     "dev": "turbo run dev",
     "dev:web": "turbo run dev --filter=web",
-    "dev:admin": "turbo run dev --filter=admin",
-    "dev:all": "turbo run dev --filter=web --filter=admin",
     "dev:admin": "turbo run dev --filter=web",
+    "dev:all": "turbo run dev --filter=web --filter=admin",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "typecheck": "tsc --build",
@@ -19,7 +18,7 @@
     "turbo": "^2.7.2",
     "typescript": "5.9.2"
   },
-  "packageManager": "pnpm@9.0.0",
+  "packageManager": "pnpm@10.28.0",
   "engines": {
     "node": ">=18"
   }

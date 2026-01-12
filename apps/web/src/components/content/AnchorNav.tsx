@@ -46,7 +46,6 @@ export function AnchorNav({ items, className }: AnchorNavProps) {
 
       window.scrollTo({
         top: offsetPosition,
-        behavior: "smooth",
       });
     }
   };

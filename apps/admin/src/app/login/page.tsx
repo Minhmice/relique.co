@@ -2,119 +2,97 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { login } from "@/lib/auth";
-import { Chrome, Apple } from "lucide-react";
+import { Lock, ArrowRight } from "lucide-react";
 
 export default function LoginPage() {
   const router = useRouter();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [authStep, setAuthStep] = useState<'login' | 'otp'>('login');
+  const [loginEmail, setLoginEmail] = useState('');
+  const [loginPass, setLoginPass] = useState('');
+  const [otpValue, setOtpValue] = useState('');
 
-  const handleEmailLogin = (e: React.FormEvent) => {
+  const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    login(email, "email");
-    router.push("/app");
+    if ((loginEmail === 'admin@relique.co' || loginEmail === 'admin@gmail.com') && loginPass === 'admin123') {
+      setAuthStep('otp');
+    } else {
+      alert('Invalid credentials');
+    }
   };
 
-  const handleGoogleLogin = () => {
-    login("user@gmail.com", "social", "google");
-    router.push("/app");
-  };
-
-  const handleAppleLogin = () => {
-    login("user@icloud.com", "social", "apple");
-    router.push("/app");
+  const handleVerifyOtp = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (otpValue === '123456') {
+      // Set session or redirect
+      router.push('/admin');
+    } else {
+      alert('Invalid OTP');
+    }
   };
 
   return (
-    <div className="container mx-auto px-4 py-16">
-      <div className="max-w-md mx-auto space-y-6">
-        <div className="text-center space-y-2">
-          <h1 className="text-h1">Welcome Back</h1>
-          <p className="text-muted-foreground">
-            Sign in to your account to continue
-          </p>
+    <div className="min-h-screen bg-bg-0 flex items-center justify-center p-4">
+      <div className="w-full max-w-md bg-surface border border-border rounded-2xl shadow-2xl overflow-hidden p-8 animate-in zoom-in-95 duration-300">
+        <div className="flex justify-center mb-8">
+          <div className="w-12 h-12 bg-primary rounded-xl flex items-center justify-center shadow-[0_0_20px_rgba(0,85,255,0.5)]">
+            <Lock className="text-white w-6 h-6" />
+          </div>
         </div>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Login</CardTitle>
-            <CardDescription>
-              Choose your preferred login method
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-6">
-            <form onSubmit={handleEmailLogin} className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="you@example.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="password">Password</Label>
-                <Input
-                  id="password"
-                  type="password"
-                  placeholder="••••••••"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                />
-              </div>
-              <Button type="submit" className="w-full">
-                Login with Email
-              </Button>
-            </form>
-
-            <div className="relative">
-              <div className="absolute inset-0 flex items-center">
-                <span className="w-full border-t" />
-              </div>
-              <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-background px-2 text-muted-foreground">
-                  Or continue with
-                </span>
-              </div>
+        {authStep === 'login' ? (
+          <form onSubmit={handleLogin} className="space-y-6">
+            <div className="text-center mb-6">
+              <h1 className="text-2xl font-bold text-white">Relique Admin</h1>
+              <p className="text-gray-400 text-sm mt-2">Secure access to marketplace operations</p>
             </div>
-
-            <div className="space-y-2">
-              <Button
-                type="button"
-                variant="outline"
-                className="w-full"
-                onClick={handleGoogleLogin}
-              >
-                <Chrome className="w-4 h-4 mr-2" />
-                Continue with Google
-              </Button>
-              <Button
-                type="button"
-                variant="outline"
-                className="w-full"
-                onClick={handleAppleLogin}
-              >
-                <Apple className="w-4 h-4 mr-2" />
-                Continue with Apple
-              </Button>
+            <div className="space-y-4">
+              <input 
+                type="email" 
+                value={loginEmail} 
+                onChange={e => setLoginEmail(e.target.value)} 
+                required 
+                placeholder="admin@relique.co" 
+                className="w-full bg-white/5 border border-border rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-primary text-white placeholder:text-gray-500" 
+              />
+              <input 
+                type="password" 
+                value={loginPass} 
+                onChange={e => setLoginPass(e.target.value)} 
+                required 
+                placeholder="••••••••" 
+                className="w-full bg-white/5 border border-border rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-primary text-white placeholder:text-gray-500" 
+              />
             </div>
-
-            <p className="text-xs text-muted-foreground text-center">
-              (Mock: All login methods will log you in immediately)
-            </p>
-          </CardContent>
-        </Card>
+            <button 
+              type="submit" 
+              className="w-full bg-primary hover:bg-primary/90 text-white font-bold py-3 rounded-lg flex items-center justify-center gap-2 shadow-lg shadow-primary/20"
+            >
+              Continue <ArrowRight className="w-4 h-4" />
+            </button>
+          </form>
+        ) : (
+          <form onSubmit={handleVerifyOtp} className="space-y-6">
+            <div className="text-center mb-6">
+              <h1 className="text-2xl font-bold text-white">Two-Factor Auth</h1>
+              <p className="text-gray-400 text-sm mt-2">Enter verification code</p>
+            </div>
+            <input 
+              type="text" 
+              maxLength={6} 
+              value={otpValue} 
+              onChange={e => setOtpValue(e.target.value)} 
+              placeholder="123456" 
+              autoFocus 
+              className="w-full text-center tracking-[0.5em] text-2xl font-bold bg-white/5 border border-border rounded-lg py-4 focus:outline-none focus:border-accent text-white placeholder:text-gray-500" 
+            />
+            <button 
+              type="submit" 
+              className="w-full bg-accent hover:bg-accent/90 text-black font-bold py-3 rounded-lg"
+            >
+              Verify Identity
+            </button>
+          </form>
+        )}
       </div>
     </div>
   );
 }
-

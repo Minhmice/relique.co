@@ -31,6 +31,19 @@
     --chart-3: 197 37% 24%;
     --chart-4: 43 74% 49%;
     --chart-5: 27 87% 67%;
+
+    /* RELIQUE Brand Core Colors (Fixed Hex Values) */
+    --relique-navy: #0F2854;
+    --relique-primary-blue: #1C4D8D;
+    --relique-accent-blue: #498BC4;
+    --relique-highlight-ice: #BDE8F5;
+
+    /* RELIQUE Dark Surfaces */
+    --relique-bg-0: #0A0A0A;
+    --relique-bg-1: #121212;
+    --relique-border: #333333;
+    --relique-text-primary: #FFFFFF;
+    --relique-text-secondary: #B3B3B3;
   }
 
   .dark {
@@ -44,6 +57,7 @@
   }
   body {
     @apply bg-background text-foreground;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
     font-feature-settings: "rlig" 1, "calt" 1;
     color-scheme: dark;
   }
@@ -124,6 +138,33 @@
   .transition-slow {
     @apply transition-all duration-300 ease-in-out;
   }
+
+  /* Custom utilities from RELIQUE design */
+  .diagonal-bg {
+    position: relative;
+    overflow: hidden;
+  }
+  .diagonal-bg::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -10%;
+    width: 120%;
+    height: 200%;
+    background: linear-gradient(160deg, transparent 40%, var(--relique-navy) 45%, var(--relique-primary-blue) 55%, transparent 60%);
+    opacity: 0.15;
+    transform: rotate(-15deg);
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  .clip-path-slant {
+    clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 100%, 12px 100%);
+  }
+
+  .clip-path-slant-lg {
+    clip-path: polygon(0 0, calc(100% - 24px) 0, 100% 100%, 24px 100%);
+  }
 }
 
 /* Print styles */
@@ -174,4 +215,22 @@
   .prose-content section {
     page-break-inside: avoid;
   }
+}
+
+/* Custom scrollbar styles */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--relique-bg-0);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--relique-border);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--relique-accent-blue);
 }

@@ -50,14 +50,23 @@ const config: Config = {
   			border: 'hsl(var(--border))',
   			input: 'hsl(var(--input))',
   			ring: 'hsl(var(--ring))',
-  			chart: {
-  				'1': 'hsl(var(--chart-1))',
-  				'2': 'hsl(var(--chart-2))',
-  				'3': 'hsl(var(--chart-3))',
-  				'4': 'hsl(var(--chart-4))',
-  				'5': 'hsl(var(--chart-5))'
-  			}
-  		},
+			chart: {
+				'1': 'hsl(var(--chart-1))',
+				'2': 'hsl(var(--chart-2))',
+				'3': 'hsl(var(--chart-3))',
+				'4': 'hsl(var(--chart-4))',
+				'5': 'hsl(var(--chart-5))'
+			},
+			// Custom colors from example design
+			navy: '#0F2854',
+			primaryBlue: '#1C4D8D',
+			accentBlue: '#498BC4',
+			highlightIce: '#BDE8F5',
+			bgDark: '#0A0A0A',
+			cardDark: '#121212',
+			textSec: '#B3B3B3',
+			borderDark: '#333333'
+		},
   		keyframes: {
   			'accordion-down': {
   				from: {

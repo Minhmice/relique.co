@@ -1,119 +1,104 @@
+"use client";
+
+import React from "react";
 import Link from "next/link";
-import Image from "next/image";
-import { Facebook, Twitter, Instagram, Linkedin } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 export function Footer() {
+  const router = useRouter();
+
+  const links = [
+    { name: "Authenticate", href: "/authenticate" },
+    { name: "Consign", href: "/consign" },
+    { name: "Verify", href: "/verify" },
+    { name: "Artificial Intelligence", href: "/about#ai-powered" },
+    { name: "About Us", href: "/about#who-we-are" },
+    { name: "Contact", href: "/contact" },
+    { name: "Policies", href: "/policies" },
+  ];
+
+  const handleNavClick = (href: string) => {
+    const [path, hash] = href.split("#");
+    router.push(path || "/");
+    if (hash) {
+      setTimeout(() => {
+        const el = document.getElementById(hash);
+        if (el) el.scrollIntoView();
+      }, 100);
+    }
+  };
+
   return (
-    <footer className="border-t bg-background">
-      <div className="container mx-auto px-4 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-          <div className="space-y-4">
-            <h3 className="text-sm font-semibold">Quick Links</h3>
-            <ul className="space-y-2 text-sm">
-              <li>
-                <Link href="/authenticate" className="text-muted-foreground hover:text-foreground transition-colors">
-                  Authenticate
-                </Link>
-              </li>
-              <li>
-                <Link href="/consign" className="text-muted-foreground hover:text-foreground transition-colors">
-                  Consign
-                </Link>
-              </li>
-              <li>
-                <Link href="/verify" className="text-muted-foreground hover:text-foreground transition-colors">
-                  Verify
-                </Link>
-              </li>
-              <li>
-                <Link href="/about#artificial-intelligence" className="text-muted-foreground hover:text-foreground transition-colors">
-                  AI
-                </Link>
-              </li>
-              <li>
-                <Link href="/about" className="text-muted-foreground hover:text-foreground transition-colors">
-                  About
-                </Link>
-              </li>
-              <li>
-                <Link href="/contact" className="text-muted-foreground hover:text-foreground transition-colors">
-                  Contact
-                </Link>
-              </li>
-            </ul>
-          </div>
-
-          <div className="space-y-4">
-            <h3 className="text-sm font-semibold">Legal</h3>
-            <ul className="space-y-2 text-sm">
-              <li>
-                <Link href="/policies" className="text-muted-foreground hover:text-foreground transition-colors">
-                  Policies
-                </Link>
-              </li>
-              <li>
-                <Link href="/terms" className="text-muted-foreground hover:text-foreground transition-colors">
-                  Terms
-                </Link>
-              </li>
-            </ul>
-          </div>
-
-          <div className="space-y-4">
-            <div className="flex items-center space-x-2">
-              <Image
-                src="/brand/logo_2.svg"
-                alt="Relique"
-                width={100}
-                height={32}
-              />
+    <footer className="bg-[#050505] border-t border-white/10 pt-24 pb-12">
+      <div className="container mx-auto px-6">
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-16 mb-20">
+          <div className="col-span-1 lg:col-span-2">
+            <div className="flex items-center gap-3 mb-8 cursor-pointer group" onClick={() => router.push("/")}>
+              <div className="w-10 h-10 bg-primaryBlue rounded-sm flex items-center justify-center font-black text-white italic group-hover:scale-110 transition-transform">
+                R
+              </div>
+              <span className="text-4xl font-black italic tracking-tighter uppercase">Relique.co</span>
             </div>
-            <p className="text-sm text-muted-foreground">
-              Authenticating collectibles with probabilistic verification.
+            <p className="text-textSec max-w-sm mb-10 text-lg leading-relaxed font-medium">
+              Establishing the forensic gold standard for sports memorabilia through AI-driven authentication and digital trust.
             </p>
+            <div className="flex gap-4">
+              {["Twitter", "Instagram", "LinkedIn"].map((s) => (
+                <a
+                  key={s}
+                  href="#"
+                  className="w-10 h-10 border border-white/10 flex items-center justify-center rounded-full hover:bg-primaryBlue hover:border-primaryBlue transition-all group"
+                >
+                  <span className="text-[10px] font-black uppercase text-white/40 group-hover:text-white">{s[0]}</span>
+                </a>
+              ))}
+            </div>
           </div>
 
-          <div className="space-y-4">
-            <h3 className="text-sm font-semibold">Follow Us</h3>
-            <div className="flex space-x-4">
-              <Link
-                href="#"
-                className="text-muted-foreground hover:text-foreground transition-colors"
-                aria-label="Facebook"
-              >
-                <Facebook className="h-5 w-5" />
-              </Link>
-              <Link
-                href="#"
-                className="text-muted-foreground hover:text-foreground transition-colors"
-                aria-label="Twitter"
-              >
-                <Twitter className="h-5 w-5" />
-              </Link>
-              <Link
-                href="#"
-                className="text-muted-foreground hover:text-foreground transition-colors"
-                aria-label="Instagram"
-              >
-                <Instagram className="h-5 w-5" />
-              </Link>
-              <Link
-                href="#"
-                className="text-muted-foreground hover:text-foreground transition-colors"
-                aria-label="LinkedIn"
-              >
-                <Linkedin className="h-5 w-5" />
-              </Link>
+          <div>
+            <h4 className="font-black uppercase text-[11px] tracking-[0.3em] mb-10 text-primaryBlue">Navigation</h4>
+            <ul className="flex flex-col gap-5">
+              {links.map((link) => (
+                <li key={link.name}>
+                  <button
+                    onClick={() => handleNavClick(link.href)}
+                    className="text-textSec hover:text-highlightIce transition-colors text-xs font-black uppercase tracking-[0.1em] flex items-center gap-2 group text-left"
+                  >
+                    <span className="w-0 h-[1px] bg-primaryBlue group-hover:w-4 transition-all" />
+                    {link.name}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div>
+            <h4 className="font-black uppercase text-[11px] tracking-[0.3em] mb-10 text-primaryBlue">Newsletter</h4>
+            <p className="text-textSec text-sm mb-6 font-medium">Stay updated with our curated drops and AI reports.</p>
+            <div className="flex bg-cardDark border border-white/10 p-1 group focus-within:border-highlightIce transition-all">
+              <input
+                type="email"
+                placeholder="EMAIL ADDRESS"
+                className="bg-transparent px-4 py-3 text-[10px] font-black w-full focus:outline-none"
+              />
+              <button className="bg-primaryBlue px-6 py-3 text-[10px] font-black uppercase tracking-widest hover:bg-accentBlue transition-colors">
+                Join
+              </button>
             </div>
           </div>
         </div>
 
-        <div className="mt-8 pt-8 border-t text-center text-sm text-muted-foreground">
-          <p>
-            Authentication is probabilistic and based on available evidence. Results
-            are not guaranteed and should be used as a reference only.
+        <div className="border-t border-white/5 pt-10 flex flex-col md:flex-row justify-between items-center gap-6">
+          <p className="text-[10px] font-black tracking-[0.4em] uppercase text-textSec">
+            © {new Date().getFullYear()} RELIQUE.CO. ALL RIGHTS RESERVED.
           </p>
-          <p className="mt-2">© {new Date().getFullYear()} Relique. All rights reserved.</p>
+          <div className="flex gap-6">
+            {["TW", "IG", "LI"].map((social) => (
+              <a key={social} href="#" className="text-textSec hover:text-white font-black text-xs">
+                {social}
+              </a>
+            ))}
+          </div>
         </div>
       </div>
     </footer>
