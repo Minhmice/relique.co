@@ -129,7 +129,13 @@ export default function AdminPage() {
     
     const newFeatured = [...featured];
     const targetIndex = direction === 'up' ? index - 1 : index + 1;
-    [newFeatured[index], newFeatured[targetIndex]] = [newFeatured[targetIndex], newFeatured[index]];
+    
+    // Type guard: ensure both elements exist before swapping
+    const currentItem = newFeatured[index];
+    const targetItem = newFeatured[targetIndex];
+    if (!currentItem || !targetItem) return;
+    
+    [newFeatured[index], newFeatured[targetIndex]] = [targetItem, currentItem];
     
     const updatedItems = items.map(item => {
       const featuredIdx = newFeatured.findIndex(nf => nf.id === item.id);
@@ -294,7 +300,7 @@ export default function AdminPage() {
                       <div>
                         <p className="text-sm font-medium text-gray-200">{log.action} on {log.entity}</p>
                         <p className="text-[10px] text-gray-500 uppercase tracking-wider mt-0.5">
-                          {mounted ? new Date(log.timestamp).toLocaleTimeString() : new Date(log.timestamp).toISOString().split('T')[1].split('.')[0]}
+                          {mounted ? new Date(log.timestamp).toLocaleTimeString() : new Date(log.timestamp).toISOString().split('T')[1]?.split('.')[0] || 'N/A'}
                         </p>
                       </div>
                     </div>
