@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServiceRoleClient } from "@/lib/supabase/server";
+import type { Database } from "@/lib/supabase/types";
+
+type MarketplaceItemRow = Database["public"]["Tables"]["marketplace_items"]["Row"];
 
 // GET /api/marketplace/[slug] - Get single published marketplace item by slug
 export async function GET(
@@ -10,7 +13,7 @@ export async function GET(
     const { slug } = await params;
     const supabase = createServiceRoleClient();
 
-    const { data, error } = await supabase
+    const { data: itemData, error } = await supabase
       .from("marketplace_items")
       .select("*")
       .eq("slug", slug)
@@ -29,6 +32,15 @@ export async function GET(
         { status: 500 }
       );
     }
+
+    if (!itemData) {
+      return NextResponse.json(
+        { error: "Item not found" },
+        { status: 404 }
+      );
+    }
+
+    const data = itemData as MarketplaceItemRow;
 
     // Transform data to match MarketplaceListing schema
     const item = {

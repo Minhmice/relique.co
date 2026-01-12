@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServiceRoleClient } from "@/lib/supabase/server";
+import type { Database } from "@/lib/supabase/types";
+
+type MarketplaceItemRow = Database["public"]["Tables"]["marketplace_items"]["Row"];
 
 // GET /api/marketplace - List published marketplace items
 export async function GET(request: NextRequest) {
@@ -50,7 +53,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Transform data to match MarketplaceListing schema
-    const items = (data || []).map((item) => ({
+    const items = (data || []).map((item: MarketplaceItemRow) => ({
       id: item.id,
       slug: item.slug,
       title: item.title,

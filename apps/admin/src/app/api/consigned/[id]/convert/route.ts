@@ -1,5 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServiceRoleClient } from "@/lib/supabase/server";
+import type { Database } from "@/lib/supabase/types";
+
+type ConsignedItem = Database["public"]["Tables"]["consigned_items"]["Row"];
+type MarketplaceItem = Database["public"]["Tables"]["marketplace_items"]["Row"];
 
 // POST /api/consigned/[id]/convert - Convert consigned item to marketplace item
 export async function POST(
@@ -11,18 +15,20 @@ export async function POST(
     const supabase = createServiceRoleClient();
 
     // Get consigned item
-    const { data: consignedItem, error: fetchError } = await supabase
+    const { data: consignedItemData, error: fetchError } = await supabase
       .from("consigned_items")
       .select("*")
       .eq("id", id)
       .single();
 
-    if (fetchError || !consignedItem) {
+    if (fetchError || !consignedItemData) {
       return NextResponse.json(
         { error: "Consigned item not found" },
         { status: 404 }
       );
     }
+
+    const consignedItem = consignedItemData as ConsignedItem;
 
     // Create marketplace item from consigned item
     const slug = consignedItem.item_description
@@ -31,7 +37,7 @@ export async function POST(
       .replace(/(^-|-$)/g, "")
       .substring(0, 50) + "-" + Date.now().toString(36);
 
-    const { data: marketplaceItem, error: createError } = await supabase
+    const { data: marketplaceItemData, error: createError } = await supabase
       .from("marketplace_items")
       .insert({
         slug,
@@ -49,12 +55,14 @@ export async function POST(
       .select()
       .single();
 
-    if (createError) {
+    if (createError || !marketplaceItemData) {
       return NextResponse.json(
-        { error: createError.message },
+        { error: createError?.message || "Failed to create marketplace item" },
         { status: 400 }
       );
     }
+
+    const marketplaceItem = marketplaceItemData as MarketplaceItem;
 
     // Update consigned item to link to marketplace item
     await supabase
