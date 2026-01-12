@@ -93,6 +93,7 @@ export async function POST(request: NextRequest) {
 
     const { data, error } = await supabase
       .from("marketplace_items")
+      // @ts-expect-error - Supabase type inference issue with service role client
       .insert({
         ...validated,
         images: validated.images ? JSON.stringify(validated.images) : null,
@@ -108,18 +109,20 @@ export async function POST(request: NextRequest) {
     }
 
     // Log audit
-    await supabase.from("audit_logs").insert({
-      action: "CREATE",
-      entity_type: "marketplace_item",
-      entity_id: data.id,
-      metadata: { item: data },
-    });
+    await supabase.from("audit_logs")
+      // @ts-expect-error - Supabase type inference issue with service role client
+      .insert({
+        action: "CREATE",
+        entity_type: "marketplace_item",
+        entity_id: (data as any).id,
+        metadata: { item: data },
+      });
 
     return NextResponse.json(data, { status: 201 });
   } catch (error) {
     if (error instanceof z.ZodError) {
       return NextResponse.json(
-        { error: "Validation error", details: error.errors },
+        { error: "Validation error", details: error.issues },
         { status: 400 }
       );
     }

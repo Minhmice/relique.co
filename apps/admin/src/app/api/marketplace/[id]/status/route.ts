@@ -20,6 +20,7 @@ export async function PATCH(
 
     const { data, error } = await supabase
       .from("marketplace_items")
+      // @ts-expect-error - Supabase type inference issue with service role client
       .update({ status: validated.status })
       .eq("id", id)
       .select()
@@ -33,21 +34,23 @@ export async function PATCH(
     }
 
     // Log audit
-    await supabase.from("audit_logs").insert({
-      action: "STATUS_CHANGE",
-      entity_type: "marketplace_item",
-      entity_id: id,
-      metadata: { 
-        old_status: data.status, 
-        new_status: validated.status 
-      },
-    });
+    await supabase.from("audit_logs")
+      // @ts-expect-error - Supabase type inference issue with service role client
+      .insert({
+        action: "STATUS_CHANGE",
+        entity_type: "marketplace_item",
+        entity_id: id,
+        metadata: { 
+          old_status: (data as any).status, 
+          new_status: validated.status 
+        },
+      });
 
     return NextResponse.json(data);
   } catch (error) {
     if (error instanceof z.ZodError) {
       return NextResponse.json(
-        { error: "Validation error", details: error.errors },
+        { error: "Validation error", details: error.issues },
         { status: 400 }
       );
     }
