@@ -34,10 +34,10 @@ export function Footer() {
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-16 mb-20">
           <div className="col-span-1 lg:col-span-2">
             <div className="flex items-center gap-3 mb-8 cursor-pointer group" onClick={() => router.push("/")}>
-              <div className="w-10 h-10 bg-primaryBlue rounded-sm flex items-center justify-center font-black text-white italic group-hover:scale-110 transition-transform">
+              <div className="w-10 h-10 bg-primaryBlue rounded-sm flex items-center justify-center font-bold text-white group-hover:scale-110 transition-transform">
                 R
               </div>
-              <span className="text-4xl font-black italic tracking-tighter uppercase">Relique.co</span>
+              <span className="text-4xl font-bold tracking-tight uppercase">Relique.co</span>
             </div>
             <p className="text-textSec max-w-sm mb-10 text-lg leading-relaxed font-medium">
               Establishing the forensic gold standard for sports memorabilia through AI-driven authentication and digital trust.

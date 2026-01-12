@@ -20,7 +20,7 @@ export function HeroSection() {
             <span className="text-primaryBlue font-black text-xs tracking-[0.4em] uppercase">Relique Official Portal</span>
           </div>
 
-          <h1 className="text-7xl md:text-[90px] font-black tracking-tighter leading-[0.85] uppercase mb-8 italic">
+          <h1 className="text-7xl md:text-[90px] font-bold tracking-tight leading-[0.85] mb-8">
             Relics you <br />
             <span className="text-primaryBlue relative inline-block">can rely on</span>
           </h1>
@@ -56,7 +56,7 @@ export function HeroSection() {
               priority
             />
             <div className="absolute inset-0 flex items-center justify-center">
-              <div className="text-[120px] font-black italic opacity-10 select-none tracking-widest leading-none pointer-events-none">
+              <div className="text-[120px] font-bold opacity-10 select-none tracking-widest leading-none pointer-events-none">
                 RELIQUE
               </div>
             </div>

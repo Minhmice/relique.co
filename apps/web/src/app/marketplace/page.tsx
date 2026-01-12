@@ -82,7 +82,7 @@ function MarketplacePageContent() {
       <div className="container mx-auto px-6">
         <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-8">
           <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}>
-            <h1 className="text-6xl font-black uppercase italic tracking-tighter mb-4">
+            <h1 className="text-6xl font-bold tracking-tight mb-4">
               Consigned <span className="text-primaryBlue">Marketplace</span>
             </h1>
             <p className="text-textSec">Exclusive access to certified institutional-grade sports relics.</p>
@@ -137,7 +137,7 @@ function MarketplacePageContent() {
                 <p className="text-[10px] font-black uppercase tracking-widest text-primaryBlue mb-2">
                   {item.signedBy || item.category}
                 </p>
-                <h3 className="text-xl font-black uppercase italic mb-4 group-hover:text-highlightIce transition-colors line-clamp-2">
+                <h3 className="text-xl font-semibold mb-4 group-hover:text-highlightIce transition-colors line-clamp-2">
                   {item.title}
                 </h3>
                 <div className="flex justify-between items-center border-t border-white/5 pt-4">

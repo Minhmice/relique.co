@@ -12,7 +12,7 @@ export function StrategicPartnerSection() {
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8 }}
           >
-            <h2 className="text-4xl md:text-5xl font-black uppercase italic tracking-tighter mb-6">
+            <h2 className="text-4xl md:text-5xl font-bold tracking-tight mb-6">
               Strategic Partner
             </h2>
             <p className="text-textSec text-xl leading-relaxed mb-8">

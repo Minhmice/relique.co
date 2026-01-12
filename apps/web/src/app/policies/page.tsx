@@ -45,7 +45,7 @@ export default function PoliciesPage() {
 
         <div className="lg:col-span-8 space-y-24">
           <section id="introduction">
-            <h1 className="text-5xl font-black uppercase italic tracking-tighter mb-8">
+            <h1 className="text-5xl font-bold tracking-tight mb-8">
               Terms of <span className="text-primaryBlue">Service</span>
             </h1>
             <p className="text-textSec text-lg leading-relaxed">
@@ -54,14 +54,14 @@ export default function PoliciesPage() {
           </section>
 
           <section id="authentication-protocol">
-            <h2 className="text-2xl font-black uppercase italic mb-6">1. Authentication Protocol</h2>
+            <h2 className="text-2xl font-bold mb-6">1. Authentication Protocol</h2>
             <p className="text-textSec leading-relaxed">
               Relique&apos;s analysis is based on current forensic standards. While we strive for 100% accuracy, certification represents the professional consensus of our expert panel.
             </p>
           </section>
 
           <section id="jurisdiction">
-            <h2 className="text-2xl font-black uppercase italic mb-6">12. Jurisdiction</h2>
+            <h2 className="text-2xl font-bold mb-6">12. Jurisdiction</h2>
             <div className="bg-cardDark p-8 border border-white/5 italic text-textSec">
               This agreement is governed by the laws of [Insert Jurisdiction]. All disputes shall be resolved in the courts of [Insert Jurisdiction].
             </div>

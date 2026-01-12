@@ -73,7 +73,7 @@ export function TeamSection() {
           className="text-center mb-20"
         >
           <span className="text-primaryBlue font-black text-xs tracking-widest uppercase mb-4 block">Core Experts</span>
-          <h2 className="text-5xl md:text-6xl font-black uppercase italic tracking-tighter">Meet Our Team</h2>
+          <h2 className="text-5xl md:text-6xl font-bold tracking-tight">Meet Our Team</h2>
           <div className="h-1 w-20 bg-highlightIce mx-auto mt-6" />
         </motion.div>
 
@@ -95,7 +95,7 @@ export function TeamSection() {
                 <span className="text-6xl font-black italic">R</span>
               </div>
               <div className="relative z-10">
-                <h3 className="text-2xl font-black uppercase italic mb-1 group-hover:text-highlightIce transition-colors">
+                <h3 className="text-2xl font-semibold mb-1 group-hover:text-highlightIce transition-colors">
                   {member.name}
                 </h3>
                 <p className="text-primaryBlue font-black text-[10px] uppercase tracking-widest mb-2">{member.role}</p>

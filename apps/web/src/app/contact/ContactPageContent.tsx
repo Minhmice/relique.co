@@ -20,7 +20,7 @@ export function ContactPageContent() {
       <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-primaryBlue/5 to-transparent opacity-30 pointer-events-none" />
       <div className="container mx-auto px-6 max-w-4xl relative z-10">
         <div className="text-center mb-16">
-          <h1 className="text-7xl font-black uppercase italic tracking-tighter mb-4">
+          <h1 className="text-7xl font-bold tracking-tight mb-4">
             Get In <span className="text-primaryBlue">Touch</span>
           </h1>
           <p className="text-textSec">Inquiry response time: &lt; 24 hours.</p>

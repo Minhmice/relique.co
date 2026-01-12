@@ -79,18 +79,7 @@ export default function AdminPage() {
   const [activeTab, setActiveTab] = useState('dashboard');
   const [mounted, setMounted] = useState(false);
 
-  // #region agent log
-  const renderCountRef = React.useRef(0);
-  renderCountRef.current += 1;
-  if (typeof window !== 'undefined') {
-    fetch('http://127.0.0.1:7243/ingest/f7dc8aa7-be7f-4274-bffb-71b80fe9d9f5',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'admin/page.tsx:87',message:'Component render',data:{renderCount:renderCountRef.current,activeTab,mounted},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
-  }
-  // #endregion
-
   useEffect(() => {
-    // #region agent log
-    fetch('http://127.0.0.1:7243/ingest/f7dc8aa7-be7f-4274-bffb-71b80fe9d9f5',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'admin/page.tsx:96',message:'useEffect mount executed',data:{mounted},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'B'})}).catch(()=>{});
-    // #endregion
     setMounted(true);
   }, []);
   
@@ -283,9 +272,6 @@ export default function AdminPage() {
   };
 
   const handleLogout = async () => {
-    // #region agent log
-    fetch('http://127.0.0.1:7243/ingest/f7dc8aa7-be7f-4274-bffb-71b80fe9d9f5',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'admin/page.tsx:228',message:'handleLogout called',data:{activeTab},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C'})}).catch(()=>{});
-    // #endregion
     try {
       const { createClient } = await import('@/lib/supabase/client');
       const supabase = createClient();
@@ -354,7 +340,7 @@ export default function AdminPage() {
                       <div className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center shrink-0"><Activity className="w-4 h-4 text-accent" /></div>
                       <div>
                         <p className="text-sm font-medium text-gray-200">{log.action} on {log.entity}</p>
-                        <p className="text-[10px] text-gray-500 uppercase tracking-wider mt-0.5">
+                        <p className="text-[10px] text-gray-500 uppercase tracking-wider mt-0.5" suppressHydrationWarning>
                           {mounted ? new Date(log.timestamp).toLocaleTimeString() : new Date(log.timestamp).toISOString().split('T')[1]?.split('.')[0] || 'N/A'}
                         </p>
                       </div>
@@ -589,9 +575,6 @@ export default function AdminPage() {
   return (
     <div className="flex h-screen bg-bg-0 text-white overflow-hidden selection:bg-primary/30">
       <PortalSidebar activeTab={activeTab} setActiveTab={(tab) => {
-        // #region agent log
-        fetch('http://127.0.0.1:7243/ingest/f7dc8aa7-be7f-4274-bffb-71b80fe9d9f5',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'admin/page.tsx:510',message:'setActiveTab called',data:{from:activeTab,to:tab},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'E'})}).catch(()=>{});
-        // #endregion
         setActiveTab(tab);
       }} onLogout={handleLogout} />
       <main className="flex-1 flex flex-col min-w-0">

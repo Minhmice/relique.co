@@ -52,7 +52,7 @@ export function AuthenticatePageContent() {
       <div className="container mx-auto px-6 max-w-4xl">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
           <span className="text-primaryBlue font-black uppercase text-xs tracking-widest mb-4 block">Service Portal</span>
-          <h1 className="text-6xl font-black uppercase italic tracking-tighter mb-8">
+          <h1 className="text-6xl font-bold tracking-tight mb-8">
             Submit Item for <span className="text-highlightIce">Authentication</span>
           </h1>
           <p className="text-textSec text-lg mb-12">
@@ -62,7 +62,7 @@ export function AuthenticatePageContent() {
 
         <form onSubmit={handleSubmit} className="space-y-12 bg-cardDark border border-white/5 p-8 md:p-12">
           <div className="space-y-6">
-            <h3 className="text-xl font-black uppercase italic border-l-4 border-primaryBlue pl-4">1. Your Information</h3>
+            <h3 className="text-xl font-semibold border-l-4 border-primaryBlue pl-4">1. Your Information</h3>
             <div className="grid md:grid-cols-2 gap-6">
               <input
                 type="text"
@@ -84,7 +84,7 @@ export function AuthenticatePageContent() {
           </div>
 
           <div className="space-y-6">
-            <h3 className="text-xl font-black uppercase italic border-l-4 border-primaryBlue pl-4">2. Item Details</h3>
+            <h3 className="text-xl font-semibold border-l-4 border-primaryBlue pl-4">2. Item Details</h3>
             <input
               type="text"
               placeholder="ITEM NAME / DESCRIPTION"
@@ -119,7 +119,7 @@ export function AuthenticatePageContent() {
           </div>
 
           <div className="space-y-6">
-            <h3 className="text-xl font-black uppercase italic border-l-4 border-primaryBlue pl-4">7. Image Uploads</h3>
+            <h3 className="text-xl font-semibold border-l-4 border-primaryBlue pl-4">7. Image Uploads</h3>
             <div className="border-2 border-dashed border-white/10 p-12 text-center hover:border-highlightIce/50 transition-colors cursor-pointer group">
               <span className="text-3xl block mb-4 group-hover:scale-110 transition-transform">📸</span>
               <p className="text-xs font-black uppercase tracking-widest text-textSec">

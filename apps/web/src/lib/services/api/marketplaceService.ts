@@ -38,7 +38,21 @@ class MarketplaceAPIService {
 
     const response = await fetch(`${this.baseUrl}?${searchParams.toString()}`);
     if (!response.ok) {
-      throw new Error(`Failed to fetch marketplace items: ${response.statusText}`);
+      // Try to parse error message from response body
+      let errorMessage = response.statusText;
+      try {
+        const errorData = await response.json();
+        if (errorData.error) {
+          errorMessage = errorData.error;
+          if (errorData.details) {
+            errorMessage += `: ${errorData.details}`;
+          }
+        }
+      } catch {
+        // If parsing fails, use statusText
+      }
+      
+      throw new Error(`Failed to fetch marketplace items: ${errorMessage}`);
     }
 
     const data = await response.json();
@@ -49,7 +63,22 @@ class MarketplaceAPIService {
     const response = await fetch(`${this.baseUrl}/${slug}`);
     if (!response.ok) {
       if (response.status === 404) return null;
-      throw new Error(`Failed to fetch marketplace item: ${response.statusText}`);
+      
+      // Try to parse error message from response body
+      let errorMessage = response.statusText;
+      try {
+        const errorData = await response.json();
+        if (errorData.error) {
+          errorMessage = errorData.error;
+          if (errorData.details) {
+            errorMessage += `: ${errorData.details}`;
+          }
+        }
+      } catch {
+        // If parsing fails, use statusText
+      }
+      
+      throw new Error(`Failed to fetch marketplace item: ${errorMessage}`);
     }
 
     return await response.json();

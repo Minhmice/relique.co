@@ -131,7 +131,7 @@ export function MarketplaceSection() {
           <span className="text-primaryBlue font-black uppercase text-xs tracking-widest mb-2 block">
             Curated Listings
           </span>
-          <h2 className="text-4xl md:text-5xl font-black uppercase italic tracking-tighter">
+          <h2 className="text-4xl md:text-5xl font-bold tracking-tight">
             Consigned Marketplace
           </h2>
         </motion.div>
@@ -207,7 +207,7 @@ export function MarketplaceSection() {
                     <p className="text-[11px] font-black tracking-[0.3em] uppercase text-primaryBlue mb-2">
                       {item.athlete}
                     </p>
-                    <h3 className="text-2xl font-black uppercase italic leading-tight group-hover:text-highlightIce transition-colors">
+                    <h3 className="text-2xl font-semibold leading-tight group-hover:text-highlightIce transition-colors">
                       {item.name}
                     </h3>
                   </div>

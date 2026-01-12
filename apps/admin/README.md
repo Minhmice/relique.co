@@ -29,13 +29,34 @@ Admin Dashboard là ứng dụng quản lý toàn diện cho Relique platform, c
 # Install dependencies (từ root)
 pnpm install
 
-# Run admin dashboard (port 3001)
+# Setup environment variables
 cd apps/admin
+cp .env.local.example .env.local
+# Edit .env.local và thêm Supabase credentials của bạn
+
+# Run admin dashboard (port 3001)
 pnpm dev
 
 # Hoặc từ root
 pnpm dev:admin
 ```
+
+### Environment Variables
+
+Tạo file `.env.local` trong thư mục `apps/admin/` với các biến sau:
+
+```env
+# Supabase Configuration
+# Get these values from: https://supabase.com/dashboard/project/_/settings/api
+
+NEXT_PUBLIC_SUPABASE_URL=your-project-url-here
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key-here
+SUPABASE_SERVICE_ROLE_KEY=your-service-role-key-here
+```
+
+**Lưu ý quan trọng:**
+- `NEXT_PUBLIC_SUPABASE_URL` và `NEXT_PUBLIC_SUPABASE_ANON_KEY` là public và có thể expose trong client-side code
+- `SUPABASE_SERVICE_ROLE_KEY` là secret key - **KHÔNG BAO GIỜ** expose trong client-side code, chỉ dùng trong API routes và server actions
 
 ### Access
 

@@ -25,7 +25,7 @@ export function DualBlocks() {
           >
             01
           </motion.span>
-          <h2 className="text-5xl md:text-6xl font-black uppercase italic tracking-tighter mb-6 leading-none">
+          <h2 className="text-5xl md:text-6xl font-bold tracking-tight mb-6 leading-none">
             Verification <br /> Services
           </h2>
           <p className="text-white/60 text-lg mb-10 max-w-sm">
@@ -61,7 +61,7 @@ export function DualBlocks() {
           >
             02
           </motion.span>
-          <h2 className="text-5xl md:text-6xl font-black uppercase italic tracking-tighter mb-6 leading-none">
+          <h2 className="text-5xl md:text-6xl font-bold tracking-tight mb-6 leading-none">
             Asset <br /> Consignment
           </h2>
           <p className="text-white/70 text-lg mb-10 max-w-sm">

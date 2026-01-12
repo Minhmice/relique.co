@@ -40,7 +40,7 @@ export function TestimonialsSection() {
           <span className="text-primaryBlue font-black text-[10px] tracking-[0.4em] uppercase mb-4 block">
             Market Sentiment
           </span>
-          <h2 className="text-5xl md:text-7xl font-black uppercase italic tracking-tighter mb-4 leading-none">
+          <h2 className="text-5xl md:text-7xl font-bold tracking-tight mb-4 leading-none">
             Voices of <span className="text-primaryBlue">Authenticity</span>
           </h2>
           <div className="h-1 w-20 bg-highlightIce mx-auto mt-8 shadow-[0_0_20px_rgba(189,232,245,0.3)]" />

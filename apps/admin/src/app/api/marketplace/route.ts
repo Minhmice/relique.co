@@ -67,17 +67,35 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    return NextResponse.json({
+    const responseData = {
       items: data || [],
       total: count || 0,
       page,
       pageSize,
       totalPages: Math.ceil((count || 0) / pageSize),
-    });
+    };
+    return NextResponse.json(responseData);
   } catch (error) {
     console.error("Error fetching marketplace items:", error);
+    
+    // Return more descriptive error message
+    const errorMessage = error instanceof Error 
+      ? error.message 
+      : "Internal server error";
+    
+    // Check if it's a configuration error
+    if (errorMessage.includes("Missing Supabase configuration")) {
+      return NextResponse.json(
+        { 
+          error: errorMessage,
+          details: "Please check your .env.local file and ensure all required Supabase environment variables are set."
+        },
+        { status: 500 }
+      );
+    }
+    
     return NextResponse.json(
-      { error: "Internal server error" },
+      { error: errorMessage },
       { status: 500 }
     );
   }

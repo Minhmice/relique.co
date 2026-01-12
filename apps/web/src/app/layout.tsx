@@ -1,15 +1,15 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Work_Sans } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/shell/Header";
 import { Footer } from "@/components/shell/Footer";
 import { Toaster } from "@/components/ui/sonner";
 import { CompareProvider, CompareDrawer } from "@/components/marketplace/CompareDrawer";
 
-const inter = Inter({
+const workSans = Work_Sans({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
-  variable: "--font-inter",
+  variable: "--font-work-sans",
   display: "swap",
 });
 
@@ -66,7 +66,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="dark" suppressHydrationWarning>
-      <body className={`${inter.variable} font-inter antialiased`}>
+      <body className={`${workSans.variable} font-work-sans antialiased`}>
         <CompareProvider>
           <div className="flex min-h-screen flex-col">
             <Header />

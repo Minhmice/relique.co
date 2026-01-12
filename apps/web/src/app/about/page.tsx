@@ -18,8 +18,8 @@ export default function AboutPage() {
         >
           <div className="mb-12">
             <span className="text-primaryBlue font-black text-xs tracking-widest uppercase mb-4 block">4.1</span>
-            <h2 className="text-6xl font-black uppercase italic tracking-tighter mb-8 leading-none">
-              WHO WE ARE - THE <span className="text-primaryBlue">RELIQUE.CO STORY</span>
+            <h2 className="text-6xl font-bold tracking-tight mb-8 leading-none">
+              Who We Are - The <span className="text-primaryBlue">Relique.co Story</span>
             </h2>
           </div>
           <div className="space-y-8 text-textSec text-lg leading-relaxed font-medium">
@@ -64,8 +64,8 @@ export default function AboutPage() {
         >
           <div className="mb-12">
             <span className="text-primaryBlue font-black text-xs tracking-widest uppercase mb-4 block">4.2</span>
-            <h2 className="text-6xl font-black uppercase italic tracking-tighter mb-8 leading-none">
-              ONE TO APPRECIATE, AND <span className="text-primaryBlue">ONE THAT APPRECIATE</span>
+            <h2 className="text-6xl font-bold tracking-tight mb-8 leading-none">
+              One to Appreciate, and <span className="text-primaryBlue">One That Appreciate</span>
             </h2>
           </div>
           <div className="space-y-8 text-textSec text-lg leading-relaxed">
@@ -84,7 +84,7 @@ export default function AboutPage() {
                   key={i}
                   className="flex gap-4 items-start bg-cardDark border border-white/5 p-6 group hover:border-primaryBlue transition-colors"
                 >
-                  <span className="w-8 h-8 bg-primaryBlue flex-none flex items-center justify-center font-black text-white italic">
+                  <span className="w-8 h-8 bg-primaryBlue flex-none flex items-center justify-center font-bold text-white">
                     {i + 1}
                   </span>
                   <span className="text-white font-bold">{point}</span>
@@ -97,7 +97,7 @@ export default function AboutPage() {
               objective scarcity, sustainable collector demand, and cultural value across time.
             </p>
             <div className="p-10 border-2 border-dashed border-white/10 text-center">
-              <p className="text-2xl font-black italic text-highlightIce">
+              <p className="text-2xl font-bold text-highlightIce">
                 &quot;With each purchase, you&apos;re not simply acquiring an item, but rather investing in a financial
                 asset imbued with a story, a memory, and a tangible connection to your sporting inspiration.&quot;
               </p>
@@ -115,8 +115,8 @@ export default function AboutPage() {
         >
           <div className="mb-12">
             <span className="text-primaryBlue font-black text-xs tracking-widest uppercase mb-4 block">4.3</span>
-            <h2 className="text-6xl font-black uppercase italic tracking-tighter mb-8 leading-none">
-              A QUESTION <span className="text-primaryBlue">OF TRUST</span>
+            <h2 className="text-6xl font-bold tracking-tight mb-8 leading-none">
+              A Question <span className="text-primaryBlue">of Trust</span>
             </h2>
           </div>
           <div className="space-y-8 text-textSec text-lg leading-relaxed">
@@ -132,10 +132,10 @@ export default function AboutPage() {
               className="bg-cardDark p-12 border-2 border-primaryBlue relative overflow-hidden group"
             >
               <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-                <span className="text-8xl font-black italic">AI</span>
+                <span className="text-8xl font-bold">AI</span>
               </div>
-              <h3 className="text-3xl font-black uppercase italic text-highlightIce mb-8 relative z-10">
-                4.3.2 ARTIFICIAL INTELLIGENCE - A NATURAL EXTENSION, NOT A PIVOT
+              <h3 className="text-3xl font-semibold text-highlightIce mb-8 relative z-10">
+                4.3.2 Artificial Intelligence - A Natural Extension, Not a Pivot
               </h3>
               <p className="mb-8">
                 As the saying goes, modern problems require modern solutions. In this day and age, conventional

@@ -59,7 +59,7 @@ export function TheWaySection() {
           <span className="text-primaryBlue font-black uppercase text-[10px] tracking-[0.4em] mb-4 block">
             Foundational Core
           </span>
-          <h2 className="text-5xl md:text-7xl font-black uppercase italic tracking-tighter mb-4 leading-none">
+          <h2 className="text-5xl md:text-7xl font-bold tracking-tight mb-4 leading-none">
             The Way <span className="text-primaryBlue">of Relique.co</span>
           </h2>
         </motion.div>
@@ -77,12 +77,12 @@ export function TheWaySection() {
               className={`${card.size} p-12 border border-borderDark ${card.bg} group cursor-pointer relative overflow-hidden flex flex-col justify-end min-h-[350px] transition-all hover:border-highlightIce/30 shadow-xl`}
             >
               <div className="absolute top-8 left-8">
-                <span className="text-primaryBlue/40 font-black text-6xl tracking-tighter italic select-none group-hover:text-primaryBlue/60 transition-colors">
+                <span className="text-primaryBlue/40 font-bold text-6xl tracking-tight select-none group-hover:text-primaryBlue/60 transition-colors">
                   {card.id}
                 </span>
               </div>
               <div className="relative z-10">
-                <h3 className="text-4xl font-black uppercase italic mb-4 leading-none group-hover:text-highlightIce transition-colors">
+                <h3 className="text-4xl font-semibold mb-4 leading-none group-hover:text-highlightIce transition-colors">
                   {card.title}
                 </h3>
                 <p className="text-textSec mb-8 text-lg leading-tight max-w-sm">{card.sub}</p>

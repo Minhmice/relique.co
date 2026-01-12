@@ -48,10 +48,10 @@ export function Header() {
       >
         <div className="container mx-auto px-6 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-3 group transition-transform active:scale-95">
-            <div className="w-10 h-10 bg-primaryBlue rounded-sm rotate-12 flex items-center justify-center font-black italic text-white group-hover:rotate-0 transition-all duration-500 shadow-[0_0_20px_rgba(28,77,141,0.4)]">
+            <div className="w-10 h-10 bg-primaryBlue rounded-sm rotate-12 flex items-center justify-center font-bold text-white group-hover:rotate-0 transition-all duration-500 shadow-[0_0_20px_rgba(28,77,141,0.4)]">
               R
             </div>
-            <span className="text-2xl font-black tracking-tighter uppercase italic group-hover:text-highlightIce transition-colors">
+            <span className="text-2xl font-bold tracking-tight uppercase group-hover:text-highlightIce transition-colors">
               Relique.co
             </span>
           </Link>
@@ -137,7 +137,7 @@ export function Header() {
                     onClick={() => handleNavClick(item.href)}
                     className="text-left"
                   >
-                    <span className="text-3xl md:text-4xl font-black uppercase italic tracking-tighter text-white hover:text-primaryBlue transition-colors block leading-none">
+                    <span className="text-3xl md:text-4xl font-bold tracking-tight text-white hover:text-primaryBlue transition-colors block leading-none">
                       {item.label}
                     </span>
                   </motion.button>
