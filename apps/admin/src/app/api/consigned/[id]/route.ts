@@ -72,6 +72,7 @@ export async function PATCH(
 
     const { data, error } = await supabase
       .from("consigned_items")
+      // @ts-expect-error - Supabase type inference issue with service role client
       .update(validated)
       .eq("id", id)
       .select()
@@ -85,18 +86,20 @@ export async function PATCH(
     }
 
     // Log audit
-    await supabase.from("audit_logs").insert({
-      action: "UPDATE",
-      entity_type: "consigned_item",
-      entity_id: id,
-      metadata: { updates: validated },
-    });
+    await supabase.from("audit_logs")
+      // @ts-expect-error - Supabase type inference issue with service role client
+      .insert({
+        action: "UPDATE",
+        entity_type: "consigned_item",
+        entity_id: id,
+        metadata: { updates: validated },
+      });
 
     return NextResponse.json(data);
   } catch (error) {
     if (error instanceof z.ZodError) {
       return NextResponse.json(
-        { error: "Validation error", details: error.errors },
+        { error: "Validation error", details: error.issues },
         { status: 400 }
       );
     }
@@ -130,11 +133,13 @@ export async function DELETE(
     }
 
     // Log audit
-    await supabase.from("audit_logs").insert({
-      action: "DELETE",
-      entity_type: "consigned_item",
-      entity_id: id,
-    });
+    await supabase.from("audit_logs")
+      // @ts-expect-error - Supabase type inference issue with service role client
+      .insert({
+        action: "DELETE",
+        entity_type: "consigned_item",
+        entity_id: id,
+      });
 
     return NextResponse.json({ success: true });
   } catch (error) {
