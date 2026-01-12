@@ -1,63 +1,76 @@
 /**
- * @deprecated Use services from impl/ instead
- * This file is kept for backward compatibility during Phase 4 migration.
+ * Marketplace service - uses API routes to fetch from Supabase
  */
-import { marketplaceService as marketplaceServiceImpl } from "./impl";
+import { marketplaceAPIService } from "./api/marketplaceService";
 import type {
   IMarketplaceService,
   MarketplaceListParams,
   MarketplaceListResponse,
 } from "./contracts";
+import type { MarketplaceListing } from "@/lib/schemas/marketplace";
 
 export const marketplaceService: IMarketplaceService = {
   async list(params?: MarketplaceListParams): Promise<MarketplaceListResponse> {
-    const result = await marketplaceServiceImpl.listListings({
-      q: params?.q,
-      filters: params?.filters,
-      sort: params?.sort,
-      page: params?.page,
-      pageSize: params?.pageSize,
-    });
-    
-    if (result.ok) {
+    try {
+      const response = await marketplaceAPIService.list(params);
       return {
-        items: result.data.items,
+        items: response.items,
         pageInfo: {
-          data: result.data.items,
-          total: result.data.total,
-          page: result.data.page,
-          limit: result.data.limit,
-          totalPages: result.data.totalPages,
+          total: response.total,
+          page: response.page,
+          pageSize: response.pageSize,
+          totalPages: response.totalPages,
+        },
+      };
+    } catch (error) {
+      console.error("Failed to list marketplace items:", error);
+      // Return empty result on error
+      return {
+        items: [],
+        pageInfo: {
+          total: 0,
+          page: 1,
+          pageSize: params?.pageSize || 100,
+          totalPages: 0,
         },
       };
     }
-    
-    throw new Error(result.error.message);
   },
-  
-  async getBySlug(slug: string) {
-    const result = await marketplaceServiceImpl.getListingBySlug(slug);
-    if (result.ok) {
-      return result.data;
+
+  async getBySlug(slug: string): Promise<MarketplaceListing | null> {
+    try {
+      return await marketplaceAPIService.getBySlug(slug);
+    } catch (error) {
+      console.error("Failed to get marketplace item:", error);
+      return null;
     }
-    return null;
   },
-  
+
   async toggleFavorite(id: string): Promise<string[]> {
-    const result = await marketplaceServiceImpl.toggleFavorite(id);
-    if (result.ok) {
-      const favoritesResult = await marketplaceServiceImpl.getFavorites();
-      return favoritesResult.ok ? favoritesResult.data : [];
+    // Favorites are still stored in localStorage
+    // This is client-side only functionality
+    if (typeof window === "undefined") return [];
+    
+    try {
+      const { getMarketplaceFavorites, toggleMarketplaceFavorite } = await import("@relique/shared/domain");
+      toggleMarketplaceFavorite(id);
+      return getMarketplaceFavorites();
+    } catch (error) {
+      console.error("Failed to toggle favorite:", error);
+      return [];
     }
-    throw new Error(result.error.message);
   },
-  
+
   async getFavorites(): Promise<string[]> {
-    const result = await marketplaceServiceImpl.getFavorites();
-    if (result.ok) {
-      return result.data;
+    // Favorites are still stored in localStorage
+    if (typeof window === "undefined") return [];
+    
+    try {
+      const { getMarketplaceFavorites } = await import("@relique/shared/domain");
+      return getMarketplaceFavorites();
+    } catch (error) {
+      console.error("Failed to get favorites:", error);
+      return [];
     }
-    console.error("Failed to get favorites:", result.error);
-    return [];
   },
 };
