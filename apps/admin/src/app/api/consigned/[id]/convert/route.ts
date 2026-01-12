@@ -37,23 +37,27 @@ export async function POST(
       .replace(/(^-|-$)/g, "")
       .substring(0, 50) + "-" + Date.now().toString(36);
 
-    const { data: marketplaceItemData, error: createError } = await supabase
+    type MarketplaceItemInsert = Database["public"]["Tables"]["marketplace_items"]["Insert"];
+    
+    const insertData: MarketplaceItemInsert = {
+      slug,
+      title: consignedItem.item_description.substring(0, 200),
+      description: consignedItem.item_description,
+      price_usd: consignedItem.estimated_value || 0,
+      currency: "USD",
+      image: "", // Should be uploaded separately
+      category: consignedItem.category || "Other",
+      status: "draft",
+      coa_issuer: consignedItem.coa_issuer,
+      commission_rate: consignedItem.commission_rate,
+      created_by: consignedItem.created_by,
+    };
+
+    const { data: marketplaceItemData, error: createError } = await (supabase
       .from("marketplace_items")
-      .insert({
-        slug,
-        title: consignedItem.item_description.substring(0, 200),
-        description: consignedItem.item_description,
-        price_usd: consignedItem.estimated_value || 0,
-        currency: "USD",
-        image: "", // Should be uploaded separately
-        category: consignedItem.category || "Other",
-        status: "draft",
-        coa_issuer: consignedItem.coa_issuer,
-        commission_rate: consignedItem.commission_rate,
-        created_by: consignedItem.created_by,
-      })
+      .insert(insertData as any)
       .select()
-      .single();
+      .single() as any);
 
     if (createError || !marketplaceItemData) {
       return NextResponse.json(
@@ -67,6 +71,7 @@ export async function POST(
     // Update consigned item to link to marketplace item
     await supabase
       .from("consigned_items")
+      // @ts-expect-error - Supabase type inference issue with service role client
       .update({ 
         marketplace_item_id: marketplaceItem.id,
         status: "approved"
@@ -74,15 +79,17 @@ export async function POST(
       .eq("id", id);
 
     // Log audit
-    await supabase.from("audit_logs").insert({
-      action: "CONVERT",
-      entity_type: "consigned_item",
-      entity_id: id,
-      metadata: { 
-        marketplace_item_id: marketplaceItem.id,
-        consigned_item: consignedItem,
-      },
-    });
+    await supabase.from("audit_logs")
+      // @ts-expect-error - Supabase type inference issue with service role client
+      .insert({
+        action: "CONVERT",
+        entity_type: "consigned_item",
+        entity_id: id,
+        metadata: { 
+          marketplace_item_id: marketplaceItem.id,
+          consigned_item: consignedItem,
+        },
+      });
 
     return NextResponse.json({
       marketplace_item: marketplaceItem,

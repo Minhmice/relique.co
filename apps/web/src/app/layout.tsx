@@ -1,9 +1,17 @@
 import type { Metadata } from "next";
+import { Inter } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/shell/Header";
 import { Footer } from "@/components/shell/Footer";
 import { Toaster } from "@/components/ui/sonner";
 import { CompareProvider, CompareDrawer } from "@/components/marketplace/CompareDrawer";
+
+const inter = Inter({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-inter",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://relique.co"),
@@ -58,7 +66,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="dark" suppressHydrationWarning>
-      <body className="antialiased">
+      <body className={`${inter.variable} font-inter antialiased`}>
         <CompareProvider>
           <div className="flex min-h-screen flex-col">
             <Header />
