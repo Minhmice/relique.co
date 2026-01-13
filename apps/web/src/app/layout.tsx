@@ -5,6 +5,7 @@ import { Header } from "@/components/shell/Header";
 import { Footer } from "@/components/shell/Footer";
 import { Toaster } from "@/components/ui/sonner";
 import { CompareProvider, CompareDrawer } from "@/components/marketplace/CompareDrawer";
+import { SpeedInsights } from "@vercel/speed-insights/next"
 
 const workSans = Work_Sans({
   subsets: ["latin"],
@@ -75,6 +76,7 @@ export default function RootLayout({
           </div>
           <CompareDrawer />
           <Toaster />
+          <SpeedInsights />
         </CompareProvider>
       </body>
     </html>

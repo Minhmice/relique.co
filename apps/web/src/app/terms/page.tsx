@@ -45,7 +45,7 @@ export default function TermsPage() {
 
         <div className="lg:col-span-8 space-y-24">
           <section id="introduction">
-            <h1 className="text-5xl font-bold tracking-tight mb-8">
+            <h1 className="text-4xl font-semibold tracking-tight mb-8">
               Terms of <span className="text-primaryBlue">Service</span>
             </h1>
             <p className="text-textSec text-lg leading-relaxed">

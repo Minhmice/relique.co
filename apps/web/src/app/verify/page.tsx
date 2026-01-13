@@ -83,7 +83,7 @@ function VerifyPageContent() {
       <div className="container mx-auto px-6 max-w-5xl">
         <div className="grid lg:grid-cols-2 gap-16">
           <motion.div initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }}>
-            <h1 className="text-5xl font-bold tracking-tight mb-8 leading-none">
+            <h1 className="text-4xl font-semibold tracking-tight mb-8 leading-none">
               Trust But <span className="text-primaryBlue">Verify</span>
             </h1>
             <p className="text-textSec text-lg mb-8 leading-relaxed">

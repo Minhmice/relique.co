@@ -1,6 +1,7 @@
 "use client";
 
 import React from 'react';
+import { usePathname, useRouter } from 'next/navigation';
 import { 
   LayoutDashboard, 
   ShoppingBag, 
@@ -13,14 +14,18 @@ import {
   LogOut,
   ChevronRight
 } from 'lucide-react';
+import { routeToTabMap, tabToRouteMap } from '@/lib/utils/admin';
 
 interface SidebarProps {
-  activeTab: string;
-  setActiveTab: (tab: string) => void;
   onLogout?: () => void;
 }
 
-export function PortalSidebar({ activeTab, setActiveTab, onLogout }: SidebarProps) {
+export function PortalSidebar({ onLogout }: SidebarProps) {
+  const pathname = usePathname();
+  const router = useRouter();
+  
+  // Get active tab from pathname
+  const activeTab = routeToTabMap[pathname] || 'dashboard';
   const menuGroups = [
     {
       title: 'Overview',
@@ -79,10 +84,15 @@ export function PortalSidebar({ activeTab, setActiveTab, onLogout }: SidebarProp
             <div className="space-y-1">
               {group.items.map((item) => {
                 const isActive = activeTab === item.id;
+                const route = tabToRouteMap[item.id];
                 return (
                   <button
                     key={item.id}
-                    onClick={() => setActiveTab(item.id)}
+                    onClick={() => {
+                      if (route) {
+                        router.push(route);
+                      }
+                    }}
                     className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-md transition-all duration-200 group ${
                       isActive 
                         ? 'bg-primary/10 text-primary border border-primary/20 shadow-[inset_0_0_10px_rgba(0,85,255,0.05)]' 

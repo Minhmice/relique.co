@@ -4,16 +4,12 @@ import type { Database } from "./types";
 
 export async function updateSession(request: NextRequest) {
   // Validate environment variables
+  // For API routes, let them handle their own error handling
+  // (API routes use SUPABASE_SERVICE_ROLE_KEY, not NEXT_PUBLIC_SUPABASE_ANON_KEY)
   if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
-    // For API routes, return error response
+    // Skip validation for API routes - let them handle their own errors
     if (request.nextUrl.pathname.startsWith('/api/')) {
-      return NextResponse.json(
-        { 
-          error: 'Missing Supabase configuration. Please set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY in your .env.local file.',
-          details: 'See https://supabase.com/dashboard/project/_/settings/api for your project credentials'
-        },
-        { status: 500 }
-      );
+      return NextResponse.next({ request });
     }
     
     // For pages, allow the request to continue but it will fail at the client level

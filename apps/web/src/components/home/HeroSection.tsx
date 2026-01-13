@@ -48,18 +48,13 @@ export function HeroSection() {
         >
           <div className="relative aspect-square max-w-xl mx-auto border-2 border-white/5 shadow-2xl overflow-hidden group">
             <Image
-              src="https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?auto=format&fit=crop&q=80&w=1200"
+              src="/mock-images/cosigned.jpeg"
               alt="Heritage"
               width={1200}
               height={1200}
-              className="w-full h-full object-cover grayscale brightness-50 group-hover:scale-105 transition-transform duration-[4s]"
+              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
               priority
             />
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="text-[120px] font-bold opacity-10 select-none tracking-widest leading-none pointer-events-none">
-                RELIQUE
-              </div>
-            </div>
             {/* Dynamic Highlight overlay */}
             <div className="absolute inset-0 bg-primaryBlue/10 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
           </div>

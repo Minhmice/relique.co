@@ -67,7 +67,7 @@
 @layer utilities {
   /* Typography Scale */
   .text-h1 {
-    @apply text-4xl md:text-5xl font-bold tracking-tight;
+    @apply text-3xl md:text-4xl font-semibold tracking-tight;
   }
   .text-h2 {
     @apply text-3xl md:text-4xl font-bold tracking-tight;

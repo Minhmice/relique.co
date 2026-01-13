@@ -132,24 +132,43 @@ class MarketplaceAPIService {
   }
 
   async update(id: string, updates: Partial<MarketplaceItem>): Promise<MarketplaceItem> {
+    const requestBody = {
+      title: updates.title,
+      price_usd: updates.price_usd,
+      category: updates.category,
+      status: updates.status,
+      is_featured: updates.is_featured,
+      featured_order: updates.featured_order,
+      signed_by: updates.athlete,
+      image: updates.cover_image_url,
+    };
+
+    // #region agent log
+    fetch('http://127.0.0.1:7243/ingest/f7dc8aa7-be7f-4274-bffb-71b80fe9d9f5',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'marketplaceService.ts:147',message:'Update request body',data:{id,requestBodyKeys:Object.keys(requestBody),requestBodyValues:Object.entries(requestBody).reduce((acc:Record<string,string>,[k,v])=>{acc[k]=v===undefined?'undefined':v===null?'null':typeof v;return acc},{})},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'F'})}).catch(()=>{});
+    // #endregion
+
     const response = await fetch(`${this.baseUrl}/${id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        title: updates.title,
-        price_usd: updates.price_usd,
-        category: updates.category,
-        status: updates.status,
-        is_featured: updates.is_featured,
-        featured_order: updates.featured_order,
-        signed_by: updates.athlete,
-        image: updates.cover_image_url,
-      }),
+      body: JSON.stringify(requestBody),
     });
 
     if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.error || "Failed to update marketplace item");
+      // Try to parse error message from response body
+      let errorMessage = response.statusText;
+      try {
+        const errorData = await response.json();
+        if (errorData.error) {
+          errorMessage = errorData.error;
+          if (errorData.details) {
+            errorMessage += `: ${errorData.details}`;
+          }
+        }
+      } catch {
+        // If parsing fails, use statusText
+      }
+      
+      throw new Error(`Failed to update marketplace item: ${errorMessage}`);
     }
 
     const data = await response.json();

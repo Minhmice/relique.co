@@ -82,7 +82,7 @@ function MarketplacePageContent() {
       <div className="container mx-auto px-6">
         <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-8">
           <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}>
-            <h1 className="text-6xl font-bold tracking-tight mb-4">
+            <h1 className="text-5xl font-semibold tracking-tight mb-4">
               Consigned <span className="text-primaryBlue">Marketplace</span>
             </h1>
             <p className="text-textSec">Exclusive access to certified institutional-grade sports relics.</p>
