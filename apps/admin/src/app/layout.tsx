@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Work_Sans } from "next/font/google";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
 import { CommandPalette } from "@/components/command/CommandPalette";
@@ -35,6 +36,7 @@ export default function RootLayout({
         {children}
         <Toaster />
         <CommandPalette />
+        <SpeedInsights />
       </body>
     </html>
   );
