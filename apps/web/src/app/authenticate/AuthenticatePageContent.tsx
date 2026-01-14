@@ -52,7 +52,7 @@ export function AuthenticatePageContent() {
       <div className="container mx-auto px-6 max-w-4xl">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
           <span className="text-primaryBlue font-black uppercase text-xs tracking-widest mb-4 block">Service Portal</span>
-          <h1 className="text-5xl font-semibold tracking-tight mb-8">
+          <h1 className="text-4xl font-semibold tracking-tight mb-8">
             Submit Item for <span className="text-highlightIce">Authentication</span>
           </h1>
           <p className="text-textSec text-lg mb-12">

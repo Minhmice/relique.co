@@ -18,7 +18,7 @@ export default function AboutPage() {
         >
           <div className="mb-12">
             <span className="text-primaryBlue font-black text-xs tracking-widest uppercase mb-4 block">4.1</span>
-            <h2 className="text-6xl font-bold tracking-tight mb-8 leading-none">
+            <h2 className="text-5xl font-bold tracking-tight mb-8 leading-none">
               Who We Are - The <span className="text-primaryBlue">Relique.co Story</span>
             </h2>
           </div>
@@ -64,7 +64,7 @@ export default function AboutPage() {
         >
           <div className="mb-12">
             <span className="text-primaryBlue font-black text-xs tracking-widest uppercase mb-4 block">4.2</span>
-            <h2 className="text-6xl font-bold tracking-tight mb-8 leading-none">
+            <h2 className="text-5xl font-bold tracking-tight mb-8 leading-none">
               One to Appreciate, and <span className="text-primaryBlue">One That Appreciate</span>
             </h2>
           </div>
@@ -115,7 +115,7 @@ export default function AboutPage() {
         >
           <div className="mb-12">
             <span className="text-primaryBlue font-black text-xs tracking-widest uppercase mb-4 block">4.3</span>
-            <h2 className="text-6xl font-bold tracking-tight mb-8 leading-none">
+            <h2 className="text-5xl font-bold tracking-tight mb-8 leading-none">
               A Question <span className="text-primaryBlue">of Trust</span>
             </h2>
           </div>
