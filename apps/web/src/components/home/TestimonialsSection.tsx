@@ -1,33 +1,29 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-
-const REVIEWS = [
-  {
-    name: "Jonathan Reeves",
-    role: "Private Collector",
-    quote: "The AI forensic score gave me the confidence to acquire a piece I've been tracking for years. Relique's standard is unmatched.",
-    rating: 5,
-    verified: true,
-  },
-  {
-    name: "Elena Petrov",
-    role: "Sports Historian",
-    quote: "Finally, a platform that treats sports memorabilia with the same academic and financial rigor as fine art.",
-    rating: 5,
-    verified: true,
-  },
-  {
-    name: "Marcus Thorne",
-    role: "Asset Manager",
-    quote: "Integrating Relique's authenticated items into my client's alternative portfolio was seamless. Pure transparency.",
-    rating: 5,
-    verified: true,
-  },
-];
+import { payloadContentService } from "@/lib/services/payloadContentService";
 
 export function TestimonialsSection() {
+  const [reviews, setReviews] = useState<any[]>([]);
+
+  useEffect(() => {
+    const loadTestimonials = async () => {
+      try {
+        const testimonials = await payloadContentService.getTestimonials();
+        setReviews(testimonials);
+      } catch (error) {
+        console.error("Failed to load testimonials:", error);
+        // Fallback to empty array
+        setReviews([]);
+      }
+    };
+    loadTestimonials();
+  }, []);
+
+  if (reviews.length === 0) {
+    return null;
+  }
   return (
     <section className="py-32 bg-bgDark relative overflow-hidden">
       <div className="container mx-auto px-6">
@@ -47,7 +43,7 @@ export function TestimonialsSection() {
         </motion.div>
 
         <div className="grid md:grid-cols-3 gap-8">
-          {REVIEWS.map((review, idx) => (
+          {reviews.map((review, idx) => (
             <motion.div
               key={review.name}
               initial={{ opacity: 0, y: 40 }}
