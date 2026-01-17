@@ -156,7 +156,7 @@ export function VerifyHistoryEnhanced({
           <div className="space-y-4">
             {filteredHistory.map((entry) => {
               const isPinned = pinnedIds.includes(entry.productId);
-              const config = statusConfig[entry.result];
+              const config = statusConfig[entry.result as keyof typeof statusConfig];
               return (
                 <div key={`${entry.productId}-${entry.timestamp}`} className="relative pl-10">
                   <div
@@ -218,7 +218,7 @@ export function VerifyHistoryEnhanced({
         <div className="space-y-2">
           {filteredHistory.map((entry) => {
             const isPinned = pinnedIds.includes(entry.productId);
-            const config = statusConfig[entry.result];
+            const config = statusConfig[entry.result as keyof typeof statusConfig];
             return (
               <div
                 key={`${entry.productId}-${entry.timestamp}`}
