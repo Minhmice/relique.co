@@ -13,6 +13,7 @@ const config: Config = {
   	extend: {
   		fontFamily: {
   			'work-sans': ['var(--font-work-sans)', 'sans-serif'],
+  			'playfair-display': ['var(--font-playfair-display)', 'serif'],
   			sans: ['var(--font-work-sans)', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'],
   		},
   		borderRadius: {

@@ -26,7 +26,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     };
   }
 
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://relique.co";
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://relique.ch";
   const url = `${baseUrl}/marketplace/${slug}`;
   const ogImage = listing.image || `${baseUrl}/og-default.jpg`;
   
@@ -174,7 +174,7 @@ export default async function MarketplaceDetailPage({ params }: Props) {
                 </Button>
               )}
               <Button variant="outline" size="lg" className="w-full" asChild>
-                <a href={`mailto:contact@relique.co?subject=Inquiry about ${listing.title}`}>
+                <a href={`mailto:contact@relique.ch?subject=Inquiry about ${listing.title}`}>
                   Inquire
                 </a>
               </Button>

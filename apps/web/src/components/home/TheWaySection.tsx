@@ -9,7 +9,6 @@ export function TheWaySection() {
 
   const cards = [
     {
-      id: "4.1",
       title: "Mission & Vision",
       sub: "Everything you need to know about our story from capital to collectible markets.",
       href: "/about#who-we-are",
@@ -17,7 +16,6 @@ export function TheWaySection() {
       bg: "bg-navy/40",
     },
     {
-      id: "4.2",
       title: "Investment Vehicle",
       sub: "One to appreciates, but also one that appreciates.",
       href: "/about#investment-vehicle",
@@ -25,7 +23,6 @@ export function TheWaySection() {
       bg: "bg-primaryBlue/20",
     },
     {
-      id: "4.3",
       title: "A Question of Trust",
       sub: "And an AI-powered answer.",
       href: "/about#question-of-trust",
@@ -59,8 +56,8 @@ export function TheWaySection() {
           <span className="text-primaryBlue font-black uppercase text-[10px] tracking-[0.4em] mb-4 block">
             Foundational Core
           </span>
-          <h2 className="text-5xl md:text-7xl font-bold tracking-tight mb-4 leading-none">
-            The Way <span className="text-primaryBlue">of Relique.co</span>
+          <h2 className="text-4xl md:text-6xl font-semibold tracking-tight mb-4 leading-none">
+            The Way <span className="text-primaryBlue">of Relique.ch</span>
           </h2>
         </motion.div>
 
@@ -74,19 +71,14 @@ export function TheWaySection() {
               transition={{ delay: idx * 0.15, duration: 0.8, ease: "easeOut" }}
               whileHover={{ y: -8 }}
               onClick={() => handleCardClick(card.href)}
-              className={`${card.size} p-12 border border-borderDark ${card.bg} group cursor-pointer relative overflow-hidden flex flex-col justify-end min-h-[350px] transition-all hover:border-highlightIce/30 shadow-xl`}
+              className={`${card.size} p-8 border border-borderDark ${card.bg} group cursor-pointer relative overflow-hidden flex flex-col justify-center min-h-[280px] transition-all hover:border-highlightIce/30 shadow-xl`}
             >
-              <div className="absolute top-8 left-8">
-                <span className="text-primaryBlue/40 font-bold text-6xl tracking-tight select-none group-hover:text-primaryBlue/60 transition-colors">
-                  {card.id}
-                </span>
-              </div>
-              <div className="relative z-10">
+              <div className="relative pt-6 z-10 flex flex-col ">
                 <h3 className="text-4xl font-semibold mb-4 leading-none group-hover:text-highlightIce transition-colors">
                   {card.title}
                 </h3>
                 <p className="text-textSec mb-8 text-lg leading-tight max-w-sm">{card.sub}</p>
-                <div className="inline-flex items-center gap-4 text-highlightIce font-black uppercase text-[10px] tracking-widest">
+                <div className="inline-flex gap-4 text-highlightIce font-black uppercase text-[10px] tracking-widest">
                   Explore Insights <span>→</span>
                 </div>
               </div>

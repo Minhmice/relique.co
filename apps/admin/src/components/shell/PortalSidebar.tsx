@@ -12,9 +12,7 @@ import {
   History, 
   Settings, 
   LogOut,
-  ChevronRight,
-  Users,
-  MessageSquare
+  ChevronRight
 } from 'lucide-react';
 import { routeToTabMap, tabToRouteMap } from '@/lib/utils/admin';
 
@@ -61,16 +59,6 @@ export function PortalSidebar({ onLogout }: SidebarProps) {
       items: [
         { id: 'logs', label: 'Audit Logs', icon: History },
         { id: 'settings', label: 'Settings', icon: Settings },
-      ]
-    },
-    {
-      title: 'Content Management',
-      items: [
-        { id: 'cms', label: 'CMS Dashboard', icon: FileText },
-        { id: 'cms-posts', label: 'Posts', icon: FileText },
-        { id: 'cms-pages', label: 'Pages', icon: FileText },
-        { id: 'cms-team', label: 'Team', icon: Users },
-        { id: 'cms-testimonials', label: 'Testimonials', icon: MessageSquare },
       ]
     }
   ];

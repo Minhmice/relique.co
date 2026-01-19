@@ -16,9 +16,9 @@ export function WhySection() {
             className="order-2 md:order-1"
           >
             <div className="inline-block px-4 py-1 bg-primaryBlue/10 border border-primaryBlue/20 mb-6">
-              <span className="text-primaryBlue font-black text-[10px] tracking-[0.3em] uppercase">Relique.co</span>
+              <span className="text-primaryBlue font-black text-[10px] tracking-[0.3em] uppercase">Relique.ch</span>
             </div>
-            <h2 className="text-4xl md:text-5xl font-bold tracking-tight leading-tight mb-8">
+            <h2 className="text-3xl md:text-4xl font-bold tracking-tight leading-tight mb-8">
               A standards-driven sports memorabilia platform built on{" "}
               <span className="text-highlightIce">trust, transparency, and long-term value.</span>
             </h2>

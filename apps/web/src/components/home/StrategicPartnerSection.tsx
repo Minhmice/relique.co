@@ -16,7 +16,7 @@ export function StrategicPartnerSection() {
               Strategic Partner
             </h2>
             <p className="text-textSec text-xl leading-relaxed mb-8">
-              We are backed by <span className="text-white font-bold">ST.B</span>, providing unparalleled
+              We are backed by <span className="text-white font-semibold">St.B</span>, providing unparalleled
               infrastructure and compliance for high-value physical assets. Together, we ensure every piece in our
               marketplace is secured, insured, and verified to institutional standards.
             </p>
@@ -39,7 +39,7 @@ export function StrategicPartnerSection() {
                 className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent pointer-events-none"
               />
               <span className="text-6xl font-black tracking-widest text-primaryBlue transition-transform group-hover:scale-110">
-                ST.B
+                St.B
               </span>
             </div>
           </motion.div>

@@ -37,7 +37,7 @@ export function Footer() {
               <div className="w-10 h-10 bg-primaryBlue rounded-sm flex items-center justify-center font-bold text-white group-hover:scale-110 transition-transform">
                 R
               </div>
-              <span className="text-4xl font-bold tracking-tight uppercase">Relique.co</span>
+              <span className="text-4xl font-bold tracking-tight uppercase">Relique.ch</span>
             </div>
             <p className="text-textSec max-w-sm mb-10 text-lg leading-relaxed font-medium">
               Establishing the forensic gold standard for sports memorabilia through AI-driven authentication and digital trust.
@@ -74,7 +74,7 @@ export function Footer() {
 
           <div>
             <h4 className="font-black uppercase text-[11px] tracking-[0.3em] mb-10 text-primaryBlue">Newsletter</h4>
-            <p className="text-textSec text-sm mb-6 font-medium">Stay updated with our curated drops and AI reports.</p>
+            <p className="text-textSec text-sm mb-6 font-medium">Sign up for our newsletter to stay updated on our latest news and products.</p>
             <div className="flex bg-cardDark border border-white/10 p-1 group focus-within:border-highlightIce transition-all">
               <input
                 type="email"
@@ -90,7 +90,7 @@ export function Footer() {
 
         <div className="border-t border-white/5 pt-10 flex flex-col md:flex-row justify-between items-center gap-6">
           <p className="text-[10px] font-black tracking-[0.4em] uppercase text-textSec">
-            © {new Date().getFullYear()} RELIQUE.CO. ALL RIGHTS RESERVED.
+            © {new Date().getFullYear()} RELIQUE.CH. ALL RIGHTS RESERVED.
           </p>
           <div className="flex gap-6">
             {["TW", "IG", "LI"].map((social) => (

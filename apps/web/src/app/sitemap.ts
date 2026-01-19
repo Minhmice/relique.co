@@ -4,7 +4,7 @@ import { posts } from "@relique/shared/domain";
 import { events } from "@relique/shared/domain";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://relique.co";
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://relique.ch";
   const now = new Date();
 
   // Static pages

@@ -93,7 +93,7 @@ export function QRScanInput({ onCodeScanned }: QRScanInputProps) {
   const handleLinkPaste = (link: string) => {
     // Extract code from URL patterns like:
     // - /verify?code=RLQ-QUAL-001
-    // - https://relique.co/verify?code=RLQ-QUAL-001
+    // - https://relique.ch/verify?code=RLQ-QUAL-001
     // - verify?code=RLQ-QUAL-001
     const urlMatch = link.match(/[?&]code=([^&]+)/i);
     if (urlMatch) {
@@ -223,7 +223,7 @@ export function QRScanInput({ onCodeScanned }: QRScanInputProps) {
           <Label htmlFor="link-input">Paste Verification Link</Label>
           <Input
             id="link-input"
-            placeholder="e.g., https://relique.co/verify?code=RLQ-QUAL-001"
+            placeholder="e.g., https://relique.ch/verify?code=RLQ-QUAL-001"
             value={pastedCode}
             onChange={(e) => {
               setPastedCode(e.target.value);

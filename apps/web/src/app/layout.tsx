@@ -15,7 +15,7 @@ const workSans = Work_Sans({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://relique.co"),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://relique.ch"),
   title: {
     default: "Relique - Authentic Collectibles",
     template: "%s | Relique",
@@ -42,7 +42,7 @@ export const metadata: Metadata = {
     description: "Probabilistic authentication for collectibles and memorabilia",
     images: [
       {
-        url: `${process.env.NEXT_PUBLIC_SITE_URL || "https://relique.co"}/og-default.jpg`,
+        url: `${process.env.NEXT_PUBLIC_SITE_URL || "https://relique.ch"}/og-default.jpg`,
         width: 1200,
         height: 630,
         alt: "Relique - Authentic Collectibles",

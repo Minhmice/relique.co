@@ -52,7 +52,7 @@ export function Header() {
               R
             </div>
             <span className="text-2xl font-bold tracking-tight uppercase group-hover:text-highlightIce transition-colors">
-              Relique.co
+              Relique.ch
             </span>
           </Link>
 
@@ -145,8 +145,8 @@ export function Header() {
               </nav>
               <div className="mt-24 pt-12 border-t border-white/5">
                 <p className="text-[10px] font-black uppercase text-white/30 tracking-widest mb-4">Support</p>
-                <a href="mailto:customersupport@relique.co" className="text-sm font-bold text-highlightIce">
-                  customersupport@relique.co
+                <a href="mailto:customersupport@relique.ch" className="text-sm font-bold text-highlightIce">
+                  customersupport@relique.ch
                 </a>
               </div>
             </motion.div>

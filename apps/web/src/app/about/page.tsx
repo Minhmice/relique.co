@@ -17,14 +17,13 @@ export default function AboutPage() {
           className="py-24 border-b border-white/5"
         >
           <div className="mb-12">
-            <span className="text-primaryBlue font-black text-xs tracking-widest uppercase mb-4 block">4.1</span>
-            <h2 className="text-5xl font-bold tracking-tight mb-8 leading-none">
-              Who We Are - The <span className="text-primaryBlue">Relique.co Story</span>
+            <h2 className="text-5xl font-semibold tracking-tight mb-8 leading-none">
+              Who We Are - The Relique Story
             </h2>
           </div>
           <div className="space-y-8 text-textSec text-lg leading-relaxed font-medium">
             <p>
-              Relique.co was founded by a group of U.S.-based financial professionals with extensive experience in
+              Relique was founded by a group of U.S.-based financial professionals with extensive experience in
               managing investment funds and high-value assets, in a quest for a new investment vehicle. Drawing on years
               of exposure to global capital markets, we recognized that memorabilia possesses all the characteristics of
               a legitimate financial asset—scarcity, provenance, and enduring value—yet has been held back by
@@ -38,17 +37,17 @@ export default function AboutPage() {
               can trust.
             </p>
             <div className="bg-primaryBlue/5 border-l-4 border-primaryBlue p-8 italic">
-              &quot;To realize this vision, Relique.co chose St.B as its strategic partner and sponsor their AI
+              &quot;To realize this vision, Relique chose St.B as its strategic partner and sponsor their AI
               engineering endeavor.&quot;
             </div>
             <p>
               Their deep expertise in artificial intelligence, established sporting ecosystem, and intimate understanding
-              of the collectibles market provide critical capabilities. This partnership enables Relique.co to bridge the
+              of the collectibles market provide critical capabilities. This partnership enables Relique to bridge the
               market knowledge gap and eradicate liability of foreignness, ensuring that every authentication and
               transaction meets the highest standard of credibility and reliability.
             </p>
             <p>
-              Relique.co is redefining what it means for memorabilia to be both collectible and investable, creating a
+              Relique is redefining what it means for memorabilia to be both collectible and investable, creating a
               trusted foundation for a market ready to mature and thrive.
             </p>
           </div>
@@ -63,9 +62,8 @@ export default function AboutPage() {
           className="py-24 border-b border-white/5"
         >
           <div className="mb-12">
-            <span className="text-primaryBlue font-black text-xs tracking-widest uppercase mb-4 block">4.2</span>
             <h2 className="text-5xl font-bold tracking-tight mb-8 leading-none">
-              One to Appreciate, and <span className="text-primaryBlue">One That Appreciate</span>
+              One <span className="italic">To</span> Appreciate, And One <span className="italic"> That </span> Appreciate
             </h2>
           </div>
           <div className="space-y-8 text-textSec text-lg leading-relaxed">
@@ -92,9 +90,10 @@ export default function AboutPage() {
               ))}
             </ul>
             <p>
-              From the perspective of asset managers, we realized that memorabilia—items tied to people, events, and
-              history that cannot be replicated—possess many of the characteristics of long-term valuable assets:
-              objective scarcity, sustainable collector demand, and cultural value across time.
+              From the perspective of asset managers with extensive background in institutional finance, we realized that memorabilia—items tied to people, events, and history that cannot be replicated—possess many of the characteristics of long-term valuable assets: objective scarcity, sustainable collector demand, and cultural value across time.
+              <br /><br />
+              Unlike most traditional financial assets, collectibles have an abstract value driven by a passionate base — much like fine art. According to Kiplinger, of the most reputable financial publication, the demand for sports collectibles has recorded unprecedented growth since the pandemic, outperforming even the S&P 500. Their valuation in the market is expected to have a CAGR of 21.8% over the next decade.
+              The fact that Sotheby’s—whose past auctions include a $157.2 million Modigliani and a $139.4 million Picasso—has stepped into the sports memorabilia market speaks volume. We might as well be witnessing the emergence of a new blue chip investment class.
             </p>
             <div className="p-10 border-2 border-dashed border-white/10 text-center">
               <p className="text-2xl font-bold text-highlightIce">
@@ -114,7 +113,6 @@ export default function AboutPage() {
           className="py-24 border-b border-white/5"
         >
           <div className="mb-12">
-            <span className="text-primaryBlue font-black text-xs tracking-widest uppercase mb-4 block">4.3</span>
             <h2 className="text-5xl font-bold tracking-tight mb-8 leading-none">
               A Question <span className="text-primaryBlue">of Trust</span>
             </h2>
@@ -135,7 +133,7 @@ export default function AboutPage() {
                 <span className="text-8xl font-bold">AI</span>
               </div>
               <h3 className="text-3xl font-semibold text-highlightIce mb-8 relative z-10">
-                4.3.2 Artificial Intelligence - A Natural Extension, Not a Pivot
+                Artificial Intelligence - A Natural Extension, Not a Pivot
               </h3>
               <p className="mb-8">
                 As the saying goes, modern problems require modern solutions. In this day and age, conventional

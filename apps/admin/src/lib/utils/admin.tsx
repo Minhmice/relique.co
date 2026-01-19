@@ -71,11 +71,6 @@ export const routeToTabMap: Record<string, string> = {
   '/admin/logs': 'logs',
   '/admin/settings': 'settings',
   '/admin/profile': 'settings',
-  '/admin/cms': 'cms',
-  '/admin/cms/posts': 'cms-posts',
-  '/admin/cms/pages': 'cms-pages',
-  '/admin/cms/team': 'cms-team',
-  '/admin/cms/testimonials': 'cms-testimonials',
 };
 
 /**
@@ -88,11 +83,6 @@ export const tabToRouteMap: Record<string, string> = {
   'verify': '/admin/verify',
   'logs': '/admin/logs',
   'settings': '/admin/settings',
-  'cms': '/admin/cms',
-  'cms-posts': '/admin/cms/posts',
-  'cms-pages': '/admin/cms/pages',
-  'cms-team': '/admin/cms/team',
-  'cms-testimonials': '/admin/cms/testimonials',
 };
 
 /**
@@ -107,11 +97,6 @@ export const tabNames: Record<string, string> = {
   'subs-consign': 'Consign Submissions',
   'messages': 'Contact Inquiries',
   'logs': 'Security Audit Trail',
-  'settings': 'System Configurations',
-  'cms': 'CMS Dashboard',
-  'cms-posts': 'Posts Management',
-  'cms-pages': 'Pages Management',
-  'cms-team': 'Team Management',
-  'cms-testimonials': 'Testimonials Management'
+  'settings': 'System Configurations'
 };
 

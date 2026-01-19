@@ -100,7 +100,7 @@ export async function PATCH(
     }
 
     // #region agent log
-    fetch('http://127.0.0.1:7243/ingest/f7dc8aa7-be7f-4274-bffb-71b80fe9d9f5',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'route.ts:95',message:'UpdateData prepared',data:{updateDataKeys:Object.keys(updateData),updateDataLength:Object.keys(updateData).length,updateDataValues:Object.entries(updateData).reduce((acc:Record<string,string>,[k,v])=>{acc[k]=v===undefined?'undefined':typeof v;return acc},{})},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C'})}).catch(()=>{});
+    fetch('http://127.0.0.1:7243/ingest/f7dc8aa7-be7f-4274-bffb-71b80fe9d9f5',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'route.ts:95',message:'UpdateData prepared',data:{updateDataKeys:Object.keys(updateData),updateDataLength:Object.keys(updateData).length,updateDataValues:Object.entries(updateData).reduce((acc,[k,v])=>{acc[k]=v===undefined?'undefined':typeof v;return acc},{})},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C'})}).catch(()=>{});
     // #endregion
 
     // Check if there's anything to update
@@ -108,6 +108,7 @@ export async function PATCH(
       // No updates, just return the existing item
       const { data: existingItem, error: fetchError } = await supabase
         .from("marketplace_items")
+        // @ts-expect-error - Supabase type inference issue with service role client
         .select("*")
         .eq("id", id)
         .single();
@@ -132,12 +133,13 @@ export async function PATCH(
     // First verify item exists
     const { data: existingItem, error: checkError } = await supabase
       .from("marketplace_items")
+      // @ts-expect-error - Supabase type inference issue with service role client
       .select("id")
       .eq("id", id)
       .maybeSingle();
 
     // #region agent log
-    fetch('http://127.0.0.1:7243/ingest/f7dc8aa7-be7f-4274-bffb-71b80fe9d9f5',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'route.ts:112',message:'Item existence check',data:{hasError:!!checkError,errorMessage:checkError?.message,hasExistingItem:!!existingItem,existingItemId:(existingItem as any)?.id},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'G'})}).catch(()=>{});
+    fetch('http://127.0.0.1:7243/ingest/f7dc8aa7-be7f-4274-bffb-71b80fe9d9f5',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'route.ts:112',message:'Item existence check',data:{hasError:!!checkError,errorMessage:checkError?.message,hasExistingItem:!!existingItem,existingItemId:existingItem?.id},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'G'})}).catch(()=>{});
     // #endregion
 
     if (checkError) {
@@ -154,8 +156,9 @@ export async function PATCH(
       );
     }
 
-    const { data, error } = await (supabase
-      .from("marketplace_items") as any)
+    const { data, error } = await supabase
+      .from("marketplace_items")
+      // @ts-expect-error - Supabase type inference issue with service role client
       .update(updateData)
       .eq("id", id)
       .select()
@@ -182,6 +185,7 @@ export async function PATCH(
       // If no data returned, fetch the item directly to verify it still exists
       const { data: fetchedItem, error: fetchError } = await supabase
         .from("marketplace_items")
+        // @ts-expect-error - Supabase type inference issue with service role client
         .select("*")
         .eq("id", id)
         .maybeSingle();
@@ -199,7 +203,8 @@ export async function PATCH(
     }
 
     // Log audit
-    await (supabase.from("audit_logs") as any)
+    await supabase.from("audit_logs")
+      // @ts-expect-error - Supabase type inference issue with service role client
       .insert({
         action: "UPDATE",
         entity_type: "marketplace_item",
@@ -249,7 +254,8 @@ export async function DELETE(
     }
 
     // Log audit
-    await (supabase.from("audit_logs") as any)
+    await supabase.from("audit_logs")
+      // @ts-expect-error - Supabase type inference issue with service role client
       .insert({
         action: "DELETE",
         entity_type: "marketplace_item",

@@ -89,7 +89,7 @@ export function ConsignForm() {
           consent: false,
         });
         if (latestDraft.files) {
-          setFiles(latestDraft.files.map((f: any) => ({
+          setFiles(latestDraft.files.map(f => ({
             id: `${Date.now()}-${Math.random().toString(16).slice(2)}`,
             name: f.name,
             size: f.size,
@@ -131,7 +131,7 @@ export function ConsignForm() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedFormData, files]);
 
-  const handleLoadDraft = useCallback((draft: any) => {
+  const handleLoadDraft = useCallback((draft: import("@/lib/schemas/consign").ConsignDraft) => {
     form.reset({
       name: draft.name || "",
       email: draft.email || "",
@@ -149,7 +149,7 @@ export function ConsignForm() {
       consent: false,
     });
     if (draft.files) {
-      setFiles(draft.files.map((f: any) => ({
+      setFiles(draft.files.map(f => ({
         id: `${Date.now()}-${Math.random().toString(16).slice(2)}`,
         name: f.name,
         size: f.size,
@@ -295,7 +295,7 @@ export function ConsignForm() {
                 allowedTypes={["image/jpeg", "image/jpg", "image/png", "image/webp", "application/pdf"]}
                 requiredTags={["Full item", "Signature close-up"]}
                 showWarnings={true}
-                onValidationError={(error: any) => toast.error(error)}
+                onValidationError={(error) => toast.error(error)}
               />
               <p className="text-xs text-muted-foreground mt-2">
                 Limits: 20 files max, 15MB per file, 120MB total

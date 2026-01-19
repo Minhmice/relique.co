@@ -16,7 +16,7 @@ export interface OGImageConfig {
 }
 
 export function generateOGImageUrl(config: OGImageConfig): string {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://relique.co";
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://relique.ch";
   
   // Mock: In production, this would call an OG image generation API
   // For now, return a placeholder or use the provided image

@@ -7,7 +7,7 @@ export default function robots(): MetadataRoute.Robots {
       allow: "/",
       disallow: ["/admin/", "/app/"],
     },
-    sitemap: `${process.env.NEXT_PUBLIC_SITE_URL || "https://relique.co"}/sitemap.xml`,
+    sitemap: `${process.env.NEXT_PUBLIC_SITE_URL || "https://relique.ch"}/sitemap.xml`,
   };
 }
 

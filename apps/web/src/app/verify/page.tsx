@@ -84,11 +84,10 @@ function VerifyPageContent() {
         <div className="grid lg:grid-cols-2 gap-16">
           <motion.div initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }}>
             <h1 className="text-3xl font-semibold tracking-tight mb-8 leading-none">
-              Trust But <span className="text-primaryBlue">Verify</span>
+            Authenticity  <span className="text-primaryBlue">Verification</span>
             </h1>
-            <p className="text-textSec text-lg mb-8 leading-relaxed">
-              Every relic authenticated by Relique is assigned a unique cryptographic ID. Enter yours here to see the full forensic dossier.
-            </p>
+            <p className="text-textSec text-xs mb-8 leading-relaxed">
+            Relique.ch allows immediate verification of any authenticated Memorabilia via a product code or QR scan. Each item is assigned an unique identifier, linking it to a comprehensive assessment.            </p>
 
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="flex">
@@ -117,13 +116,19 @@ function VerifyPageContent() {
                 <div className="flex gap-4">
                   <span className="text-green-400 font-bold">✓</span>
                   <p className="text-xs text-textSec leading-relaxed">
-                    <span className="text-white font-bold">QUALIFIED:</span> The item meets all criteria and is confirmed authentic by our forensic panel.
+                    <span className="text-white font-bold">QUALIFIED:</span> A status of "Qualified" indicates very strong alignment between the present autograph and available references.
+                  </p>
+                </div>
+                <div className="flex gap-4">
+                  <span className="text-red-400 font-bold">✗</span>
+                  <p className="text-xs text-textSec leading-relaxed">
+                    <span className="text-white font-bold">DISQUALIFIED:</span> A status of "Disqualified" indicates significant inconsistencies compared to known references.
                   </p>
                 </div>
                 <div className="flex gap-4">
                   <span className="text-amber-400 font-bold">◈</span>
                   <p className="text-xs text-textSec leading-relaxed">
-                    <span className="text-white font-bold">INCONCLUSIVE:</span> Analysis could not definitively confirm or deny authenticity due to lack of evidence.
+                    <span className="text-white font-bold">INCONCLUSIVE:</span> A status of "Inconclusive" indicates data is insufficient to reach a reliable conclusion.
                   </p>
                 </div>
               </div>

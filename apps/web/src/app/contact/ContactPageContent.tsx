@@ -30,14 +30,14 @@ export function ContactPageContent() {
           <div className="space-y-12">
             <div>
               <h3 className="text-xs font-black uppercase tracking-[0.3em] text-highlightIce mb-4">Direct Access</h3>
-              <a href="mailto:customersupport@relique.co" className="text-2xl font-bold hover:text-highlightIce transition-colors">
-                customersupport@relique.co
+              <a href="mailto:customersupport@relique.ch" className="text-2xl font-bold hover:text-highlightIce transition-colors">
+                customersupport@relique.ch
               </a>
             </div>
             <div>
               <h3 className="text-xs font-black uppercase tracking-[0.3em] text-highlightIce mb-4">Strategic Partnerships</h3>
-              <a href="mailto:partners@relique.co" className="text-2xl font-bold hover:text-highlightIce transition-colors">
-                partners@relique.co
+              <a href="mailto:partners@relique.ch" className="text-2xl font-bold hover:text-highlightIce transition-colors">
+                partners@relique.ch
               </a>
             </div>
           </div>

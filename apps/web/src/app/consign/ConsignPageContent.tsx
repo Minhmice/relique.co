@@ -53,8 +53,8 @@ export function ConsignPageContent() {
           </h1>
           <p className="text-textSec">
             Reach our network of high-net-worth collectors. Contact{" "}
-            <a href="mailto:customersupport@relique.co" className="text-highlightIce hover:underline">
-              customersupport@relique.co
+            <a href="mailto:customersupport@relique.ch" className="text-highlightIce hover:underline">
+              customersupport@relique.ch
             </a>{" "}
             for direct inquiries.
           </p>

@@ -49,7 +49,7 @@ export function VerifyResultEnhanced({
     },
   };
 
-  const config = statusConfig[result.status as keyof typeof statusConfig];
+  const config = statusConfig[result.status];
   const verificationLink = `${typeof window !== "undefined" ? window.location.origin : ""}/verify?code=${encodeURIComponent(result.productId)}`;
 
   const handleCopyLink = () => {

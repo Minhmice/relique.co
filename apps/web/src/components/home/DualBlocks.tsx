@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { motion } from "framer-motion";
 
 export function DualBlocks() {
@@ -15,24 +16,31 @@ export function DualBlocks() {
         whileHover={{ flex: 1.1 }}
         className="flex-1 bg-navy relative p-12 md:p-24 flex flex-col justify-center border-r border-borderDark group overflow-hidden cursor-pointer"
       >
+        {/* Background Image */}
+        <div className="absolute inset-0 z-0">
+          <Image
+            src="/mock-images/verify.JPG"
+            alt="Verification"
+            fill
+            className="object-cover"
+            priority
+          />
+        </div>
         <Link href="/verify" className="absolute inset-0 z-10" />
-        <div className="absolute inset-0 bg-gradient-to-br from-black/40 to-transparent pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-br from-black/60 to-black/40 pointer-events-none z-[1]" />
         <div className="relative z-10">
           <motion.span
             initial={{ opacity: 0 }}
-            whileInView={{ opacity: 0.1 }}
+            whileInView={{ opacity: 0.3 }}
             className="text-highlightIce font-black text-6xl absolute -top-10 -left-10 select-none"
           >
             01
           </motion.span>
           <h2 className="text-5xl md:text-6xl font-bold tracking-tight mb-6 leading-none">
-            Verification <br /> Services
+            Items <br /> Verification
           </h2>
-          <p className="text-white/60 text-lg mb-10 max-w-sm">
-            Leverage our proprietary AI analysis and forensic verification to prove the authenticity of your assets.
-          </p>
           <div className="inline-flex items-center gap-4 text-highlightIce font-black uppercase text-sm tracking-widest group-hover:gap-6 transition-all">
-            Get Verified <span>→</span>
+            Verify Now <span>→</span>
           </div>
         </div>
         <motion.div
@@ -51,12 +59,22 @@ export function DualBlocks() {
         whileHover={{ flex: 1.1 }}
         className="flex-1 bg-primaryBlue relative p-12 md:p-24 flex flex-col justify-center group overflow-hidden cursor-pointer"
       >
+        {/* Background Image */}
+        <div className="absolute inset-0 z-0">
+          <Image
+            src="/mock-images/cosign.JPG"
+            alt="Consignment"
+            fill
+            className="object-cover"
+            priority
+          />
+        </div>
         <Link href="/consign" className="absolute inset-0 z-10" />
-        <div className="absolute inset-0 bg-gradient-to-br from-black/20 to-transparent pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-br from-black/60 to-black/40 pointer-events-none z-[1]" />
         <div className="relative z-10">
           <motion.span
             initial={{ opacity: 0 }}
-            whileInView={{ opacity: 0.1 }}
+            whileInView={{ opacity: 0.3 }}
             className="text-white font-black text-6xl absolute -top-10 -left-10 select-none"
           >
             02
@@ -64,11 +82,8 @@ export function DualBlocks() {
           <h2 className="text-5xl md:text-6xl font-bold tracking-tight mb-6 leading-none">
             Asset <br /> Consignment
           </h2>
-          <p className="text-white/70 text-lg mb-10 max-w-sm">
-            List your qualified relics in our exclusive marketplace for global high-net-worth investors.
-          </p>
           <div className="inline-flex items-center gap-4 text-white font-black uppercase text-sm tracking-widest group-hover:gap-6 transition-all">
-            Start Consignment <span>→</span>
+            Consign Now <span>→</span>
           </div>
         </div>
         <motion.div

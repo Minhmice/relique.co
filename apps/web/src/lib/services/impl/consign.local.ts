@@ -86,7 +86,7 @@ export const consignServiceLocal: IConsignService = {
         return err(validationError("Invalid draft data", validated.error));
       }
       
-      const filtered = drafts.filter((d: any) => d.timestamp !== timestamp);
+      const filtered = drafts.filter((d) => d.timestamp !== timestamp);
       setConsignDrafts([...filtered, validated.data]);
       
       return ok(validated.data);
@@ -114,7 +114,7 @@ export const consignServiceLocal: IConsignService = {
   async listDrafts(): Promise<Result<ConsignDraft[]>> {
     try {
       const drafts = getConsignDrafts();
-      const validated = drafts.map((d: any) => validateDraft(d));
+      const validated = drafts.map(validateDraft);
       return ok(validated);
     } catch (error) {
       return err(unknownError("Failed to list drafts", error));
@@ -153,7 +153,7 @@ export const consignServiceLocal: IConsignService = {
         return err(validationError("Invalid draft data", validated.error));
       }
       
-      const filtered = drafts.filter((d: any) => d.timestamp !== timestamp);
+      const filtered = drafts.filter((d) => d.timestamp !== timestamp);
       setConsignDrafts([...filtered, validated.data]);
       
       return ok(validated.data);
@@ -174,7 +174,7 @@ export const consignServiceLocal: IConsignService = {
       
       const updated: ConsignDraft = {
         ...existing,
-        files: (existing.files || []).filter((f: any) => f.name !== fileId),
+        files: (existing.files || []).filter((f) => f.name !== fileId),
       };
       
       const validated = ConsignDraftSchema.safeParse(updated);
@@ -182,7 +182,7 @@ export const consignServiceLocal: IConsignService = {
         return err(validationError("Invalid draft data", validated.error));
       }
       
-      const filtered = drafts.filter((d: any) => d.timestamp !== timestamp);
+      const filtered = drafts.filter((d) => d.timestamp !== timestamp);
       setConsignDrafts([...filtered, validated.data]);
       
       return ok(validated.data);
@@ -257,13 +257,13 @@ export const consignServiceLocal: IConsignService = {
       let submissions = getConsignSubmissions();
       
       if (status) {
-        submissions = submissions.filter((s: any) => s.status === status);
+        submissions = submissions.filter((s) => s.status === status);
       }
       
       const validated = submissions
         .map(validateSubmission)
         .sort(
-          (a: any, b: any) =>
+          (a, b) =>
             new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
         );
       

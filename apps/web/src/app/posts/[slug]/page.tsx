@@ -22,7 +22,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     };
   }
 
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://relique.co";
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://relique.ch";
   const url = `${baseUrl}/posts/${slug}`;
   const ogImage = post.image || `${baseUrl}/og-default.jpg`;
   

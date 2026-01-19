@@ -26,7 +26,6 @@ export default function HomePage() {
       <MarketplaceSection />
       <DualBlocks />
       <TheWaySection />
-      <TestimonialsSection />
       <StrategicPartnerSection />
       <TeamSection />
     </>
