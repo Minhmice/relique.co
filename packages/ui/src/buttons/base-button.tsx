@@ -31,7 +31,7 @@ export interface BaseButtonProps extends ButtonProps {
 export const BaseButton = React.forwardRef<HTMLButtonElement, BaseButtonProps>(
   ({ className, children, disableAnimation = false, disabled, ...props }, ref) => {
     // Premium easing function từ design system
-    const premiumEasing = [0.16, 1, 0.3, 1];
+    const premiumEasing = [0.16, 1, 0.3, 1] as const;
 
     // Nếu disabled hoặc disableAnimation, không áp dụng motion effects
     if (disabled || disableAnimation) {

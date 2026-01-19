@@ -1,6 +1,6 @@
 "use client";
 
-import { EventCard } from "./EventCard";
+import { EventCard } from "@/components/cards/EventCard";
 import type { Event } from "@/lib/types";
 
 interface EventTimelineProps {

@@ -24,7 +24,10 @@ import { cn } from "../cn";
  *   View Documentation
  * </SecondaryButton>
  */
-export interface SecondaryButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+export interface SecondaryButtonProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 
+  'onDrag' | 'onDragStart' | 'onDragEnd' | 'onDragEnter' | 'onDragLeave' | 'onDragOver' | 'onDrop' |
+  'onAnimationStart' | 'onAnimationEnd' | 'onAnimationIteration'
+> {
   /** Nội dung button */
   children: React.ReactNode;
   /** Nếu có href, button sẽ render như Link */
@@ -44,7 +47,7 @@ export const SecondaryButton = React.forwardRef<HTMLButtonElement, SecondaryButt
     disableAnimation = false,
     ...props 
   }, ref) => {
-    const premiumEasing = [0.16, 1, 0.3, 1];
+    const premiumEasing = [0.16, 1, 0.3, 1] as const;
     
     const buttonClassName = cn(
       // Base styles

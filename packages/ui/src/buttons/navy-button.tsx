@@ -25,7 +25,10 @@ import { cn } from "../cn";
  *   Start Consignment
  * </NavyButton>
  */
-export interface NavyButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+export interface NavyButtonProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 
+  'onDrag' | 'onDragStart' | 'onDragEnd' | 'onDragEnter' | 'onDragLeave' | 'onDragOver' | 'onDrop' |
+  'onAnimationStart' | 'onAnimationEnd' | 'onAnimationIteration'
+> {
   /** Nội dung button */
   children: React.ReactNode;
   /** Nếu có href, button sẽ render như Link */
@@ -45,7 +48,7 @@ export const NavyButton = React.forwardRef<HTMLButtonElement, NavyButtonProps>(
     disableAnimation = false,
     ...props 
   }, ref) => {
-    const premiumEasing = [0.16, 1, 0.3, 1];
+    const premiumEasing = [0.16, 1, 0.3, 1] as const;
     
     const buttonClassName = cn(
       // Base styles

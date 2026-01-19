@@ -46,7 +46,7 @@ export const OutlineButton = React.forwardRef<HTMLButtonElement, OutlineButtonPr
     size,
     ...props 
   }, ref) => {
-    const premiumEasing = [0.16, 1, 0.3, 1];
+    const premiumEasing = [0.16, 1, 0.3, 1] as const;
     
     const buttonClassName = cn(
       // Base outline styles
@@ -65,7 +65,7 @@ export const OutlineButton = React.forwardRef<HTMLButtonElement, OutlineButtonPr
     if (href && !disabled) {
       if (disableAnimation) {
         return (
-          <Link href={href} className={cn(buttonClassName, getSizeClass(size))}>
+          <Link href={href} className={cn(buttonClassName, getSizeClass(size ?? undefined))}>
             {children}
           </Link>
         );
@@ -78,7 +78,7 @@ export const OutlineButton = React.forwardRef<HTMLButtonElement, OutlineButtonPr
           transition={{ duration: 0.2, ease: premiumEasing }}
           className="inline-block"
         >
-          <Link href={href} className={cn(buttonClassName, getSizeClass(size))}>
+          <Link href={href} className={cn(buttonClassName, getSizeClass(size ?? undefined))}>
             {children}
           </Link>
         </motion.div>

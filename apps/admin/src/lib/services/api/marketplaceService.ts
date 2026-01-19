@@ -143,10 +143,6 @@ class MarketplaceAPIService {
       image: updates.cover_image_url,
     };
 
-    // #region agent log
-    fetch('http://127.0.0.1:7243/ingest/f7dc8aa7-be7f-4274-bffb-71b80fe9d9f5',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'marketplaceService.ts:147',message:'Update request body',data:{id,requestBodyKeys:Object.keys(requestBody),requestBodyValues:Object.entries(requestBody).reduce((acc:Record<string,string>,[k,v])=>{acc[k]=v===undefined?'undefined':v===null?'null':typeof v;return acc},{})},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'F'})}).catch(()=>{});
-    // #endregion
-
     const response = await fetch(`${this.baseUrl}/${id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },

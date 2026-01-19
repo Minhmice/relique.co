@@ -28,7 +28,10 @@ import { cn } from "../cn";
  *   Delete Permanently
  * </AlertButton>
  */
-export interface AlertButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+export interface AlertButtonProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 
+  'onDrag' | 'onDragStart' | 'onDragEnd' | 'onDragEnter' | 'onDragLeave' | 'onDragOver' | 'onDrop' |
+  'onAnimationStart' | 'onAnimationEnd' | 'onAnimationIteration'
+> {
   /** Nội dung button */
   children: React.ReactNode;
   /** Yêu cầu xác nhận trước khi thực thi */

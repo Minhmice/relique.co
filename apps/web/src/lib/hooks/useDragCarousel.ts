@@ -4,7 +4,7 @@ import { useRef, useState, useEffect, type RefObject } from "react";
 import { useMotionValue, useTransform, type MotionValue } from "framer-motion";
 
 interface UseDragCarouselReturn {
-  containerRef: RefObject<HTMLDivElement>;
+  containerRef: RefObject<HTMLDivElement | null>;
   constraints: { left: number; right: number };
   isDragging: boolean;
   x: MotionValue<number>;

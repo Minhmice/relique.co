@@ -50,7 +50,7 @@ export const LinkButton = React.forwardRef<HTMLButtonElement, LinkButtonProps>(
     size,
     ...props 
   }, ref) => {
-    const premiumEasing = [0.16, 1, 0.3, 1];
+    const premiumEasing = [0.16, 1, 0.3, 1] as const;
     
     const buttonClassName = cn(
       // Link styles
