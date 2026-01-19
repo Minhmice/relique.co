@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Calendar, ArrowLeft } from "lucide-react";
 import { contentService } from "@/lib/services/contentService";
-import { PostCard } from "@/components/content/PostCard";
+import { PostCard } from "@/components/cards/PostCard";
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -24,7 +24,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://relique.ch";
   const url = `${baseUrl}/posts/${slug}`;
-  const ogImage = post.image || `${baseUrl}/og-default.jpg`;
+  const ogImage = post.image || `${baseUrl}/og-logo.png`;
   
   return {
     title: `${post.title} | Relique`,
@@ -100,7 +100,7 @@ export default async function PostDetailPage({ params }: Props) {
 
         <div className="relative w-full h-96 mb-8">
           <Image
-            src={post.image || "/og-default.jpg"}
+            src={post.image || "/og-logo.png"}
             alt={post.title}
             fill
             className="object-cover"

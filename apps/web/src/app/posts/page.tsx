@@ -1,9 +1,9 @@
 "use client";
 
 import { useState, useMemo, useEffect } from "react";
-import { PostCard } from "@/components/content/PostCard";
-import { FeaturedPost } from "@/components/content/FeaturedPost";
-import { SectionHeader } from "@/components/sections/SectionHeader";
+import { PostCard } from "@/components/cards/PostCard";
+import { FeaturedPost } from "@/components/cards/FeaturedPost";
+import { SectionHeader } from "@/components/layout/SectionHeader";
 import { Badge } from "@/components/ui/badge";
 import { contentService } from "@/lib/services/contentService";
 import type { Post } from "@/lib/types";

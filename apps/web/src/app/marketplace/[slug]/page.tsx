@@ -4,12 +4,12 @@ import Link from "next/link";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ItemGallery } from "@/components/marketplace/ItemGallery";
-import { FavoriteButton } from "@/components/marketplace/FavoriteButton";
-import { TrustPanel } from "@/components/marketplace/TrustPanel";
-import { RelatedItems } from "@/components/marketplace/RelatedItems";
-import { CompareButton } from "@/components/marketplace/CompareDrawer";
-import { WatchlistButton } from "@/components/marketplace/WatchlistButton";
+import { ItemGallery } from "@/components/display/ItemGallery";
+import { FavoriteButton } from "@/components/interactive/FavoriteButton";
+import { TrustPanel } from "@/components/display/TrustPanel";
+import { RelatedItems } from "@/components/display/RelatedItems";
+import { CompareButton } from "@/components/interactive/CompareDrawer";
+import { WatchlistButton } from "@/components/interactive/WatchlistButton";
 import { marketplaceService } from "@/lib/services/marketplaceService";
 
 type Props = {
@@ -28,7 +28,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://relique.ch";
   const url = `${baseUrl}/marketplace/${slug}`;
-  const ogImage = listing.image || `${baseUrl}/og-default.jpg`;
+  const ogImage = listing.image || `${baseUrl}/og-logo.png`;
   
   return {
     title: `${listing.title} | Relique Marketplace`,
@@ -80,31 +80,31 @@ export default async function MarketplaceDetailPage({ params }: Props) {
   const images = listing.images || [listing.image];
 
   return (
-    <div className="container mx-auto px-4 py-16 mt-16">
-      <div className="max-w-6xl mx-auto space-y-12">
-        <div className="grid md:grid-cols-2 gap-8">
-          <div className="space-y-4">
+    <div className="container mx-auto px-4 sm:px-6 py-12 sm:py-16 mt-16 sm:mt-20">
+      <div className="max-w-6xl mx-auto space-y-8 sm:space-y-12">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 md:gap-16">
+          <div className="space-y-3 sm:space-y-4">
             <ItemGallery images={images} alt={listing.title} />
-            <div className="flex items-center gap-4">
+            <div className="flex flex-wrap items-center gap-3 sm:gap-4">
               <div className="flex items-center gap-2">
                 <FavoriteButton itemId={listing.id} />
-                <span className="text-sm text-muted-foreground">Favorite</span>
+                <span className="text-xs sm:text-sm text-muted-foreground">Favorite</span>
               </div>
               <div className="flex items-center gap-2">
                 <CompareButton item={listing} />
-                <span className="text-sm text-muted-foreground">Compare</span>
+                <span className="text-xs sm:text-sm text-muted-foreground">Compare</span>
               </div>
               <div className="flex items-center gap-2">
                 <WatchlistButton itemId={listing.id} itemTitle={listing.title} />
-                <span className="text-sm text-muted-foreground">Watch</span>
+                <span className="text-xs sm:text-sm text-muted-foreground">Watch</span>
               </div>
             </div>
           </div>
 
-          <div className="space-y-6">
+          <div className="space-y-4 sm:space-y-6">
             <div>
               <h1 className="text-h1">{listing.title}</h1>
-              <p className="text-2xl font-semibold text-muted-foreground mt-2">
+              <p className="text-xl sm:text-2xl font-semibold text-muted-foreground mt-2">
                 ${listing.price.toLocaleString()}
               </p>
             </div>

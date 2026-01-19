@@ -1,27 +1,27 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { StrategicPartnerSection } from "@/components/home/StrategicPartnerSection";
-import { TeamSection } from "@/components/home/TeamSection";
+import { StrategicPartnerSection } from "../(home)/components/StrategicPartnerSection";
+import { TeamSection } from "../(home)/components/TeamSection";
 
 export default function AboutPage() {
   return (
-    <div className="bg-bgDark pt-24 pb-12">
-      <div className="container mx-auto px-6 max-w-5xl">
+    <div className="bg-bgDark pt-20 sm:pt-24 pb-8 sm:pb-12">
+      <div className="container mx-auto px-4 sm:px-6 max-w-full md:max-w-5xl">
         {/* 4.1 WHO WE ARE */}
         <motion.section
           id="who-we-are"
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="py-24 border-b border-white/5"
+          className="py-16 sm:py-20 md:py-24 border-b border-white/5"
         >
-          <div className="mb-12">
-            <h2 className="text-5xl font-semibold tracking-tight mb-8 leading-none">
+          <div className="mb-8 sm:mb-12">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-semibold tracking-tight mb-6 sm:mb-8 leading-none">
               Who We Are - The Relique Story
             </h2>
           </div>
-          <div className="space-y-8 text-textSec text-lg leading-relaxed font-medium">
+          <div className="space-y-6 sm:space-y-8 text-textSec text-base sm:text-lg leading-relaxed font-medium">
             <p>
               Relique was founded by a group of U.S.-based financial professionals with extensive experience in
               managing investment funds and high-value assets, in a quest for a new investment vehicle. Drawing on years

@@ -38,4 +38,6 @@ export * from "./form/upload-manager/upload-manager";
 // Table
 export * from "./table/data-table";
 
+// Buttons (new organized system)
+export * from "./buttons";
 

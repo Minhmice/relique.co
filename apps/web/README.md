@@ -37,6 +37,16 @@ pnpm dev
 
 The application will be available at `http://localhost:3000`
 
+### New Developer Resources (Phase 7)
+
+The project now includes standardized utilities for faster development:
+
+- **Motion Variants:** Pre-built animation patterns (`@/lib/motion-variants`)
+- **Theme Utilities:** Status helpers, typography, colors (`@/lib/theme-utils`)  
+- **Typography Classes:** Consistent text styles (`.text-display-hero`, `.text-metadata`, etc.)
+
+See [Design System](#design-system) section below for complete details.
+
 ### Environment Variables
 
 Create `.env.local` file in `apps/web/`:
@@ -65,26 +75,12 @@ pnpm check-types
 
 ## Tech Stack
 
-### Core Framework
-- **Next.js 16.1.0** (App Router)
-- **React 19.2.0**
-- **TypeScript 5.9.2**
-
-### Styling & UI
-- **Tailwind CSS 3.4.17**
-- **shadcn/ui** (Radix UI primitives)
-- **Framer Motion 12.25.0** (animations)
-- **next-themes** (theme management)
-
-### Forms & Validation
-- **React Hook Form 7.69.0**
-- **Zod 4.3.2**
-- **@hookform/resolvers 5.2.2**
-
-### Utilities
-- **class-variance-authority** (component variants)
-- **clsx** & **tailwind-merge** (conditional classes)
-- **sonner** (toast notifications)
+- **Framework:** Next.js 16.1.0 (App Router), React 19.2.0, TypeScript 5.9.2
+- **Styling:** Tailwind CSS 3.4.17, shadcn/ui (Radix UI)
+- **Animation:** Framer Motion 12.25.0 với centralized variants library
+- **Forms:** React Hook Form 7.69.0 + Zod 4.3.2
+- **Utilities:** Motion variants, Theme utilities, Typography classes
+- **State:** React hooks + localStorage persistence
 
 ## Project Structure
 
@@ -106,7 +102,14 @@ apps/web/
 │   ├── robots.ts                 # robots.txt
 │   └── sitemap.ts                # sitemap.xml
 ├── src/
+│   ├── fonts/                    # Local fonts
+│   │   └── Zapf Renaissance Book.ttf
 │   ├── components/
+│   │   ├── logo/                 # Brand logo components (3)
+│   │   │   ├── ReliqueMark.tsx
+│   │   │   ├── ReliqueWordmark.tsx
+│   │   │   ├── ReliqueLogo.tsx
+│   │   │   └── index.ts
 │   │   ├── ui/                   # shadcn/ui components (DO NOT EDIT)
 │   │   ├── shell/                # Header, Footer
 │   │   ├── home/                 # Home page sections
@@ -193,144 +196,284 @@ All home page sections are client components with Framer Motion animations:
 - **StrategicPartnerSection** - Partner information
 - **TeamSection** - Team members grid with hover effects
 
+### Logo Components (`src/components/logo/`)
+
+Reusable brand identity components with Zapf Renaissance font:
+
+- **ReliqueMark.tsx** - Logo icon/mark (R. symbol)
+  - Props: `size` (sm/md/lg/xl or number), `className`, `animated`
+  - Size presets: sm: 24px, md: 40px, lg: 64px, xl: 96px
+  - Example: `<ReliqueMark size="lg" animated />`
+
+- **ReliqueWordmark.tsx** - Logo wordmark (text with Zapf Renaissance)
+  - Props: `size` (sm/md/lg/xl), `text`, `className`, `animated`
+  - Font: Zapf Renaissance auto-applied
+  - Example: `<ReliqueWordmark size="xl" text="Relique" animated />`
+
+- **ReliqueLogo.tsx** - Combined mark + wordmark
+  - Props: `markSize`, `wordmarkSize`, `gap`, `href`, `animated`, `text`
+  - Auto-wraps in Link if `href` provided
+  - Example: `<ReliqueLogo href="/" animated />`
+
 ### UI Components (`src/components/ui/`)
 
 All shadcn/ui components installed via CLI. **⚠️ IMPORTANT:** Do NOT edit files in `src/components/ui/`. These are managed by shadcn CLI. Create wrappers in `src/components/shared/` or `src/components/app/` if customization is needed.
 
 ## Design System
 
-### Theme
+### Overview
 
-The application uses a dark-only theme with custom color palette:
+Relique.co uses a comprehensive design system with standardized utilities for consistent UI development.
 
-- **Background:** `#0A0A0A` (bgDark)
-- **Card:** `#121212` (cardDark)
-- **Navy:** `#0F2854`
-- **Primary Blue:** `#1C4D8D`
-- **Accent Blue:** `#498BC4`
-- **Highlight Ice:** `#BDE8F5`
-- **Text Secondary:** `#B3B3B3`
-- **Border Dark:** `#333333`
+**Documentation:** See [`docs/THEME.md`](../../docs/THEME.md) for complete guidelines
 
-### Typography
+### Theme Tokens
 
-- **Font Family:** System fonts (Inter, -apple-system, etc.)
-- **Headings:** Bold, uppercase, italic, tight tracking
-- **Body:** Regular weight, relaxed leading
+#### Fonts
 
-### Animations
+```tsx
+// Body/UI Font: Work Sans (Google Fonts, variable weight)
+font-family: var(--font-work-sans);  // 400-700
 
-- **Framer Motion** for page transitions and component animations
-- **Scroll-triggered animations** using `whileInView`
-- **Hover effects** with scale and color transitions
-- **Mobile menu** with slide-in animation
+// Display/Brand Font: Zapf Renaissance (local)
+font-family: var(--font-zapf-renaissance);  // serif
+// Location: src/fonts/Zapf Renaissance Book.ttf
+// Used for: Hero headings, display text, brand wordmark
 
-## Services Integration
+// Tailwind classes
+font-work-sans          // Body, UI, buttons
+font-zapf-renaissance   // Display, hero, brand
+```
 
-The application integrates with service layer for data management:
+#### Colors
 
-### Marketplace Service
-- Browse items with filters and sorting
-- Item detail views
-- Search functionality
+```tsx
+// Brand colors (from tailwind.config.ts)
+navy: '#0F2854'           // Navy chủ đạo
+primaryBlue: '#1C4D8D'    // Primary CTA, highlights
+accentBlue: '#498BC4'     // Hover states, secondary
+highlightIce: '#BDE8F5'   // Premium features, AI scores
 
-### Verify Service
-- Product ID verification
-- Certificate code validation
-- Result display with status (Qualified, Inconclusive, Disqualified)
+// Surfaces
+bgDark: '#0A0A0A'         // Page background
+cardDark: '#121212'       // Cards, panels
+borderDark: '#333333'     // Borders
 
-### Consign Service
-- Draft saving
-- Form submission
-- Autosave functionality
+// Text
+textPrimary: '#FFFFFF'    // Main text
+textSecondary: '#B3B3B3'  // Muted content
+```
 
-All services use mock data with localStorage persistence.
+#### Typography Scale
+
+```tsx
+// Display (Hero)
+.text-display-hero        // 80-120px, Zapf Renaissance, serif
+.text-display-section     // 48-72px, Work Sans, bold
+.text-display-subsection  // 32-48px, Work Sans, semibold
+
+// Cards
+.text-card-title          // 24px, semibold
+.text-card-subtitle       // 16px, muted
+
+// Metadata (Labels)
+.text-metadata            // 10px, uppercase, tracking-[0.4em], black
+.text-metadata-primary    // + primaryBlue color
+.text-metadata-ice        // + highlightIce color
+
+// Interactive
+.text-link-arrow          // Uppercase, tracking-[0.2em], flex gap-2
+.text-button-primary      // Button text style
+
+// Accents
+.text-accent-blue         // primaryBlue color
+.text-accent-ice          // highlightIce color
+```
+
+**Usage:**
+
+```tsx
+<h2 className="text-display-section">
+  Section <span className="text-accent-blue">Title</span>
+</h2>
+<span className="text-metadata-primary">Category</span>
+```
+
+### Motion System
+
+**Library:** `src/lib/motion-variants.ts`
+
+#### Pre-built Variants
+
+```tsx
+import { 
+  fadeInUp,           // Standard fade from bottom
+  slideInLeft,        // Slide from left
+  slideInRight,       // Slide from right
+  scaleIn,            // Scale + fade
+  staggerContainer,   // For lists/grids
+  staggerItem,        // Child items
+  hoverLift,          // Card hover
+  VIEWPORT_ONCE       // Viewport config
+} from "@/lib/motion-variants";
+
+// Standard usage
+<motion.div
+  variants={fadeInUp}
+  initial="hidden"
+  whileInView="visible"
+  viewport={VIEWPORT_ONCE}
+>
+  Content
+</motion.div>
+
+// Stagger children
+<motion.div variants={staggerContainer} initial="hidden" whileInView="visible">
+  {items.map(item => (
+    <motion.div key={item.id} variants={staggerItem}>
+      {item.content}
+    </motion.div>
+  ))}
+</motion.div>
+
+// Hover effects
+<motion.div
+  initial="rest"
+  whileHover="hover"
+  variants={hoverLift}
+>
+```
+
+#### Easing Functions
+
+```tsx
+PREMIUM_EASING = [0.16, 1, 0.3, 1]  // Smooth luxury feel
+SHARP_EASING = "easeInOut"          // Quick interactions
+LINEAR_EASING = "linear"            // Infinite loops
+```
+
+**See:** [`docs/THEME.md#motion-system`](../../docs/THEME.md#4-motion-system) for complete reference
+
+### Theme Utilities
+
+**Library:** `src/lib/theme-utils.ts`
+
+#### Status Helpers
+
+```tsx
+import { 
+  getStatusClasses,     // Get CSS classes
+  getStatusBadge,       // Get badge config
+  getStatusColor,       // Timeline colors
+  getStatusExplanation  // Human-readable text
+} from "@/lib/theme-utils";
+
+// Usage
+<Badge className={getStatusClasses(item.status)}>
+  {getStatusBadge(item.status).label}
+</Badge>
+
+<p>{getStatusExplanation(item.status)}</p>
+```
+
+#### Typography Helpers
+
+```tsx
+import { getMetadataClasses, getLinkArrowClasses } from "@/lib/theme-utils";
+
+<span className={getMetadataClasses("primary")}>Category</span>
+<div className={getLinkArrowClasses("ice")}>
+  View More <span>→</span>
+</div>
+```
+
+#### Formatting
+
+```tsx
+import { formatPrice, formatDate, getRelativeTime } from "@/lib/theme-utils";
+
+formatPrice(1250000)           // "$1,250,000"
+formatDate(new Date())         // "Jan 19, 2026"
+getRelativeTime(pastDate)      // "2 hours ago"
+```
+
+**See:** [`docs/THEME.md#component-patterns`](../../docs/THEME.md#5-component-patterns) for patterns
+
+### Focus Management
+
+Enhanced focus indicators for accessibility:
+
+```tsx
+// Focus ring utilities (in globals.css)
+.focus-ring-primary   // Primary blue ring
+.focus-ring-ice       // Ice blue ring
+.focus-ring-white     // White ring
+
+// Usage
+<button className="focus-ring-primary">Click me</button>
+<Link href="/page" className="focus-ring-ice">Navigate</Link>
+```
+
+### Component Architecture
+
+**Inventory:** See [`docs/COMPONENT_STRUCTURE.md`](../../docs/COMPONENT_STRUCTURE.md)
+
+**Total Components:** ~97
+- Home: 12 components
+- Marketplace: 13 components
+- Consign: 14 components
+- Verify: 9 components
+- Content: 8 components
+- Sections: 12 components
+- Shared: 5 components
+- Shell: 5 components
+- UI (shadcn): 19 components
+
+**Component Rules:**
+
+1. **File Size:** Max 300 lines (200 for app components)
+2. **shadcn Guard:** Never edit `src/components/ui/**` directly
+3. **Composition:** Prefer composition over inheritance
+4. **TypeScript:** Full type safety, no `any`
+
+**See:** Component guidelines in [`docs/COMPONENT_STRUCTURE.md`](../../docs/COMPONENT_STRUCTURE.md)
+
+## Services
+
+Mock services với localStorage persistence:
+
+- **Marketplace Service** - Browse, filter, sort, search items
+- **Verify Service** - Product verification với status display
+- **Consign Service** - Form submission với draft autosave
+- **Content Service** - Posts và events management
 
 ## Development Guidelines
 
-### Component Rules
+**Component Rules:**
+1. File size ≤300 lines (200 for app-specific)
+2. Never edit `src/components/ui/**` (shadcn guard)
+3. Use motion variants library cho animations
+4. Use theme utilities cho status, typography, formatting
+5. TypeScript strict mode, no `any` types
 
-1. **File Size Limit:** Each `.tsx` file MUST be under 300 lines
-2. **shadcn Protection:** Never edit `src/components/ui/**` directly
-3. **Client Components:** Use `"use client"` for interactive components
-4. **Server Components:** Default for pages (use client only when needed)
-
-### File Naming
-
-- Components: PascalCase (`Header.tsx`, `HeroSection.tsx`)
-- Utilities: camelCase (`utils.ts`, `storage.ts`)
-- Routes: lowercase with dashes (Next.js convention)
-
-### Import Paths
-
-Use `@/` alias for imports:
-- `@/components/home/HeroSection`
-- `@/lib/services/marketplaceService`
-- `@/lib/types`
-
-### Adding New Routes
-
-1. Create page file in `app/` directory
-2. Add route to this README's Route Map
-3. Update navigation in `Header.tsx` if it's a public route
-
-### Adding New Components
-
-1. If it's a UI primitive, check shadcn first: `npx shadcn@latest add [component]`
-2. If custom, create in appropriate directory:
-   - `src/components/home/` for home page sections
-   - `src/components/shared/` for reusable components
-3. Keep components under 300 lines - extract logic to hooks if needed
-
-## Image Optimization
-
-The application uses Next.js `Image` component for optimized images. External image domains are configured in `next.config.js`:
-
-- `picsum.photos`
-- `images.unsplash.com`
-
-## Responsive Design
-
-- **Desktop-first** design approach
-- **Breakpoints:**
-  - Mobile: default
-  - Tablet: `md:` (768px+)
-  - Desktop: `lg:` (1024px+)
-- **Mobile menu** for navigation on smaller screens
-
-## Browser Support
-
-- Modern browsers (Chrome, Firefox, Safari, Edge)
-- ES2020+ features
-- CSS Grid and Flexbox
+**See:** [`docs/THEME.md`](../../docs/THEME.md) for complete guidelines
 
 ## Build & Deployment
 
-### Production Build
-
 ```bash
+# Production build
 pnpm build
-```
 
-### Start Production Server
-
-```bash
+# Start production
 pnpm start
 ```
 
-### Environment Setup
-
-Ensure `NEXT_PUBLIC_SITE_URL` is set in production environment for proper metadata and OG image generation.
+**Browser Support:** Modern browsers (Chrome, Firefox, Safari, Edge)  
+**Responsive:** Desktop-first với mobile support (md: 768px, lg: 1024px)
 
 ## Documentation
 
-See `docs/` directory for detailed documentation:
-
-- **COMPONENT_CATALOG.md** - Component catalog with props and usage
-- **STRUCTURE.md** - Architecture overview and file organization
-- **SCOPE_BOUNDARIES.md** - Scope boundaries for contract
-- **NEXT_STEPS.md** - Next steps checklist
-
-## License
-
-Private project - All rights reserved
+- **Design System:** [`docs/THEME.md`](../../docs/THEME.md)
+- **Components:** [`docs/COMPONENT_STRUCTURE.md`](../../docs/COMPONENT_STRUCTURE.md)
+- **Improvements:** [`docs/THEME_IMPROVEMENTS.md`](../../docs/THEME_IMPROVEMENTS.md)
+- **Project Structure:** [`docs/PROJECT_STRUCTURE.md`](../../docs/PROJECT_STRUCTURE.md)

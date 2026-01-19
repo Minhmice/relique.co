@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { AuthenticatePageContent } from "./AuthenticatePageContent";
+import { AuthenticateForm } from "./components/AuthenticateForm";
 
 export const metadata: Metadata = {
   title: "Authenticate Your Items",
@@ -11,6 +11,28 @@ export const metadata: Metadata = {
   },
 };
 
+/**
+ * Authentication page - server component with client form
+ * Refactored from AuthenticatePageContent.tsx to use composable components
+ */
 export default function AuthenticatePage() {
-  return <AuthenticatePageContent />;
+  return (
+    <div className="py-24 bg-bgDark min-h-screen">
+      <div className="container mx-auto px-6 max-w-4xl">
+        <div>
+          <span className="text-primaryBlue font-black uppercase text-xs tracking-widest mb-4 block">
+            Service Portal
+          </span>
+          <h1 className="text-4xl font-semibold tracking-tight mb-8">
+            Submit Item for <span className="text-highlightIce">Authentication</span>
+          </h1>
+          <p className="text-textSec text-lg mb-12">
+            Submit your items to our expert panel for rigorous forensic analysis and digital twin certification.
+          </p>
+        </div>
+
+        <AuthenticateForm />
+      </div>
+    </div>
+  );
 }

@@ -65,48 +65,48 @@
 }
 
 @layer utilities {
-  /* Typography Scale */
+  /* Typography Scale - Mobile First */
   .text-h1 {
-    @apply text-2xl md:text-3xl font-semibold tracking-tight;
+    @apply text-xl sm:text-2xl md:text-3xl lg:text-4xl font-semibold tracking-tight;
   }
   .text-h2 {
-    @apply text-2xl md:text-3xl font-bold tracking-tight;
+    @apply text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold tracking-tight;
   }
   .text-h3 {
-    @apply text-2xl md:text-3xl font-semibold tracking-tight;
+    @apply text-lg sm:text-xl md:text-2xl font-semibold tracking-tight;
   }
   .text-h4 {
-    @apply text-xl md:text-2xl font-semibold tracking-tight;
+    @apply text-base sm:text-lg md:text-xl lg:text-2xl font-semibold tracking-tight;
   }
   .text-body {
-    @apply text-base leading-7;
+    @apply text-sm sm:text-base leading-relaxed;
   }
   .text-caption {
-    @apply text-sm text-muted-foreground;
+    @apply text-xs sm:text-sm text-muted-foreground;
   }
 
   /* Content Prose Style (for long-form content like Policies/Terms) */
   .prose-content {
-    @apply max-w-4xl mx-auto;
+    @apply max-w-full sm:max-w-2xl md:max-w-3xl lg:max-w-4xl mx-auto;
   }
   .prose-content h1 {
-    @apply text-h1 mt-8 mb-4;
+    @apply text-2xl sm:text-3xl md:text-4xl mt-6 sm:mt-8 mb-3 sm:mb-4 font-semibold tracking-tight;
   }
   .prose-content h2 {
-    @apply text-h2 mt-8 mb-4;
+    @apply text-xl sm:text-2xl md:text-3xl mt-6 sm:mt-8 mb-3 sm:mb-4 font-bold tracking-tight;
   }
   .prose-content h3 {
-    @apply text-h3 mt-6 mb-3;
+    @apply text-lg sm:text-xl md:text-2xl mt-4 sm:mt-6 mb-2 sm:mb-3 font-semibold tracking-tight;
   }
   .prose-content h4 {
-    @apply text-h4 mt-4 mb-2;
+    @apply text-base sm:text-lg md:text-xl mt-4 mb-2 font-semibold tracking-tight;
   }
   .prose-content p {
-    @apply text-body mb-4;
+    @apply text-sm sm:text-base leading-relaxed mb-3 sm:mb-4;
   }
   .prose-content ul,
   .prose-content ol {
-    @apply mb-4 ml-6;
+    @apply mb-3 sm:mb-4 ml-4 sm:ml-6;
   }
   .prose-content ul {
     @apply list-disc;
@@ -115,7 +115,7 @@
     @apply list-decimal;
   }
   .prose-content li {
-    @apply mb-2;
+    @apply mb-1 sm:mb-2 text-sm sm:text-base;
   }
   .prose-content a {
     @apply text-primary hover:underline border-b border-accent/50 hover:border-accent transition-colors;
@@ -124,12 +124,109 @@
     @apply font-semibold;
   }
   .prose-content code {
-    @apply bg-muted px-1.5 py-0.5 text-sm font-mono;
+    @apply bg-muted px-1.5 py-0.5 text-xs sm:text-sm font-mono;
+  }
+
+  /* ========================================
+     Display Typography - Mobile First
+     ======================================== */
+  
+  .text-display-hero {
+    @apply text-4xl sm:text-5xl md:text-7xl lg:text-[120px] font-medium tracking-tight leading-[0.95];
+    font-family: var(--font-zapf-renaissance), serif;
+  }
+  
+  .text-display-section {
+    @apply text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight;
+  }
+  
+  .text-display-subsection {
+    @apply text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-semibold tracking-tight;
+  }
+  
+  /* ========================================
+     Card Typography - Mobile First
+     ======================================== */
+  
+  .text-card-title {
+    @apply text-lg sm:text-xl md:text-2xl font-semibold;
+  }
+  
+  .text-card-subtitle {
+    @apply text-sm sm:text-base text-textSec;
+  }
+  
+  /* ========================================
+     Metadata Typography - Mobile First
+     ======================================== */
+  
+  .text-metadata {
+    @apply text-[9px] sm:text-[10px] font-black uppercase tracking-[0.3em] sm:tracking-[0.4em];
+  }
+  
+  .text-metadata-sm {
+    @apply text-[8px] sm:text-[9px] font-black uppercase tracking-[0.2em] sm:tracking-[0.3em];
+  }
+  
+  .text-metadata-primary {
+    @apply text-metadata text-primaryBlue;
+  }
+  
+  .text-metadata-ice {
+    @apply text-metadata text-highlightIce;
+  }
+  
+  /* ========================================
+     Interactive Typography - Mobile First
+     ======================================== */
+  
+  .text-link-arrow {
+    @apply text-[10px] sm:text-xs font-black uppercase tracking-[0.15em] sm:tracking-[0.2em] flex items-center gap-1 sm:gap-2;
+  }
+  
+  .text-button-primary {
+    @apply text-[10px] sm:text-xs font-black uppercase tracking-[0.15em] sm:tracking-[0.2em];
+  }
+  
+  /* ========================================
+     Accents
+     ======================================== */
+  
+  .text-accent-blue {
+    @apply text-primaryBlue;
+  }
+  
+  .text-accent-ice {
+    @apply text-highlightIce;
   }
 
   /* Interaction Standards */
   .focus-ring {
     @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2;
+  }
+  
+  .focus-ring-primary {
+    @apply focus-visible:outline-none 
+           focus-visible:ring-2 
+           focus-visible:ring-primaryBlue 
+           focus-visible:ring-offset-2 
+           focus-visible:ring-offset-bgDark;
+  }
+  
+  .focus-ring-ice {
+    @apply focus-visible:outline-none 
+           focus-visible:ring-2 
+           focus-visible:ring-highlightIce 
+           focus-visible:ring-offset-2 
+           focus-visible:ring-offset-bgDark;
+  }
+  
+  .focus-ring-white {
+    @apply focus-visible:outline-none 
+           focus-visible:ring-2 
+           focus-visible:ring-white 
+           focus-visible:ring-offset-2 
+           focus-visible:ring-offset-bgDark;
   }
   
   /* Motion Rules - Subtle transitions */
@@ -138,6 +235,34 @@
   }
   .transition-slow {
     @apply transition-all duration-300 ease-in-out;
+  }
+
+  /* ========================================
+     Mobile-First Layout Utilities
+     ======================================== */
+  
+  .container-mobile {
+    @apply px-4 sm:px-6 lg:px-8;
+  }
+  
+  .section-padding-mobile {
+    @apply py-12 sm:py-16 md:py-20 lg:py-24;
+  }
+  
+  .section-padding-sm {
+    @apply py-8 sm:py-12 md:py-16 lg:py-20;
+  }
+  
+  .grid-mobile-responsive {
+    @apply grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4;
+  }
+  
+  .gap-mobile {
+    @apply gap-4 sm:gap-6 md:gap-8;
+  }
+  
+  .gap-mobile-sm {
+    @apply gap-3 sm:gap-4 md:gap-6;
   }
 
   /* Custom utilities from RELIQUE design */

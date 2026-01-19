@@ -3,6 +3,7 @@
   "compilerOptions": {
     "outDir": "dist",
     "composite": true,
+    "incremental": true,
     "declaration": true,
     "declarationMap": true
   },
