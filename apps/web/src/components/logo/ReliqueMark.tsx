@@ -40,7 +40,7 @@ export function ReliqueMark({
       style={{ width: numericSize, height: numericSize }}
     >
       <Image
-        src="/brand/LogoRelique.svg"
+        src="/brand/relique-logo.svg"
         alt="Relique Mark"
         width={numericSize}
         height={numericSize}

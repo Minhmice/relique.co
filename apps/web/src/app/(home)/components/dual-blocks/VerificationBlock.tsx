@@ -19,7 +19,7 @@ export function VerificationBlock() {
     >
       <div className="absolute inset-0 z-0">
         <Image
-          src="/mock-images/verify.JPG"
+          src="/mock-images/verify2.jpg"
           alt="Verification"
           fill
           className="object-cover"

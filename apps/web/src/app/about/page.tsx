@@ -23,7 +23,7 @@ export default function AboutPage() {
           </div>
           <div className="space-y-6 sm:space-y-8 text-textSec text-base sm:text-lg leading-relaxed font-medium">
             <p>
-              Relique was founded by a group of U.S.-based financial professionals with extensive experience in
+              Relique was founded by a group of financial professionals with extensive experience in
               managing investment funds and high-value assets, in a quest for a new investment vehicle. Drawing on years
               of exposure to global capital markets, we recognized that memorabilia possesses all the characteristics of
               a legitimate financial asset—scarcity, provenance, and enduring value—yet has been held back by

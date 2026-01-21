@@ -41,7 +41,7 @@ export function StrategicPartnerSection() {
               />
               <div className="relative w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 transition-transform group-hover:scale-110">
                 <Image
-                  src="/brand/St.B.svg"
+                  src="/brand/stb-logo.svg"
                   alt="St.B Logo"
                   fill
                   className="object-contain"

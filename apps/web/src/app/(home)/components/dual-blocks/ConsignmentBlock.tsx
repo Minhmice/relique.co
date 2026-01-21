@@ -19,7 +19,7 @@ export function ConsignmentBlock() {
     >
       <div className="absolute inset-0 z-0">
         <Image
-          src="/mock-images/cosign.JPG"
+          src="/mock-images/consign.jpg"
           alt="Consignment"
           fill
           className="object-cover"

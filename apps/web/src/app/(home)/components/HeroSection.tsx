@@ -30,7 +30,7 @@ export function HeroSection() {
             className="text-4xl sm:text-5xl md:text-[80px] lg:text-[120px] font-medium tracking-wide leading-[0.90] sm:leading-[0.85] mb-6 sm:mb-8"
             style={{ fontFamily: 'var(--font-zapf-renaissance), serif' }}
           >
-            <span className="text-white">Relique</span>{" "}
+            <span className="text-white">Relics</span>{" "}
             <span className="text-primaryBlue">you</span>
             <br />
             <span className="text-primaryBlue">can </span>
