@@ -77,9 +77,9 @@ export function ProfileCard({ member, className }: ProfileCardProps) {
           </p>
 
           {/* Expertise Chips */}
-          {false && member.expertiseChips && member.expertiseChips.length > 0 && (
+          {false && member.expertiseChips && (member.expertiseChips?.length ?? 0) > 0 && (
             <div className="mb-6">
-              <ProfileChips chips={member.expertiseChips} maxVisible={4} />
+              <ProfileChips chips={member.expertiseChips ?? []} maxVisible={4} />
             </div>
           )}
 

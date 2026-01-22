@@ -75,7 +75,7 @@ export function ProfileDrawer({ member, open, onOpenChange }: ProfileDrawerProps
           </motion.div>
 
           {/* Expertise Chips */}
-          {false && member.expertiseChips && member.expertiseChips.length > 0 && (
+          {false && member.expertiseChips && (member.expertiseChips?.length ?? 0) > 0 && (
             <motion.div
               custom={1}
               initial="hidden"
@@ -83,7 +83,7 @@ export function ProfileDrawer({ member, open, onOpenChange }: ProfileDrawerProps
               variants={sectionVariants}
             >
               <ProfileChips 
-                chips={member.expertiseChips} 
+                chips={member.expertiseChips ?? []} 
                 maxVisible={8}
               />
             </motion.div>
@@ -142,9 +142,9 @@ export function ProfileDrawer({ member, open, onOpenChange }: ProfileDrawerProps
             variants={sectionVariants}
             className="mt-8 pt-6 border-t border-white/10 flex flex-wrap gap-4"
           >
-            {fullBio.links.linkedin && (
+            {fullBio?.links?.linkedin && (
               <a
-                href={fullBio.links.linkedin}
+                href={fullBio?.links?.linkedin ?? '#'}
                 target="_blank"
                 rel="noopener noreferrer"
                 className={cn(
