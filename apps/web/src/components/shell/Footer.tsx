@@ -3,6 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { ReliqueMark } from "../logo/ReliqueMark";
 
 export function Footer() {
   const router = useRouter();
@@ -33,11 +34,13 @@ export function Footer() {
       <div className="container mx-auto px-4 sm:px-6">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-12 md:gap-16 mb-12 sm:mb-16 md:mb-20">
           <div className="col-span-1 lg:col-span-2">
-            <div className="flex items-center gap-2 sm:gap-3 mb-6 sm:mb-8 cursor-pointer group" onClick={() => router.push("/")}>
-              <div className="w-8 h-8 sm:w-10 sm:h-10 bg-primaryBlue rounded-sm flex items-center justify-center font-bold text-white text-sm sm:text-base group-hover:scale-110 transition-transform">
-                R
-              </div>
-              <span className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight uppercase">Relique.ch</span>
+            <div className="flex items-center gap-2  sm:gap-3 mb-6 sm:mb-8 cursor-pointer group" onClick={() => router.push("/")}>
+              <Link href="/" className="group transition-transform active:scale-95">
+                <ReliqueMark
+                  size="lg"
+                  className="tracking-wide"
+                />
+              </Link>
             </div>
             <p className="text-textSec max-w-sm mb-6 sm:mb-8 md:mb-10 text-sm sm:text-base md:text-lg leading-relaxed font-medium">
               Establishing the forensic gold standard for sports memorabilia through AI-driven authentication and digital trust.

@@ -64,7 +64,7 @@ export function ProfileDrawer({ member, open, onOpenChange }: ProfileDrawerProps
             <SheetTitle className="text-3xl font-bold tracking-tight text-white">
               {member.name}
             </SheetTitle>
-            <p className="text-primaryBlue font-black text-[10px] uppercase tracking-[0.4em] mt-2">
+            <p className="text-primaryBlue font-black text-[10px] uppercase mt-2">
               {member.role}
             </p>
             {member.tagline && (
@@ -75,7 +75,7 @@ export function ProfileDrawer({ member, open, onOpenChange }: ProfileDrawerProps
           </motion.div>
 
           {/* Expertise Chips */}
-          {member.expertiseChips && member.expertiseChips.length > 0 && (
+          {false && member.expertiseChips && member.expertiseChips.length > 0 && (
             <motion.div
               custom={1}
               initial="hidden"
@@ -134,7 +134,7 @@ export function ProfileDrawer({ member, open, onOpenChange }: ProfileDrawerProps
         </div>
 
         {/* Footer CTAs */}
-        {fullBio?.links && (
+        {false && fullBio?.links && (
           <motion.div
             custom={5}
             initial="hidden"

@@ -24,10 +24,10 @@ const zapfRenaissance = localFont({
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://relique.ch"),
   title: {
-    default: "Relique - Authentic Collectibles",
+    default: "Relique - Relics you can rely on",
     template: "%s | Relique",
   },
-  description: "Probabilistic authentication for collectibles and memorabilia. Verify, authenticate, and consign your collectibles with confidence.",
+  description: "Relics you can rely on",
   keywords: [
     "collectibles",
     "authentication",
@@ -65,14 +65,14 @@ export const metadata: Metadata = {
     locale: "en_US",
     url: "/",
     siteName: "Relique",
-    title: "Relique - Authentic Collectibles",
-    description: "Probabilistic authentication for collectibles and memorabilia. Verify, authenticate, and consign your collectibles with confidence.",
+    title: "Relique - Relics you can rely on",
+    description: "Relics you can rely on",
     images: [
       {
         url: "/og-logo.png",
         width: 1200,
         height: 1200,
-        alt: "Relique - Authentic Collectibles",
+        alt: "Relique - Relics you can rely on",
         type: "image/png",
       },
     ],
@@ -81,7 +81,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     site: "@relique",
     creator: "@relique",
-    title: "Relique - Authentic Collectibles",
+    title: "Relique - Relics you can rely on",
     description: "Probabilistic authentication for collectibles and memorabilia. Verify, authenticate, and consign your collectibles with confidence.",
     images: ["/og-logo.png"],
   },

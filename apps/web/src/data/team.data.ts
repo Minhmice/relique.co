@@ -58,14 +58,14 @@ export const teamMembers: ExtendedTeamMember[] = [
   {
     id: "3",
     name: "Do Tuan Kiet",
-    role: "CO-FOUNDER & HEAD OF SEA OPERATIONS",
+    role: "CO-FOUNDER & HEAD OF SEA OPERATIONS MANAGER AT WWP (WANDER WEALTH PARTNER)",
     sub: "Financial Analyst & Business Consultant at Wander Wealth Partner",
-    tagline: "Visionary co-founder establishing memorabilia as a credible investment asset class across Southeast Asia",
+    tagline: "Visionary co-founder establishing memorabilia as a credible investment asset class across USA",
     watermark: "R",
     credentials: {
       primaryOrg: "Wander Wealth Partner",
       education: "Finance & Investment Management",
-      region: "Southeast Asia",
+      region: "USA",
       specialization: ["Capital Management", "Investment Analysis", "Risk Assessment", "Strategic Operations"],
     },
     expertiseChips: [
@@ -77,26 +77,26 @@ export const teamMembers: ExtendedTeamMember[] = [
       "Strategic Planning",
     ],
     expanded: {
-      microSummary: "Co-founder driving Relique's transformation of memorabilia into a credible financial asset class through capital discipline and Southeast Asia expansion.",
+      microSummary: "Co-founder driving Relique's transformation of memorabilia into a credible financial asset class through capital discipline and USA expansion.",
       keyContributions: [
         "Co-founded Relique.ch with vision for memorabilia as investable asset class",
-        "Leads Southeast Asia operations and regional market development",
+        "Leads USA operations and regional market development",
         "Establishes investment frameworks blending heritage with tangible value",
       ],
       experienceSnapshot: [
         { period: "Now", title: "Co-Founder & Head of SEA Operations", org: "Relique.ch" },
         { period: "Currently", title: "Financial Analyst & Business Consultant", org: "Wander Wealth Partner" },
-        { period: "Focus", title: "Capital Strategy & Regional Expansion", org: "Southeast Asia Markets" },
+        { period: "Focus", title: "Capital Strategy & Regional Expansion", org: "USA Markets" },
       ],
     },
     fullBio: {
-      overview: "Mr. Do Tuan Kiet is one of the co-founders of Relique.ch and leads the firm's operations across Southeast Asia. As a seasoned finance and investment expert, he brings his vision and extensive experience in capital management, investment analysis, and risk assessment to the firm's strategic direction.",
+      overview: "Mr. Do Tuan Kiet is one of the co-founders of Relique.ch and leads the firm's operations across USA. As a seasoned finance and investment expert, he brings his vision and extensive experience in capital management, investment analysis, and risk assessment to the firm's strategic direction.",
       timeline: [
         {
           year: "Present",
           title: "Co-Founder & Head of SEA Operations",
           org: "Relique.ch",
-          description: "Leading regional expansion and operational strategy across Southeast Asian markets",
+          description: "Leading regional expansion and operational strategy across USAn markets",
         },
         {
           year: "Present",
@@ -111,13 +111,13 @@ export const teamMembers: ExtendedTeamMember[] = [
           description: "Established vision for memorabilia as credible, investable financial asset class",
         },
       ],
-      institutionalValue: "At the forefront of the company's mission, Mr. Do Tuan Kiet is the driving force behind Relique's ambition to establish memorabilia as a credible, investable financial asset, seamlessly blending passion, heritage, and tangible value. His operational leadership ensures that Relique maintains rigorous financial discipline while scaling across high-growth Southeast Asian markets.",
+      institutionalValue: "At the forefront of the company's mission, Mr. Do Tuan Kiet is the driving force behind Relique's ambition to establish memorabilia as a credible, investable financial asset, seamlessly blending passion, heritage, and tangible value. His operational leadership ensures that Relique maintains rigorous financial discipline while scaling across high-growth USAn markets.",
       links: {
         linkedin: "https://www.linkedin.com/in/do-tuan-kiet",
       },
     },
     description: [
-      "Mr. Do Tuan Kiet is one of the co-founders of Relique.ch and leads the firm's operations across Southeast Asia. As a seasoned finance and investment expert, he brings his vision and extensive experience in capital management, investment analysis, and risk assessment to the firm's board and channels that into Relique's strategies.",
+      "Mr. Do Tuan Kiet is one of the co-founders of Relique.ch and leads the firm's operations across USA. As a seasoned finance and investment expert, he brings his vision and extensive experience in capital management, investment analysis, and risk assessment to the firm's board and channels that into Relique's strategies.",
       "At the forefront of the company's mission, he is the driving force behind Relique's mission to establish memorabilia as a credible, investable financial asset, seamlessly blending passion, heritage, and tangible value.",
     ],
   },
@@ -131,7 +131,7 @@ export const teamMembers: ExtendedTeamMember[] = [
     credentials: {
       primaryOrg: "St. B Sporting Ecosystem",
       education: "MSc Applied AI, Swiss UMEF University | Dual Degrees in Business & Finance, Foreign Trade University",
-      region: "Vietnam / Switzerland",
+      region: "USA",
       specialization: ["Applied Artificial Intelligence", "Authentication Technology", "Business Strategy", "Market Analysis"],
     },
     expertiseChips: [
@@ -204,7 +204,7 @@ export const teamMembers: ExtendedTeamMember[] = [
     credentials: {
       primaryOrg: "Xenatech Nepal Pvt. Ltd.",
       education: "Business Studies, The British College",
-      region: "Nepal / Europe",
+      region: "USA",
       specialization: ["Institutional Relations", "Sports Diplomacy", "Digital Strategy", "Partnership Development"],
     },
     expertiseChips: [
@@ -278,7 +278,7 @@ export const teamMembers: ExtendedTeamMember[] = [
     credentials: {
       primaryOrg: "VNPAY | St.B AI",
       education: "Multiple ML & Deep Learning Certifications (Coursera) | Faculty of Information Technology",
-      region: "Vietnam",
+      region: "USA",
       specialization: ["Deep Learning", "Fraud Detection", "Transfer Learning", "Model Fine-tuning"],
     },
     expertiseChips: [
@@ -350,7 +350,7 @@ export const teamMembers: ExtendedTeamMember[] = [
     credentials: {
       primaryOrg: "TDMK Ltd. | St.B AI",
       education: "AI Engineering & Computer Science",
-      region: "Vietnam",
+      region: "USA",
       specialization: ["Signature Analysis", "Pattern Recognition", "Variance Assessment", "Forensic AI"],
     },
     expertiseChips: [
@@ -415,7 +415,7 @@ export const teamMembers: ExtendedTeamMember[] = [
     credentials: {
       primaryOrg: "Pixta Vietnam | St.B AI",
       education: "AI Engineering & Computer Vision",
-      region: "Vietnam",
+      region: "USA",
       specialization: ["Computer Vision", "Forensic Analysis", "Material Assessment", "Data-Driven Metrics"],
     },
     expertiseChips: [

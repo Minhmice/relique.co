@@ -10,10 +10,6 @@ interface ProfileChipsProps {
   className?: string;
 }
 
-/**
- * ProfileChips - Reusable expertise chips component
- * Displays chips with hover effects, expandable functionality, and responsive wrapping
- */
 export function ProfileChips({ 
   chips, 
   maxVisible = 4, 

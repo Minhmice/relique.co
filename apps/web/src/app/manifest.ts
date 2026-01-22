@@ -4,7 +4,7 @@ export default function manifest(): MetadataRoute.Manifest {
   return {
     name: 'Relique - Authentic Collectibles',
     short_name: 'Relique',
-    description: 'Probabilistic authentication for collectibles and memorabilia. Verify, authenticate, and consign your collectibles with confidence.',
+    description: 'Relics you can rely on',
     start_url: '/',
     display: 'standalone',
     background_color: '#000000',

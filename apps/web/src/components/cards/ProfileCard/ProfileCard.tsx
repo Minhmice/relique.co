@@ -61,7 +61,7 @@ export function ProfileCard({ member, className }: ProfileCardProps) {
             <h3 className="text-xl sm:text-2xl font-semibold mb-2 tracking-tight group-hover:text-highlightIce transition-colors">
               {member.name}
             </h3>
-            <p className="text-primaryBlue font-black text-[9px] sm:text-[10px] uppercase tracking-[0.4em] mb-2">
+            <p className="text-primaryBlue font-black text-[9px] sm:text-[10px] uppercase mb-2">
               {member.role}
             </p>
             {member.sub && (
@@ -77,7 +77,7 @@ export function ProfileCard({ member, className }: ProfileCardProps) {
           </p>
 
           {/* Expertise Chips */}
-          {member.expertiseChips && member.expertiseChips.length > 0 && (
+          {false && member.expertiseChips && member.expertiseChips.length > 0 && (
             <div className="mb-6">
               <ProfileChips chips={member.expertiseChips} maxVisible={4} />
             </div>

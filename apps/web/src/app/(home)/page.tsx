@@ -9,11 +9,11 @@ import { StrategicPartnerSection } from "./components/StrategicPartnerSection";
 import { TeamSection } from "./components/TeamSection";
 
 export const metadata: Metadata = {
-  title: "Relique - Probabilistic Authentication for Collectibles",
+  title: "Relique - Relics you can rely on",
   description: "Trusted authentication for memorabilia and collectibles. Verify, browse, and consign authenticated items.",
   openGraph: {
-    title: "Relique - Probabilistic Authentication for Collectibles",
-    description: "Trusted authentication for memorabilia and collectibles",
+    title: "Relique - Relics you can rely on",
+    description: "Relics you can rely on",
     type: "website",
   },
 };
