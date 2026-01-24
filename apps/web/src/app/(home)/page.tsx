@@ -7,6 +7,8 @@ import { TheWaySection } from "./components/TheWaySection";
 import { TestimonialsSection } from "./components/TestimonialsSection";
 import { StrategicPartnerSection } from "./components/StrategicPartnerSection";
 import { TeamSection } from "./components/TeamSection";
+import { PressCoverageSection } from "./components/PressCoverageSection";
+import { PRESS_ARTICLES } from "@/data/press.data";
 
 export const metadata: Metadata = {
   title: "Relique - Relics you can rely on",
@@ -28,6 +30,7 @@ export default function HomePage() {
       <TheWaySection />
       <StrategicPartnerSection />
       <TeamSection />
+      <PressCoverageSection items={PRESS_ARTICLES} />
     </>
   );
 }
