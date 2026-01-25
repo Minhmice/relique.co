@@ -9,14 +9,13 @@ import { ProfileDrawer } from "./ProfileDrawer";
 
 /**
  * ProfileCard - Main team member card component
- * Displays card with tagline + microSummary, opens full drawer on click
+ * Displays card with tagline, opens full drawer on click
  */
 export function ProfileCard({ member, className }: ProfileCardProps) {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   // Fallbacks cho missing data
   const displayTagline = member.tagline || member.description[0];
-  const displayMicroSummary = member.expanded?.microSummary;
   const displayWatermark = member.watermark || "R";
 
   const handleKeyDown = (e: React.KeyboardEvent, action: () => void) => {
@@ -73,7 +72,7 @@ export function ProfileCard({ member, className }: ProfileCardProps) {
 
           {/* Description - clean, no clamp */}
           <p className="text-textSec text-sm sm:text-base leading-relaxed mb-4">
-            {displayMicroSummary || displayTagline}
+            {displayTagline}
           </p>
 
           {/* Expertise Chips */}

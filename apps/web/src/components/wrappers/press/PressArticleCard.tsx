@@ -21,7 +21,6 @@ export interface PressArticleCardProps {
   excerpt?: string;
   dateLabel: string;
   readTime?: string;
-  tag?: string;
   outletVerified?: boolean;
   logoSrc?: string;
   thumbnailSrc?: string;
@@ -37,7 +36,6 @@ export function PressArticleCard({
   excerpt,
   dateLabel,
   readTime,
-  tag,
   outletVerified,
   logoSrc,
   thumbnailSrc,
@@ -64,78 +62,57 @@ export function PressArticleCard({
           "group-hover:border-white/20"
         )}
       >
-        {(thumbnailSrc || logoSrc || outletVerified || tag) && (
-          <CardHeader className="p-0">
-            <div className="relative">
-              {thumbnailSrc ? (
-                <div className="relative h-[180px] w-full overflow-hidden">
-                  <Image
-                    src={thumbnailSrc}
-                    alt={title}
-                    fill
-                    className={cn(
-                      "object-cover grayscale transition-all duration-1000",
-                      "group-hover:grayscale-0 group-hover:scale-110"
-                    )}
-                    sizes="(max-width: 768px) 100vw, 33vw"
-                    draggable={false}
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-bgDark/90" />
-                </div>
-              ) : (
-                <div className="h-[72px] bg-gradient-to-r from-bgDark to-cardDark border-b border-white/5" />
-              )}
+        <CardHeader className="p-0">
+          <div className="relative">
+            {thumbnailSrc ? (
+              <div className="relative h-[180px] w-full overflow-hidden">
+                <Image
+                  src={thumbnailSrc}
+                  alt={title}
+                  fill
+                  className={cn(
+                    "object-cover grayscale transition-all duration-1000",
+                    "group-hover:grayscale-0 group-hover:scale-110"
+                  )}
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                  draggable={true}
+                />
+                <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-bgDark/90" />
+              </div>
+            ) : (
+              <div className="h-[72px] bg-gradient-to-r from-bgDark to-cardDark border-b border-white/5" />
+            )}
 
-              <div className="absolute inset-x-0 top-0 p-4 sm:p-6 flex items-start justify-between gap-4">
-                <div className="min-w-0">
-                  <div className="flex items-center gap-3">
-                    <div className="flex gap-1">
-                      <div className="w-1 h-4 bg-primaryBlue" />
-                      <div className="w-1 h-4 bg-accentBlue" />
-                    </div>
-                    <span className="text-[10px] font-black uppercase tracking-[0.4em] text-primaryBlue">
-                      {publisher}
-                    </span>
-                    {logoSrc && (
-                      <div className="relative w-6 h-6 overflow-hidden">
-                        <Image
-                          src={logoSrc}
-                          alt={`${publisher} logo`}
-                          fill
-                          className={cn("object-contain grayscale transition-all duration-700", "group-hover:grayscale-0")}
-                          sizes="24px"
-                          draggable={false}
-                        />
-                      </div>
-                    )}
+            <div className="absolute inset-x-0 top-0 p-4 sm:p-6 flex items-start justify-between gap-4">
+              <div className="min-w-0">
+                <div className="flex items-center gap-3">
+                  <div className="flex gap-1">
+                    <div className="w-1 h-4 bg-primaryBlue" />
+                    <div className="w-1 h-4 bg-accentBlue" />
                   </div>
-                  {(outletVerified || tag) && (
-                    <div className="mt-3 flex items-center gap-2">
-                      {outletVerified && (
-                        <Badge className="rounded-none border border-white/10 bg-white/5 text-white backdrop-blur-md">
-                          Verified Outlet
-                        </Badge>
-                      )}
-                      {tag && (
-                        <Badge
-                          className={cn(
-                            "rounded-none border border-white/10 backdrop-blur-md",
-                            isFeatured ? "bg-highlightIce/10 text-highlightIce" : "bg-white/5 text-white/80"
-                          )}
-                        >
-                          {tag}
-                        </Badge>
-                      )}
+                  <span className="text-[10px] font-black uppercase tracking-[0.4em] text-primaryBlue">
+                    {publisher}
+                  </span>
+                  {logoSrc && (
+                    <div className="relative w-6 h-6 overflow-hidden">
+                      <Image
+                        src={logoSrc}
+                        alt={`${publisher} logo`}
+                        fill
+                        className={cn("object-contain grayscale transition-all duration-700", "group-hover:grayscale-0")}
+                        sizes="24px"
+                        draggable={false}
+                      />
                     </div>
                   )}
                 </div>
-                {isFeatured && (
-                  <Badge className="rounded-none bg-primaryBlue text-white border-0">Featured</Badge>
-                )}
               </div>
+              {isFeatured && (
+                <Badge className="rounded-none bg-primaryBlue text-white border-0">Featured</Badge>
+              )}
             </div>
-          </CardHeader>
-        )}
+          </div>
+        </CardHeader>
 
         <CardContent className={cn("p-6 sm:p-8", thumbnailSrc ? "pt-4 sm:pt-6" : "pt-6 sm:pt-8")}>
           <h3 className="text-xl md:text-2xl font-semibold tracking-tight text-white transition-colors group-hover:text-highlightIce">
