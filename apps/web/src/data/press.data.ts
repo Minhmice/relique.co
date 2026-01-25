@@ -4,7 +4,7 @@
  */
 
 export type PressTone = "neutral" | "featured";
-ad
+
 export interface PressArticle {
   href: string;
   tone?: PressTone;
