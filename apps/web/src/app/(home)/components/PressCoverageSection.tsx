@@ -9,6 +9,7 @@ import type { PressArticle } from "@/data/press.data";
 
 const FALLBACK_IMAGE = "/mock-images/consign.jpg";
 
+// --- Interfaces ---
 export interface PressCoverageSectionProps {
   items: PressArticle[];
   eyebrow?: string;
@@ -24,15 +25,15 @@ interface ArticleMeta {
   publisher: string | null;
 }
 
-/**
- * Hook để fetch full article metadata từ API
- */
+// --- Hooks ---
 function useArticleMeta(items: PressArticle[]) {
   const [metadata, setMetadata] = useState<Record<string, ArticleMeta>>({});
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchMetadata = async () => {
+      // Reset loading khi items đổi (nếu cần thiết logic reload)
+      setLoading(true);
       const results: Record<string, ArticleMeta> = {};
       
       await Promise.all(
@@ -40,12 +41,9 @@ function useArticleMeta(items: PressArticle[]) {
           try {
             const res = await fetch(`/api/article-meta?url=${encodeURIComponent(item.href)}`);
             const data = await res.json();
-            
-            if (!data.error) {
-              results[item.href] = data;
-            }
+            if (!data.error) results[item.href] = data;
           } catch {
-            // Ignore errors, will show loading state
+            // Silent fail
           }
         })
       );
@@ -60,27 +58,25 @@ function useArticleMeta(items: PressArticle[]) {
   return { metadata, loading };
 }
 
-/**
- * Format ISO date to readable format
- */
 function formatDate(isoDate: string | null | undefined): string | null {
   if (!isoDate) return null;
   try {
-    const date = new Date(isoDate);
-    return date.toLocaleDateString("en-US", {
-      month: "short",
-      day: "numeric",
-      year: "numeric",
+    return new Date(isoDate).toLocaleDateString("en-US", {
+      month: "long", day: "numeric", year: "numeric",
     });
-  } catch {
-    return null;
-  }
+  } catch { return null; }
 }
 
+// --- Skeleton Component ---
+const SkeletonText = ({ className }: { className?: string }) => (
+  <div className={`bg-white/10 animate-pulse rounded ${className}`} />
+);
+
+// --- Main Component ---
 export function PressCoverageSection({
   items,
   eyebrow = "Editorial Insights",
-  title = "Featured Post",
+  title = "Featured Stories",
 }: PressCoverageSectionProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
@@ -96,222 +92,213 @@ export function PressCoverageSection({
 
   useEffect(() => {
     if (isPaused || items.length <= 1) return;
-    const timer = setInterval(nextSlide, 5000);
+    const timer = setInterval(nextSlide, 6000);
     return () => clearInterval(timer);
   }, [nextSlide, isPaused, items.length]);
 
   const currentArticle = items[currentIndex];
   if (!currentArticle) return null;
 
-  const isFeatured = currentArticle.tone === "featured";
+  // Xử lý dữ liệu hiển thị
+  const meta = metadata[currentArticle.href];
+  
+  // Logic check: Đang tải global HOẶC chưa có data cho bài viết cụ thể này
+  const isLoading = loading || !meta;
+
+  const displayImage = meta?.imageUrl || FALLBACK_IMAGE;
+  const displayTitle = meta?.title || "Untitled Article";
+  const displayDesc = meta?.description;
+  const displayDate = formatDate(meta?.publishedAt);
+  const displayPublisher = meta?.publisher || "Press Coverage";
+  const displayReadTime = meta?.readingTime;
 
   return (
     <section className="py-20 lg:py-24 bg-bgDark border-t border-white/5 relative overflow-hidden">
-      {/* Background Decor - Hidden on mobile */}
+      {/* Background Decor */}
       <div className="absolute top-0 right-0 w-1/3 h-full bg-primaryBlue/5 -skew-x-12 translate-x-1/2 pointer-events-none hidden lg:block" />
 
-      <div className="container mx-auto px-4 lg:px-6">
-        {/* Header - Centered on mobile */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
+      <div className="container mx-auto px-4 lg:px-6 relative z-10">
+        
+        {/* Header */}
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="mb-8 lg:mb-12"
+          className="mb-10 lg:mb-12"
         >
-          <span className="text-primaryBlue font-semibold uppercase text-[10px] lg:text-xs tracking-wider mb-2 lg:mb-3 block text-center lg:text-left">
+          <span className="text-primaryBlue font-semibold uppercase text-xs tracking-wider mb-3 block">
             {eyebrow}
           </span>
-          <h1 className="text-5xl sm:text-6xl lg:text-7xl font-semibold text-white text-center lg:text-left">
+          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-semibold text-white tracking-tight">
             {title}
-          </h1>
+          </h2>
         </motion.div>
 
         {/* Main Card */}
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
+        <div 
+          className="bg-cardDark border border-white/10 shadow-2xl overflow-hidden group"
           onMouseEnter={() => setIsPaused(true)}
           onMouseLeave={() => setIsPaused(false)}
-          className="bg-cardDark border border-white/5 group overflow-hidden shadow-2xl relative"
         >
-          {/* Grid: Stacked on mobile, Split on desktop */}
-          <div className="grid grid-cols-1 lg:grid-cols-[600px_1fr] gap-0">
-            {/* Visual Column - Fixed aspect ratios */}
-            <div className="relative aspect-[4/3] lg:aspect-[3/3] overflow-hidden bg-black border-b lg:border-b-0 border-white/5">
+          <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] min-h-[500px]">
+            
+            {/* 1. IMAGE COLUMN */}
+            <div className="relative h-[300px] lg:h-auto overflow-hidden bg-black border-b lg:border-b-0 lg:border-r border-white/5">
               <AnimatePresence mode="wait">
-                {(() => {
-                  const meta = metadata[currentArticle.href];
-                  const imageSrc = meta?.imageUrl || FALLBACK_IMAGE;
-                  return (
-                    <motion.div
-                      key={imageSrc}
-                      initial={{ opacity: 0, scale: 1.1 }}
-                      animate={{ opacity: loading ? 0.5 : 1, scale: 1 }}
-                      exit={{ opacity: 0, scale: 0.95 }}
-                      transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-                      className="absolute inset-0"
-                    >
-                      <Image
-                        src={imageSrc}
-                        alt={meta?.title || "Article"}
-                        fill
-                        unoptimized={imageSrc.startsWith("http")}
-                        className="object-cover grayscale brightness-50 lg:brightness-75 transition-all duration-700 group-hover:grayscale-0"
-                      />
-                    </motion.div>
-                  );
-                })()}
+                <motion.div
+                  key={currentArticle.href}
+                  className="absolute inset-0"
+                  initial={{ scale: 1.1, opacity: 0, filter: "blur(10px)" }}
+                  animate={{ scale: 1, opacity: 1, filter: "blur(0px)" }}
+                  exit={{ scale: 1.05, opacity: 0, filter: "blur(5px)" }}
+                  transition={{ duration: 0.8, ease: "easeOut" }}
+                >
+                  <Image
+                    src={displayImage}
+                    alt={displayTitle}
+                    fill
+                    unoptimized={displayImage.startsWith("http")}
+                    className="object-cover opacity-90 transition-transform duration-[8000ms] ease-linear group-hover:scale-110"
+                  />
+                  {/* Gradient Overlay để text dễ đọc hơn nếu cần */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-bgDark/60 via-transparent to-transparent opacity-60" />
+                </motion.div>
               </AnimatePresence>
-              {/* Gradient: Bottom on mobile, Right on desktop */}
-              <div className="absolute inset-0 bg-gradient-to-t lg:bg-gradient-to-r from-bgDark/80 lg:from-bgDark/40 to-transparent pointer-events-none" />
 
-              {/* Source Badge - Compact on mobile */}
-              <div className="absolute top-3 left-3 lg:top-6 lg:left-6 px-3 py-1.5 lg:px-4 lg:py-2 bg-bgDark/80 backdrop-blur-md border border-white/10 z-10">
-                <p className="text-[9px] lg:text-[10px] font-semibold uppercase tracking-wider text-primaryBlue">
-                  Trusted Press
-                </p>
+              {/* Publisher Badge */}
+              <div className="absolute top-4 left-4 z-20">
+                <div className="px-3 py-1.5 bg-bgDark/80 backdrop-blur-md border border-white/10 rounded-sm">
+                  {isLoading ? (
+                     <SkeletonText className="w-20 h-3" />
+                  ) : (
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-white">
+                      {displayPublisher}
+                    </span>
+                  )}
+                </div>
               </div>
             </div>
 
-            {/* Content Column - Matches image height on desktop */}
-            <div className="p-6 sm:p-8 lg:p-10 flex flex-col justify-center relative bg-bgDark min-h-[320px] lg:min-h-0">
-              <AnimatePresence mode="wait">
-                {(() => {
-                  const meta = metadata[currentArticle.href];
-                  const displayTitle = meta?.title || (loading ? "Loading..." : "Article");
-                  const displayExcerpt = meta?.description;
-                  const displayDate = formatDate(meta?.publishedAt);
-                  const displayReadTime = meta?.readingTime;
-                  const displayPublisher = meta?.publisher || (loading ? "..." : "Press");
-                  
-                  return (
-                    <motion.div
-                      key={currentIndex}
-                      initial={{ opacity: 0, x: 20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      exit={{ opacity: 0, x: -20 }}
-                      transition={{ duration: 0.4 }}
-                      className="flex-grow flex flex-col justify-center mb-16 lg:mb-0"
-                    >
-                      {/* Badge & Publisher */}
-                      <div className="flex items-center gap-2 lg:gap-3 mb-4 lg:mb-6">
-                        {isFeatured && (
-                          <span className="px-2 py-0.5 lg:px-3 lg:py-1 bg-primaryBlue text-white text-[10px] lg:text-xs font-semibold">
-                            Featured
-                          </span>
-                        )}
-                        <span className="text-[11px] lg:text-xs font-medium text-white/50">
-                          {displayPublisher}
-                        </span>
-                      </div>
+            {/* 2. CONTENT COLUMN */}
+            <div className="flex flex-col relative bg-bgDark">
+              <div className="flex-grow p-8 lg:p-12 flex flex-col justify-center">
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={currentIndex}
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -20 }}
+                    transition={{ duration: 0.4 }}
+                    className="space-y-6"
+                  >
+                    {/* Featured Label */}
+                    {currentArticle.tone === "featured" && (
+                      <span className="inline-block px-2 py-1 bg-primaryBlue text-white text-[10px] font-bold uppercase tracking-wide rounded-sm">
+                        Featured
+                      </span>
+                    )}
 
-                      {/* Title */}
-                      <h3 className="text-xl sm:text-2xl lg:text-3xl font-semibold leading-tight mb-4 lg:mb-6 text-white group-hover:text-highlightIce transition-colors">
-                        {displayTitle}
-                      </h3>
-
-                      {/* Excerpt */}
-                      {displayExcerpt && (
-                        <p className="text-textSec text-sm lg:text-base leading-relaxed mb-6 lg:mb-8 line-clamp-3">
-                          {displayExcerpt}
-                        </p>
-                      )}
-
-                      {/* Metadata & CTA */}
-                      <div className="space-y-4 lg:space-y-6 pt-4 lg:pt-6 border-t border-white/10">
-                        <div className="flex flex-wrap gap-4 lg:gap-6 text-sm">
-                          {displayDate && (
-                            <div>
-                              <p className="text-[10px] lg:text-xs text-white/40 mb-0.5 lg:mb-1">
-                                Published
-                              </p>
-                              <p className="text-white text-xs lg:text-sm font-medium">
-                                {displayDate}
-                              </p>
-                            </div>
-                          )}
-                          {displayReadTime && (
-                            <div>
-                              <p className="text-[10px] lg:text-xs text-white/40 mb-0.5 lg:mb-1">
-                                Read Time
-                              </p>
-                              <p className="text-primaryBlue text-xs lg:text-sm font-medium">
-                                {displayReadTime}
-                              </p>
-                            </div>
-                          )}
+                    {/* TITLE AREA: Text or Skeleton */}
+                    <div className="min-h-[80px] lg:min-h-[100px]"> 
+                      {isLoading ? (
+                        <div className="space-y-3">
+                          <SkeletonText className="h-8 w-full" />
+                          <SkeletonText className="h-8 w-3/4" />
+                          <SkeletonText className="h-8 w-1/2" />
                         </div>
+                      ) : (
+                        <h3 className="text-2xl sm:text-3xl lg:text-4xl font-semibold leading-tight text-white group-hover:text-primaryBlue transition-colors duration-300">
+                          {displayTitle}
+                        </h3>
+                      )}
+                    </div>
 
-                        <Link
-                          href={currentArticle.href}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="w-full lg:w-fit inline-flex items-center justify-center lg:justify-start gap-2 px-6 py-3 bg-primaryBlue text-white text-xs lg:text-sm font-semibold transition-all hover:bg-primaryBlue/80"
-                        >
-                          Read Full Article
-                          <span>→</span>
-                        </Link>
-                      </div>
-                    </motion.div>
-                  );
-                })()}
-              </AnimatePresence>
+                    {/* DESCRIPTION AREA: Text or Skeleton */}
+                    <div className="min-h-[72px]">
+                      {isLoading ? (
+                        <div className="space-y-2 mt-4">
+                          <SkeletonText className="h-4 w-full" />
+                          <SkeletonText className="h-4 w-5/6" />
+                          <SkeletonText className="h-4 w-4/6" />
+                        </div>
+                      ) : (
+                        displayDesc && (
+                          <p className="text-white/60 text-base leading-relaxed line-clamp-3">
+                            {displayDesc}
+                          </p>
+                        )
+                      )}
+                    </div>
 
-              {/* Navigation Controls - Smaller on mobile */}
-              <NavControls
-                currentIndex={currentIndex}
-                total={items.length}
-                onPrev={prevSlide}
-                onNext={nextSlide}
-              />
+                    {/* Call to Action */}
+                    <div className="pt-4">
+                      <Link
+                        href={currentArticle.href}
+                        target="_blank"
+                        className="inline-flex items-center gap-2 text-primaryBlue font-medium text-sm hover:text-white transition-colors group/link"
+                      >
+                        Read Full Article
+                        <span className="transition-transform group-hover/link:translate-x-1">→</span>
+                      </Link>
+                    </div>
+                  </motion.div>
+                </AnimatePresence>
+              </div>
+
+              {/* FOOTER INFO & NAV */}
+              <div className="mt-auto border-t border-white/10 flex flex-col sm:flex-row h-auto sm:h-20 bg-cardDark/50">
+                
+                {/* Meta Info Grid */}
+                <div className="flex-grow grid grid-cols-2 border-b sm:border-b-0 sm:border-r border-white/10">
+                  <div className="p-4 sm:pl-12 flex flex-col justify-center border-r sm:border-r-0 border-white/10">
+                    <span className="text-[10px] uppercase text-white/40 mb-1">Published</span>
+                    {isLoading ? (
+                      <SkeletonText className="h-4 w-24" />
+                    ) : (
+                      <span className="text-sm font-medium text-white">{displayDate || "N/A"}</span>
+                    )}
+                  </div>
+                  <div className="p-4 sm:pl-8 flex flex-col justify-center">
+                    <span className="text-[10px] uppercase text-white/40 mb-1">Read Time</span>
+                     {isLoading ? (
+                      <SkeletonText className="h-4 w-16" />
+                    ) : (
+                      <span className="text-sm font-medium text-white">{displayReadTime || "N/A"}</span>
+                    )}
+                  </div>
+                </div>
+
+                {/* Nav Controls */}
+                <div className="flex shrink-0">
+                  <div className="w-20 flex items-center justify-center border-r border-white/10 bg-bgDark">
+                    <span className="text-sm font-medium text-white">
+                      {String(currentIndex + 1).padStart(2, '0')}
+                      <span className="text-white/30 mx-1">/</span>
+                      <span className="text-white/30">{String(items.length).padStart(2, '0')}</span>
+                    </span>
+                  </div>
+                  
+                  <button 
+                    onClick={prevSlide}
+                    className="w-16 sm:w-20 bg-bgDark hover:bg-primaryBlue hover:text-white transition-all flex items-center justify-center border-r border-white/10 text-white/70"
+                    aria-label="Previous"
+                  >
+                    <span className="text-xl">←</span>
+                  </button>
+                  <button 
+                    onClick={nextSlide}
+                    className="w-16 sm:w-20 bg-bgDark hover:bg-primaryBlue hover:text-white transition-all flex items-center justify-center text-white/70"
+                    aria-label="Next"
+                  >
+                    <span className="text-xl">→</span>
+                  </button>
+                </div>
+              </div>
+
             </div>
           </div>
-        </motion.div>
+        </div>
       </div>
     </section>
-  );
-}
-
-function NavControls({
-  currentIndex,
-  total,
-  onPrev,
-  onNext,
-}: {
-  currentIndex: number;
-  total: number;
-  onPrev: () => void;
-  onNext: () => void;
-}) {
-  return (
-    <div className="absolute bottom-0 right-0 flex border-t border-l border-white/10">
-      <div className="px-3 lg:px-6 flex items-center border-r border-white/10 bg-cardDark/50">
-        <span className="text-xs lg:text-sm font-medium text-primaryBlue">
-          {String(currentIndex + 1).padStart(2, "0")}
-        </span>
-        <span className="mx-1 lg:mx-2 text-white/20">/</span>
-        <span className="text-xs lg:text-sm font-medium text-white/40">
-          {String(total).padStart(2, "0")}
-        </span>
-      </div>
-      <button
-        onClick={onPrev}
-        className="w-12 h-12 lg:w-14 lg:h-14 bg-cardDark hover:bg-primaryBlue transition-all flex items-center justify-center border-r border-white/10 group/btn"
-      >
-        <span className="text-base lg:text-lg text-white group-hover/btn:-translate-x-0.5 transition-transform">
-          ←
-        </span>
-      </button>
-      <button
-        onClick={onNext}
-        className="w-12 h-12 lg:w-14 lg:h-14 bg-cardDark hover:bg-primaryBlue transition-all flex items-center justify-center group/btn"
-      >
-        <span className="text-base lg:text-lg text-white group-hover/btn:translate-x-0.5 transition-transform">
-          →
-        </span>
-      </button>
-    </div>
   );
 }

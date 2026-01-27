@@ -21,10 +21,4 @@ export const PRESS_ARTICLES: PressArticle[] = [
   {
     href: "https://www.kiplinger.com/investing/sports-memorabilia-arrive-as-an-investing-class",
   },
-  {
-    href: "https://www.kiplinger.com/investing/car-collecting-provenance-plays-vital-role",
-  },
-  {
-    href: "https://www.kiplinger.com/retirement/collectibles-prove-to-be-solid-asset-class-for-investors",
-  },
 ];
